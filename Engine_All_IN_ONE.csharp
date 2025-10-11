@@ -1,0 +1,1508 @@
+using System;
+using System.Collections.Generic;
+
+//Enum
+
+public enum BasicPatternType // 체스의 다섯 기물의 패턴을 저장해둔 dictioanry에 접근하기 위한 keys.
+{
+	King, Knight, Bishop, Queen, Rook
+}
+
+public enum MoveType // 캐릭터에게 주어질 수 있는 모든 종류의 이동 방법
+{
+	Stationary, King, Pawn_Up, Pawn_Up_Advanced, Pawn_Down, Pawn_Down_Advanced, Knight, Bishop, Rook, Queen
+}
+
+public enum WeaponType // 캐릭터에게 주어질 수 있는 모든 종류의 무기의 식별번호 역할을 함.
+{
+	Sword, Shield_Up, Shield_Down, Spear, Cannon, Bow, Fireball
+}
+
+public enum AttackType // 공격이 공격력을 참고하는지, 마법 공격력을 참고하는지 확인. 나중에 방어력 참고 공격 이런것도 생각중.
+{
+	Physical, Magical
+}
+
+public enum DamageType // 피해 유형. 속성 피해 등을 추가할수도 있다.
+{
+	Physical, Magical, True
+}
+
+public enum BuffType // 각 버프의 실질적 효과를 식별하기 위한 타입. 같은 타입의 버프들은 중첩된다.
+{
+	MaxHpBoost,DefenseBoost,MagicDefenseBoost, AttackBoost, MagicAttackBoost, AgilityBoost, PhysicalResidence, MagicalResidence
+}
+
+public enum Teams // 말 그대로 어느 소속인지
+{
+    Players,    // 플레이어 소속
+    Enemies,    // 적 1 소속
+    Neutrals    // 중립
+}
+
+public enum TeamType // 출처와 대상의 관계. 이 대상이 어떤 behavior의 대상이 되는지를 확인하기 위한 타입.
+{
+	Same, Ally, Neutral, Enemy, Air
+}
+
+public enum TerrainType // 지형의 종류를 구분하기 위한 타입.
+{
+	Plains, Swamp, Water
+}
+
+public enum PatternType // PatternSet에 들어있는 Pattern이 좌표인지 벡터인지 구분하기 위한 타입.
+{ 
+	Coordinate, Vector, Pvector
+}
+
+public enum ActionType // 검색된 액션이 유효한지 아닌지 알려주기 위한 타입.
+{
+	Accessible, Unaccessible
+}
+
+public enum BehaviorTag // 해당 Behavior의 특성을 세세하게 설명하는 태그.
+{
+	PawnFirstUp, PawnFirstDown
+}
+
+public enum BattleTag // 전투 결과에 대한 상세 설명에 필요한 태그. 크리티컬을 추가한다면 크리티컬 발생 여부나 뭐 이런거.
+{
+	noCounter, killedCounter
+}
+
+public enum ItemTag
+{
+
+}
+
+public enum WeaponTag
+{
+
+}
+
+public enum ActorCode // 각각의 Actor들의 고유번호.
+{
+	Phantom, Hagen, Gideon, 
+}
+
+public enum WeaponCode // 각각의 Weapon들의 고유번호
+{
+	PhantomShield, IronShield, LongSword, IronSpear
+}
+
+public enum SkillCode
+{
+	Frontline
+}
+
+public enum BuffSetCode
+{
+	FrontlineAura, FrontlineBuff
+}
+
+//Enum 끝.
+
+public static class GameData
+{	
+	// 이동 ApCost 딕셔너리
+	public static readonly Dictionary<MoveType, int> MoveApCosts = new Dictionary<MoveType, int>{
+		[MoveType.Pawn_Up] = 8,
+		[MoveType.Pawn_Down] = 8,
+		[MoveType.Pawn_Up_Advanced] = 8,
+		[MoveType.Pawn_Down_Advanced] = 8,
+		[MoveType.King] = 10,
+		[MoveType.Knight] = 12,
+		[MoveType.Bishop] = 13,
+		[MoveType.Rook] = 15,
+		[MoveType.Queen] = 20
+	};
+	
+	// 공격 ApCost 딕셔너리
+	public static readonly Dictionary<WeaponType, int> AttackApCosts = new Dictionary<WeaponType, int>{
+		[WeaponType.Shield_Up] = 5,
+		[WeaponType.Shield_Down] = 5,
+		[WeaponType.Sword] = 10,
+		[WeaponType.Spear] = 12,
+		[WeaponType.Bow] = 15,
+		[WeaponType.Cannon] = 20,
+		[WeaponType.Fireball] = 25
+		
+	};
+	
+	// 공격 DamageType 딕셔너리
+	public static readonly Dictionary<WeaponType, (AttackType, DamageType)> AttackDamageTypes = new Dictionary<WeaponType, (AttackType, DamageType)>{
+		[WeaponType.Shield_Up] = (AttackType.Physical, DamageType.Physical),
+		[WeaponType.Shield_Down] = (AttackType.Physical, DamageType.Physical),
+		[WeaponType.Sword] = (AttackType.Physical, DamageType.Physical),
+		[WeaponType.Spear] = (AttackType.Physical, DamageType.Physical),
+		[WeaponType.Bow] = (AttackType.Physical, DamageType.Physical),
+		[WeaponType.Cannon] = (AttackType.Physical, DamageType.Physical),
+		[WeaponType.Fireball] = (AttackType.Magical, DamageType.Magical)
+	};
+	
+	public static readonly Dictionary<BasicPatternType, PatternSet> BasicPatternSets = new Dictionary<BasicPatternType, PatternSet>
+    {
+		 // 킹(King): 주변 8칸으로 1칸씩 이동
+        [BasicPatternType.King] = new PatternSet(new List<Pattern>
+        {
+            new Pattern { X = -1, Y = -1, Type = PatternType.Coordinate }, // Up-Left
+            new Pattern { X = 0,  Y = -1, Type = PatternType.Coordinate }, // Up
+            new Pattern { X = 1,  Y = -1, Type = PatternType.Coordinate }, // Up-Right
+            new Pattern { X = -1, Y = 0,  Type = PatternType.Coordinate }, // Left
+            new Pattern { X = 1,  Y = 0,  Type = PatternType.Coordinate }, // Right
+            new Pattern { X = -1, Y = 1,  Type = PatternType.Coordinate }, // Down-Left
+            new Pattern { X = 0,  Y = 1,  Type = PatternType.Coordinate }, // Down
+            new Pattern { X = 1,  Y = 1,  Type = PatternType.Coordinate }  // Down-Right
+        }),
+        
+        // 퀸(Queen): 8방향으로 끝까지 이동
+        [BasicPatternType.Queen] = new PatternSet(new List<Pattern>
+        {
+            new Pattern { X = -1, Y = -1, Type = PatternType.Vector }, // Up-Left
+            new Pattern { X = 0,  Y = -1, Type = PatternType.Vector }, // Up
+            new Pattern { X = 1,  Y = -1, Type = PatternType.Vector }, // Up-Right
+            new Pattern { X = -1, Y = 0,  Type = PatternType.Vector }, // Left
+            new Pattern { X = 1,  Y = 0,  Type = PatternType.Vector }, // Right
+            new Pattern { X = -1, Y = 1,  Type = PatternType.Vector }, // Down-Left
+            new Pattern { X = 0,  Y = 1,  Type = PatternType.Vector }, // Down
+            new Pattern { X = 1,  Y = 1,  Type = PatternType.Vector }  // Down-Right
+        }),
+
+        // 비숍(Bishop): 대각선 4방향으로 끝까지 이동
+        [BasicPatternType.Bishop] = new PatternSet(new List<Pattern>
+        {
+            new Pattern { X = -1, Y = -1, Type = PatternType.Vector }, // Up-Left
+            new Pattern { X = 1,  Y = -1, Type = PatternType.Vector }, // Up-Right
+            new Pattern { X = -1, Y = 1,  Type = PatternType.Vector }, // Down-Left
+            new Pattern { X = 1,  Y = 1,  Type = PatternType.Vector }  // Down-Right
+        }),
+		
+        // 나이트(Knight): 자신을 중심으로 한 반지름 루트5 원 위로 점프
+        [BasicPatternType.Knight] = new PatternSet(new List<Pattern>
+        {
+            new Pattern { X = 1, Y = -2, Type = PatternType.Coordinate },
+            new Pattern { X = 2, Y = -1, Type = PatternType.Coordinate },
+            new Pattern { X = 2, Y = 1, Type = PatternType.Coordinate },
+            new Pattern { X = 1, Y = 2, Type = PatternType.Coordinate },
+            new Pattern { X = -1, Y = 2, Type = PatternType.Coordinate },
+            new Pattern { X = -2, Y = 1, Type = PatternType.Coordinate },
+            new Pattern { X = -2, Y = -1, Type = PatternType.Coordinate },
+            new Pattern { X = -1, Y = -2, Type = PatternType.Coordinate }
+        }),
+                // 룩(Rook): 상하좌우 4방향으로 무제한 이동
+        [BasicPatternType.Rook] = new PatternSet(new List<Pattern>
+        {
+            new Pattern { X = 1, Y = 0, Type = PatternType.Vector }, // Right
+            new Pattern { X = 0, Y = 1, Type = PatternType.Vector }, // Down
+            new Pattern { X = -1, Y = 0, Type = PatternType.Vector }, // Left
+            new Pattern { X = 0, Y = -1, Type = PatternType.Vector } //Up
+        })
+    };
+	
+	// 이동 패턴셋 딕셔너리
+	public static readonly Dictionary<MoveType, PatternSet> MovePatterns = new Dictionary<MoveType, PatternSet>
+    {
+		// 기본적인 5개 기물 이동은 BasicPatternSets Dictionary에 있는 PatternSet으로 해결.
+        [MoveType.King] = BasicPatternSets[BasicPatternType.King],
+        [MoveType.Queen] = BasicPatternSets[BasicPatternType.Queen],
+		[MoveType.Bishop] = BasicPatternSets[BasicPatternType.Bishop],
+        [MoveType.Knight] = BasicPatternSets[BasicPatternType.Knight],
+        [MoveType.Rook] = BasicPatternSets[BasicPatternType.Rook],	
+		
+		// 상향 폰(Pawn_Up): 
+        [MoveType.Pawn_Up] = new PatternSet(new List<Pattern>
+        {
+        new Pattern { X = 0, Y = -1, Type = PatternType.Coordinate }, //Up1
+                new Pattern { X = 0, Y = -2, Type = PatternType.Coordinate } //Up2
+        }),
+		// 하향 폰(Pawn_Down)
+		[MoveType.Pawn_Down] = new PatternSet(new List<Pattern>
+        {
+        new Pattern { X = 0, Y = 1, Type = PatternType.Coordinate }, //Down1
+                    new Pattern { X = 0, Y = 2, Type = PatternType.Coordinate } //Down2
+        }),
+                // 한 번 이상 전진한 상향 폰(Pawn_Up_Advanced): 
+        [MoveType.Pawn_Up_Advanced] = new PatternSet(new List<Pattern>
+        {
+        new Pattern { X = 0, Y = -1, Type = PatternType.Coordinate }
+        }),
+                // 한 번 이상 전진한 하향 폰(Pawn_Down_Advanced): 
+                [MoveType.Pawn_Down_Advanced] = new PatternSet(new List<Pattern>
+        {
+        new Pattern { X = 0, Y = 1, Type = PatternType.Coordinate }
+        })
+    };
+	
+	// 공격 패턴셋 딕셔너리
+	public static readonly Dictionary<WeaponType, PatternSet> AttackPatterns = new Dictionary<WeaponType, PatternSet>
+    {
+        [WeaponType.Sword] = BasicPatternSets[BasicPatternType.King], // 검. 킹처럼 주변 8칸 공격
+        [WeaponType.Shield_Up] = new PatternSet(new List<Pattern> // 방패. 폰처럼 전방 대각선 공격
+        {
+            new Pattern { X = -1, Y = -1, Type = PatternType.Coordinate },
+            new Pattern { X = 1, Y = -1, Type = PatternType.Coordinate }
+        }),
+        [WeaponType.Shield_Down] = new PatternSet(new List<Pattern> // 방패. 폰처럼 전방 대각선 공격
+        {
+            new Pattern { X = -1, Y = 1, Type = PatternType.Coordinate },
+            new Pattern { X = 1, Y = 1, Type = PatternType.Coordinate }
+        }),
+                [WeaponType.Spear] = BasicPatternSets[BasicPatternType.Knight], // 창. 나이트처럼 원형 범위 공격
+                [WeaponType.Bow] = BasicPatternSets[BasicPatternType.Bishop], // 활. 비숍처럼 대각선 범위 공격
+                [WeaponType.Cannon] = BasicPatternSets[BasicPatternType.Rook], // 대포. 룩처럼 상하좌우 범위 공격
+                [WeaponType.Fireball] = BasicPatternSets[BasicPatternType.Queen] // 화염구. 퀸처럼 전방향 공격
+    };
+	
+	public static readonly Dictionary<BuffSetCode, BuffSet> AllBuffSets = new Dictionary<BuffSetCode, BuffSet>
+    {
+		// '전선 구축' 오라가 실제로 주변에 뿌리는 효과 버프
+        [BuffSetCode.FrontlineBuff] = new BuffSet
+        {
+            Name = Text.Get(Text.Key.BuffSet_FrontlineBuff_Name),
+			Description  = Text.Get(Text.Key.BuffSet_FrontlineBuff_Desc),
+			Effects = new List<Buff>{
+				new Buff{
+					Type = BuffType.DefenseBoost,
+					Magnitude = 5,
+				},
+				new Buff{
+					Type = BuffType.MagicDefenseBoost,
+					Magnitude = 5,
+				}
+			},
+            Duration = -1, // 오라형 버프라서 일단은 지속시간 무한.
+            isBuff = true,
+            Removable = false // 오라형 버프는 해제 불가능.
+        },
+		
+        // '전선 구축' 스킬이 부여하는 오라 버프(상향 폰)
+        [BuffSetCode.FrontlineAura] = new BuffSet
+        {
+            Name = Text.Get(Text.Key.Skill_Frontline_Name),
+            Duration = -1, // 영구 지속 (스킬을 잃지 않는 한)
+            Effects = new List<Buff>{ new Aura{
+            AuraTargets = new List<TeamType> { TeamType.Same, TeamType.Ally },
+            AuraEffect = BuffSetCode.FrontlineBuff, // 오라 효과: '방어 태세' 버프를 부여
+			UseAttackPattern = true
+			}
+			}
+        },
+        
+       
+    };
+	
+	public static readonly Dictionary<WeaponCode, Weapon> AllWeapons  = new Dictionary<WeaponCode, Weapon> 
+	{
+		[WeaponCode.PhantomShield] = new Weapon{
+			Name = Text.Get(Text.Key.Weapon_PhantomShield_Name),
+			Type = WeaponType.Shield_Up,
+			Power = 4
+		},
+		[WeaponCode.IronShield] = new Weapon{
+			Name = Text.Get(Text.Key.Weapon_PhantomShield_Name),
+			Type = WeaponType.Shield_Up,
+			Power = 4
+		},
+		[WeaponCode.LongSword] = new Weapon{
+			Name = Text.Get(Text.Key.Weapon_LongSword_Name),
+			Type = WeaponType.Sword,
+			Power = 5
+		},
+		[WeaponCode.IronSpear] = new Weapon{
+			Name = Text.Get(Text.Key.Weapon_IronSpear_Name),
+			Type = WeaponType.Spear,
+			Power = 5
+		},
+		
+	};
+	
+	public static readonly Dictionary<SkillCode, Skill> AllSkills = new Dictionary<SkillCode, Skill>
+    {
+        [SkillCode.Frontline] = new Skill
+        {
+            Name = Text.Get(Text.Key.Skill_Frontline_Name),
+            IsPassive = true,
+            // 이 스킬을 가지고 있으면, 'FrontlineAura' 버프를 자신에게 부여.
+            SkillBuffs = new List<BuffSet> { AllBuffSets[BuffSetCode.FrontlineAura] }
+        }
+    };
+	
+	public static readonly Dictionary<ActorCode, Actor> AllActors  = new Dictionary<ActorCode, Actor> 
+	{
+		[ActorCode.Phantom] = new Actor // 환영 폰. 일괄적인 데이터 관리를 위해 얘네 데이터도 이 딕셔너리에 보관.
+		{
+			Name = Text.Get(Text.Key.Actor_Phantom_Name),
+			Stat = new Status(maxHp: 10, defense: 5, magicDefense: 5, attack: 7, magicAttack: 0, agility: 7),
+			MoveClass = MoveType.Pawn_Up,
+			WeaponClass = WeaponType.Shield_Up,
+			UniqueSkill = AllSkills[SkillCode.Frontline], // 전선 유지
+			Traits = new List<Trait>(),
+			Inventory = new List<Item>{
+				new Weapon(AllWeapons[WeaponCode.PhantomShield])
+			}
+		},
+		
+		[ActorCode.Hagen] = new Actor
+		{
+			Name = Text.Get(Text.Key.Actor_Hagen_Name),
+			Stat = new Status(maxHp: 12, defense: 6, magicDefense: 5, attack: 9, magicAttack: 0, agility: 7),
+			MoveClass = MoveType.Knight,
+			WeaponClass = WeaponType.Spear,
+			UniqueSkill = null, // 나중에 스킬 객체 추가
+			Traits = new List<Trait>(),
+			Equipment = AllWeapons[WeaponCode.IronSpear],
+			Inventory = new List<Item>{
+				new Weapon(AllWeapons[WeaponCode.LongSword])
+			}
+		},
+	};
+
+	 public static class Text
+    {
+        // 텍스트의 '고유 키' 역할을 할 Enum (나중에 Index로도 써먹을 수 있을듯.)
+        public enum Key
+        {
+            // 명령어
+            Command_Move,
+            Command_Attack,
+            Command_Cancel,
+
+            // UI 메시지
+            UI_SelectSquare,
+            UI_ChooseAction,
+            UI_InvalidCoordinate,
+            UI_PressEnterToContinue,
+			UI_Battle_FirstAttack,
+			UI_Battle_DefenderDied,
+			UI_Battle_DefenderCantCounter,
+			UI_Battle_ExcuteCounterAttack,
+			UI_Battle_FinalStateIndicator,
+			UI_Battle_AttackerFinalState,
+			
+			// 캐릭터 이름
+			Actor_Phantom_Name,
+			Actor_Hagen_Name,
+			Actor_Gideon_Name,
+			Actor_Elara_Name,
+			Actor_Cassandra_Name,
+			
+			// 무기 이름
+			Weapon_PhantomShield_Name,
+			Weapon_IronShield_Name,
+			Weapon_LongSword_Name,
+			Weapon_IronSpear_Name,
+				
+			// 무기 설명
+			Weapon_PhantomShield_Desc,
+			Weapon_IronShield_Desc,
+			Weapon_LongSword_Desc,
+			Weapon_IronSpear_Desc,
+			
+			// 스킬 이름
+			Skill_Frontline_Name,
+			
+			// 버프 이름
+			BuffSet_FrontlineBuff_Name,
+			
+			// 버프 설명
+			BuffSet_FrontlineBuff_Desc,
+			
+			
+        }
+
+		 // 한국어 텍스트 데이터 딕셔너리
+		 private static readonly Dictionary<Key, string> Korean = new Dictionary<Key, string>
+		 {
+			 // 커맨드 관련
+			 [Key.Command_Move] = "이동",
+			 [Key.Command_Attack] = "공격",
+			 [Key.Command_Cancel] = "취소",
+			 // UI 관련
+			 [Key.UI_SelectSquare] = "칸을 선택하세요",
+			 [Key.UI_ChooseAction] = "어떤 행동을 하시겠습니까?",
+			 [Key.UI_InvalidCoordinate] = "잘못된 좌표입니다.",
+			 [Key.UI_PressEnterToContinue] = "계속하려면 엔터를 누르세요...",
+			 // 기본 공격 관련 UI 메시지
+			 [Key.UI_Battle_FirstAttack] =  "{0}, {1}에게 공격! [{2}]의 피해!",
+			 [Key.UI_Battle_DefenderDied] =  "{0}, 쓰러져 공격할 수 없습니다!",
+			 [Key.UI_Battle_DefenderCantCounter] =  "{0}, 반격할 수 없습니다!",
+			 [Key.UI_Battle_ExcuteCounterAttack] =  "{0}, {1}에게 공격! [{2}]의 피해!",
+			 [Key.UI_Battle_FinalStateIndicator] =  "전투 결과",
+			 [Key.UI_Battle_AttackerFinalState] =  "{0}: HP {1} / {2}",
+			 
+			 // Actor 관련
+			 [Key.Actor_Phantom_Name] = "환영병",
+			 [Key.Actor_Hagen_Name] = "하겐",
+			 [Key.Actor_Gideon_Name] = "기드온",
+			 [Key.Actor_Elara_Name] = "엘라라",
+			 [Key.Actor_Cassandra_Name] = "카산드라",
+			 // Weapon 관련
+			 // Weapon 이름
+			 [Key.Weapon_PhantomShield_Name] = "환영 방패",
+			 [Key.Weapon_IronShield_Name] = "철 방패",
+			 [Key.Weapon_LongSword_Name] = "롱소드",
+			 [Key.Weapon_IronSpear_Name] = "쇠창",
+			 // Weapon 설명
+			 [Key.Weapon_PhantomShield_Desc] = "환영병의 기본 무장.",
+			 [Key.Weapon_IronShield_Desc] = "제국의 병사들이 애용하는, 믿음의 철 방패.",
+			 [Key.Weapon_LongSword_Desc] = "기본에 충실한, 잘 만들어진 검.",
+			 [Key.Weapon_IronSpear_Desc] = "손잡이도 쇠로 만들어져, 다소 무겁지만 부러질 일은 없다.",
+			 // BuffSet 관련
+			 // BuffSet 이름
+			 [Key.BuffSet_FrontlineBuff_Name] = "전선 지원",
+			 // BuffSet 설명
+			 [Key.BuffSet_FrontlineBuff_Desc] = "아군의 전선 지원으로 방어력이 증가했습니다.",
+			 // Skill 관련
+			 // Skill 이름
+			 [Key.Skill_Frontline_Name] = "전선 구축",
+			 
+		 };
+		
+		// 현재 언어 설정 (나중에 옵션에서 바꿀 수 있도록)
+		public static Dictionary<Key, string> CurrentLanguage = Korean;
+
+		 // 텍스트를 가져오는 함수 (지금은 한국어 데이터만 있긴 하지만.)
+		public static string Get(Key key)
+		 {
+			 if (CurrentLanguage.ContainsKey(key))
+			 {
+				 return CurrentLanguage[key];
+			 }
+			 return key.ToString(); // 혹시 데이터가 없으면 키 이름을 그대로 반환
+		 }
+	 }
+	
+	public static readonly Dictionary<MoveType, BehaviorTag> SpecialMoves = new Dictionary<MoveType, BehaviorTag>{
+		[MoveType.Pawn_Up] = BehaviorTag.PawnFirstUp,
+		[MoveType.Pawn_Down] = BehaviorTag.PawnFirstDown
+	};
+	public static readonly Dictionary<WeaponType, BehaviorTag> SpecialAttacks = new Dictionary<WeaponType, BehaviorTag>{
+		
+	};
+	 public static TeamType GetTeamType(Teams observer, Teams target)
+		{
+			if (target == Teams.Neutrals) // 중립 진영은 모든 대상과 중립.
+			{
+				return TeamType.Neutral;
+			}
+
+			if (observer == target)
+			{
+				return TeamType.Same; // 같은 진영의 관계는 Same이다. 아군과는 구별한다.
+			}
+
+			// 여기에 더 복잡한 관계를 정의할 수 있음
+			// 예: 플레이어와 적은 서로에게 '적'
+			if ((observer == Teams.Players && target == Teams.Enemies) ||
+				(observer == Teams.Enemies && target == Teams.Players))
+			{
+				return TeamType.Enemy;
+			}
+
+			// 기본값은 중립
+			return TeamType.Neutral;
+		}
+}
+
+public class Pattern
+{
+	public int X { get; set; }
+	public int Y { get; set; }
+	public PatternType Type { get; set; }
+}
+
+public class Square
+{
+    public TerrainType Terrain { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
+    public Unit Occupant { get; set; } // 이 변수가 null인지 아닌지로 점유 상태를 판단.
+
+    public Square(int x, int y, TerrainType type = TerrainType.Plains)
+    {
+        this.X = x;
+        this.Y = y;
+        this.Terrain = type;
+        this.Occupant = null; // 처음에는 비어있으므로 null로 초기화
+    }
+
+    public void PlaceUnit(Unit occupant)
+    {
+        this.Occupant = occupant;
+    }
+    public void ClearUnit()
+    {
+        this.Occupant = null;
+    }
+	
+	public void Update()
+	{
+		this.Occupant.Update();
+	}
+	
+	public void TurnStart()
+	{
+		this.Occupant.TurnStart();
+	}
+	
+	public void TurnOver()
+	{
+		this.Occupant.TurnOver();
+	}
+
+    public override string ToString()
+    {
+        string open_text = "[";
+        string content = " ";
+
+        switch (this.Terrain)
+        {
+            case TerrainType.Swamp: open_text = "("; break;
+            case TerrainType.Water: open_text = "~"; break;
+        }
+
+      // Occupant가 null이 아니면 (유닛이 있으면)
+        if (this.Occupant != null)
+        {
+            content = this.Occupant.ToString(); // Unit의 ToString()을 호출
+        }
+        return open_text + content;
+    }
+}
+
+public class PatternSet
+{
+	public List<Pattern> Patterns;
+	public int Penetration;
+	
+	public PatternSet(List<Pattern> patterns)
+	{
+		Patterns = patterns;
+		Penetration = 0;
+	}
+
+	public PatternSet(List<Pattern> patterns, int penetration)
+	{
+		Patterns = patterns;
+		Penetration = penetration;
+	}
+
+}
+
+public abstract class Behavior
+{
+	public string Name { get; set; }
+	public PatternSet Scope { get; set; }
+	public List<BehaviorTag> Tags { get; set; }
+	public List<TeamType> Accessible { get; set; }
+	public int ApCost { get; set; }
+	public List<UnitAction> ActionSearcher(Square startSquare, Square[,] map, Behavior B)
+	{
+		List<UnitAction> possibleActions = new List<UnitAction>();
+		int startX = startSquare.X;
+		int startY = startSquare.Y;
+		int sizeX = map.GetLength(1);
+		int sizeY = map.GetLength(0);
+
+		// --- 지역 함수: 특정 좌표를 검사하고 리스트에 추가하는 중복 로직 ---
+		// 이 함수는 bool 값을 반환합니다: 벡터 탐색을 계속해야 하면 true, 멈춰야 하면 false
+		bool ProcessSquare(int x, int y)
+		{
+			// 1. 맵 경계 검사 (버그 수정: >= 0)
+			if (x < 0 || x >= sizeX || y < 0 || y >= sizeY)
+			{
+				return false; // 맵 벗어나면 탐색 중지
+			}
+
+			Unit targetUnit = map[y, x].Occupant;
+			TeamType targetTeam = (targetUnit != null) ? GameData.GetTeamType(startSquare.Occupant.Team, targetUnit.Team) : TeamType.Air; // Air: 빈 칸을 의미
+
+			// 2. Behavior의 규칙에 따라 이 칸이 유효한 타겟인지 확인
+			if (B.Accessible.Contains(targetTeam))
+			{
+				possibleActions.Add(new UnitAction(x, y, ActionType.Accessible));
+			}
+			else
+			{
+				possibleActions.Add(new UnitAction(x, y, ActionType.Unaccessible));
+			}
+
+			// 3. 벡터 탐색 계속 여부 결정
+			if (targetTeam != TeamType.Air) // 칸에 유닛이 있다면
+			{
+				return B.Scope.Penetration > 0; // 관통력이 남아있으면 계속, 없으면 중지
+			}
+
+			return true; // 빈 칸이면 계속 탐색
+		}
+
+
+		// --- 메인 로직 ---
+		foreach (Pattern p in B.Scope.Patterns)
+		{
+			if (p.Type == PatternType.Coordinate)
+			{
+				ProcessSquare(startX + p.X, startY + p.Y);
+			}
+			else if (p.Type == PatternType.Vector)
+			{
+				int currentX = startX;
+				int currentY = startY;
+				int penetration = B.Scope.Penetration;
+
+				while (true)
+				{
+					currentX += p.X;
+					currentY += p.Y;
+
+					if (!ProcessSquare(currentX, currentY)) // 지역 함수 호출, false 반환 시 루프 중단
+					{
+						break;
+					}
+
+					// ProcessSquare 내부에서 유닛 존재 여부를 판단했으므로,
+					// 여기서 관통력 감소 로직을 처리해야 함
+					if (map[currentY, currentX].Occupant != null)
+					{
+						penetration--;
+						if (penetration < 0) break;
+					}
+				}
+			}
+            else if (p.Type == PatternType.Pvector)
+            {
+                int currentX = startX;
+				int currentY = startY;
+				int penetration = B.Scope.Penetration + 1;
+                bool penetrated = false;
+
+				while (true)
+				{
+					currentX += p.X;
+					currentY += p.Y;
+                    if(!penetrated)
+                    {
+                        //아무것도 뛰어넘지 않았을 경우. 뛰어넘을 대상을 탐색.
+                        if (currentX < 0 || currentX >= sizeX || currentY < 0 || currentY >= sizeY)
+			            {
+				            break; // 맵 범위를 벗어나면 탐색 끝.
+			            }
+                    }
+					else if (!ProcessSquare(currentX, currentY)) // 뛰어넘었다면, 대상을 탐색해준다.
+					{
+						break;
+					}
+
+					// ProcessSquare 내부에서 유닛 존재 여부를 판단했으므로,
+					// 여기서 관통력 감소 로직을 처리해야 함
+                    if (map[currentY, currentX].Occupant != null)
+                    {
+                        penetration--;
+                        penetrated = true;
+                        if (penetration < 0) break;
+                    }
+
+                }
+		    }
+        }
+		return possibleActions;
+    }
+	public abstract string Excute(Square origin, Square target);
+}
+
+public class BasicAttackBehavior : Behavior
+{
+    public Weapon Method;
+    public BasicAttackBehavior(Weapon weapon) // 공격 behavior 생성자
+    {
+        this.Name = GameData.Text.Get(GameData.Text.Key.Command_Attack);
+        this.Scope = GameData.AttackPatterns[weapon.Type];
+        this.ApCost = GameData.AttackApCosts[weapon.Type];
+        this.Accessible = new List<TeamType> { TeamType.Enemy, TeamType.Neutral };
+        // 특수한 공격 판정을 가진 무기는 tag를 따로 부여한다.
+        this.Tags = new List<BehaviorTag>();
+        if(GameData.SpecialAttacks.ContainsKey(weapon.Type)){
+            this.Tags.Add(GameData.SpecialAttacks[weapon.Type]);
+        }
+    }
+    static BasicAttackBehavior counterAttack(Square origin, Square target, int attackCost) // 예상되는 반격을 return하는 함수
+    {
+        Unit attacker = origin.Occupant;
+        Unit defender = target.Occupant;
+        int dx = origin.X - target.X, dy = origin.Y - target.Y;
+        foreach(Behavior B in defender.Behaviors){
+            if(B is not BasicAttackBehavior)continue;
+            if(B.ApCost > attackCost) continue;
+            foreach(Pattern p in B.Scope.Patterns){
+                if(p.Type == PatternType.Coordinate)
+                    // 좌표 처리
+                    if(p.X == dx && p.Y == dy) return B as BasicAttackBehavior; // 해당 좌표가 공격 범위 내에 있으므로 반격 가능
+                else{ 
+                    // 벡터 처리
+                    if (dx * p.Y == dy * p.X) // 벡터 방향 검사
+                    {
+                        if (Math.Sign(dx) == Math.Sign(p.X) && Math.Sign(dy) == Math.Sign(p.Y)) // 부호까지 검사
+                        {
+                            return B as BasicAttackBehavior; // 같은 방향, 같은 부호 => 반격 가능
+                        }
+                        }
+                }
+            }	
+        }
+        return null;
+    }
+    
+    static int hit(Unit attacker, Unit defender, BasicAttackBehavior B) // attaker가 deffender를 때리는 판정을 하는 함수.
+    {
+        int damage = attacker.Equipment.Power;
+        (AttackType atkType, DamageType dmgType) = GameData.AttackDamageTypes[attacker.WeaponClass];
+        // 원래라면 B에 있는 여러 태그들을 체크한다. 지금은 없으므로 주석만 달아놓자.
+        if(atkType == AttackType.Physical) damage += attacker.LiveStat.Buffed().Attack;
+        else damage += attacker.LiveStat.Buffed().MagicAttack;
+        return defender.TakeDamage(damage, dmgType); // 가한 피해 return. 
+    }
+    
+    static (Unit, int, Unit, int, List<BattleTag>) fight(Unit first, Unit last, BasicAttackBehavior B_f, BasicAttackBehavior B_l)
+    {
+        List<BattleTag> tags = new List<BattleTag>(); // B의 여러 태그들을 확인하고 보고해야할 특이사항들을 tags에 담아서 return.
+        int damage_first = hit(first, last, B_f);
+        if(last.LiveStat.CurrentHp == 0) {
+            tags.Add(BattleTag.killedCounter); // 쓰러뜨렸음을 보고한다.
+            return (first, damage_first, last, 0, tags); // 패배한 자는 반격할 수 없다.
+        }
+        int damage_last = hit(last, first, B_l);
+        return (first, damage_first, last, damage_last, tags); // 전투 결과를 먼저 공격한 유닛, 피해, 나중에 공격한 유닛, 피해 순으로 전달.
+    }
+    
+    string explainResult((Unit u1, int d1, Unit u2, int d2, List<BattleTag> tags) battleResult)
+    {
+        string explainedResult = "";
+        Unit firstAttacker = battleResult.u1;
+        int damageToSecond = battleResult.d1;
+        Unit secondAttacker = battleResult.u2;
+        int damageToFirst = battleResult.d2;
+        List<BattleTag> tags = battleResult.tags;
+        
+        // 선공자의 공격 메시지 추가.
+        explainedResult = ">> " + string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_FirstAttack), firstAttacker.Name, secondAttacker.Name, -damageToSecond);
+        if (tags.Contains(BattleTag.killedCounter)) // 후공자가 죽었는지?
+        {
+            explainedResult = explainedResult + "\n>> " + string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_DefenderDied), secondAttacker.Name);
+            // = Console.WriteLine($">> {secondAttacker.Name}이(가) 쓰러져 반격할 수 없습니다!");
+        }
+        else if (tags.Contains(BattleTag.noCounter))
+        {
+            explainedResult = explainedResult + "\n>> " + string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_DefenderCantCounter), secondAttacker.Name);
+            // = Console.WriteLine($">> {secondAttacker.Name}이(가) 반격할 수 없었습니다!");
+        }
+        else // 일반적인 반격 상황
+        {
+            explainedResult = explainedResult + "\n>> " + string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_DefenderCantCounter), secondAttacker.Name, -damageToFirst);
+            // = Console.WriteLine($">> {secondAttacker.Name}이(가) 반격! {firstAttacker.Name}에게 [{damageToFirst}]의 피해!");
+        }
+
+        // 전투 후 최종 HP 상태
+        explainedResult = explainedResult + "\n--- " + GameData.Text.Get(GameData.Text.Key.UI_Battle_FinalStateIndicator) + "---";
+        // = Console.WriteLine("\n--- 최종 상태 ---");
+        explainedResult = explainedResult + "\n" + string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_AttackerFinalState), firstAttacker.Name, firstAttacker.LiveStat.CurrentHp, firstAttacker.LiveStat.Buffed().MaxHp);
+        // = Console.WriteLine($"{firstAttacker.Name}: HP {firstAttacker.LiveStat.CurrentHp} / {firstAttacker.LiveStat.Buffed().MaxHp}");
+        explainedResult = explainedResult + "\n" + string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_AttackerFinalState), secondAttacker.Name, secondAttacker.LiveStat.CurrentHp, secondAttacker.LiveStat.Buffed().MaxHp);
+        // = Console.WriteLine($"{secondAttacker.Name}: HP {secondAttacker.LiveStat.CurrentHp} / {secondAttacker.LiveStat.Buffed().MaxHp}");
+        return explainedResult;
+    }
+    public override string Excute(Square origin, Square target)
+    {
+        Unit attacker = origin.Occupant;
+        Unit defender = target.Occupant;
+        BasicAttackBehavior counter = counterAttack(origin, target, this.ApCost);
+        
+        if(counter == null){
+            int damage = hit(attacker, defender, this);
+            List<BattleTag> tags = new List<BattleTag>();
+            tags.Add(BattleTag.noCounter);
+            return explainResult((attacker, damage, defender, 0, tags));
+        }
+        (Unit, int, Unit, int, List<BattleTag>) result;
+        // 누가 먼저 때릴지, Agility를 비교. 같으면 공격자 우선.
+        if(attacker.LiveStat.Buffed().Agility >= defender.LiveStat.Buffed().Agility){
+            result = fight(attacker, defender, this, counter);
+        }
+        else {
+            result = fight(defender, attacker, counter, this);
+        }
+        if(attacker.LiveStat.CurrentHp == 0){
+            origin.ClearUnit();
+        }
+        if(defender.LiveStat.CurrentHp == 0){
+            origin.ClearUnit();
+        }
+        
+        return explainResult(result);
+    }
+}
+
+public class BasicMoveBehavior : Behavior
+{
+		public BasicMoveBehavior(MoveType moveType) // 이동 behavior 생성자
+		{
+			this.Name = GameData.Text.Get(GameData.Text.Key.Command_Move);
+			this.Scope = GameData.MovePatterns[moveType];
+			this.ApCost = GameData.MoveApCosts[moveType];
+			this.Accessible = new List<TeamType> { TeamType.Air };
+			// "폰"처럼 이동에 특별한 처리가 필요한 경우 tag를 따로 부여해 준다.
+			this.Tags = new List<BehaviorTag>();
+			if(GameData.SpecialMoves.ContainsKey(moveType)){
+				this.Tags.Add(GameData.SpecialMoves[moveType]);
+			}
+
+		}
+		public override string Excute(Square origin, Square target)
+		{
+            //폰에 대한 예외처리. 폰의 이동방식을 전진한 폰의 이동방식으로 바꿔준다.
+            if(this.Tags.Contains(BehaviorTag.PawnFirstDown)){
+                this.Scope = GameData.MovePatterns[MoveType.Pawn_Down_Advanced];
+                this.Tags.Remove(BehaviorTag.PawnFirstDown);
+            }
+            if(this.Tags.Contains(BehaviorTag.PawnFirstUp)){
+                this.Scope = GameData.MovePatterns[MoveType.Pawn_Up_Advanced];
+                this.Tags.Remove(BehaviorTag.PawnFirstUp);
+            }
+            // 여기가 메인 로직. 말 그대로 이동을 처리함.
+            target.PlaceUnit(origin.Occupant);
+            origin.ClearUnit();
+            return "";
+		}
+}
+
+public class UnitAction
+{
+	public int X { get; set; }
+	public int Y { get; set; }
+	public ActionType Type { get; set; }
+	public UnitAction(int x, int y, ActionType type)
+	{
+		X = x;
+		Y = y;
+		Type = type;
+	}
+}
+
+public class Status
+{
+    public int MaxHp { get; set; }
+    public int Defense { get; set; }
+    public int MagicDefense { get; set; }
+    public int Attack { get; set; }
+    public int MagicAttack { get; set; }
+    public int Agility { get; set; }
+
+    public Status(int maxHp=10, int defense=5, int magicDefense=5, int attack=5, int magicAttack=5, int agility=5)
+    {
+    this.MaxHp = maxHp;
+    this.Defense = defense;
+    this.MagicDefense = magicDefense;
+    this.Attack = attack;
+    this.MagicAttack = magicAttack;
+    this.Agility = agility;
+    }
+	
+	public Status(Status status)
+	{
+		this.MaxHp = status.MaxHp;
+        this.Defense = status.Defense;
+        this.MagicDefense = status.MagicDefense;
+        this.Attack = status.Attack;
+        this.MagicAttack = status.MagicAttack;
+        this.Agility = status.Agility;
+	}
+}
+
+public class LiveStatus
+{
+	public Status Stat { get; set; }
+    public int CurrentHp { get; set; }
+    public List<BuffSet> Buffs { get; set; }
+	public PatternSet MovePattern;
+	public PatternSet AttackPattern;
+
+    // 생성자: '기본 스탯(Status)'을 바탕으로 '현재 상태'를 생성.
+    public LiveStatus(Status baseStat, MoveType moveClass, WeaponType weapon)
+     {
+		this.Stat = baseStat;
+        // 현재 체력은 최대 체력과 같게 초기화.
+        this.CurrentHp = baseStat.MaxHp;
+        // 빈 버프 리스트 생성.
+        this.Buffs = new List<BuffSet>();
+		// 이동과 공격의 PatternSet 초기화
+		MovePattern = GameData.MovePatterns[moveClass];
+		AttackPattern = GameData.AttackPatterns[weapon];
+    }
+	
+	public Status Buffed()
+	{
+		Status buffed_status = new Status(this.Stat);
+		foreach(BuffSet bSet in Buffs)
+		{
+			foreach(Buff iter in bSet.Effects)
+			{
+				switch(iter.Type){
+				case BuffType.MaxHpBoost: buffed_status.MaxHp += (int)iter.Magnitude; break;
+				case BuffType.DefenseBoost: buffed_status.Defense += (int)iter.Magnitude; break;
+				case BuffType.MagicDefenseBoost: buffed_status.MagicDefense += (int)iter.Magnitude; break;
+				case BuffType.AttackBoost: buffed_status.Attack += (int)iter.Magnitude; break;
+				case BuffType.MagicAttackBoost: buffed_status.MagicAttack += (int)iter.Magnitude; break;
+				case BuffType.AgilityBoost: buffed_status.Agility += (int)iter.Magnitude; break;
+			}
+		}
+
+		}
+		return buffed_status;
+	}
+	
+	public int ChangeHp(int amount)
+    {
+        // Buffed()를 호출해서 버프가 적용된 현재의 MaxHp를 가져옵니다.
+        int currentMaxHp = this.Buffed().MaxHp;
+        int newHp = this.CurrentHp + amount;
+		int dealt = amount;
+
+        if (newHp < 0){
+			dealt = -this.CurrentHp;
+			this.CurrentHp = 0;
+		}
+        else if (newHp > currentMaxHp) {
+			dealt = currentMaxHp - this.CurrentHp;
+			this.CurrentHp = currentMaxHp; // 버프 적용된 MaxHp 기준으로 제한
+		}
+        else this.CurrentHp = newHp;
+		return dealt;
+    }
+}
+
+public class Buff
+{
+	//가장 기본적인 속성
+	public BuffType Type { get; set; } // 버프의 타입.
+	public float Magnitude { get; set; } // 버프용 수치. 버프 자체는 데이터 덩어리이고, 각 말단 함수들에서 버프의 타입과 magnitude를 참조하여 버프가 반영된 수치를 계산.
+	
+	public Buff(){}
+	
+	public Buff(BuffType type)
+	{
+		this.Type = type;
+		this.Magnitude = 0;
+	}
+	
+	public Buff(Buff buff)
+	{
+		this.Type = buff.Type;
+		this.Magnitude = buff.Magnitude;
+	}
+	
+	public Buff(BuffType type, float magnitude)
+	{
+		this.Type = type;
+		this.Magnitude = magnitude;
+	}
+	
+	public static float netBuffMagnitude(BuffType type, List<BuffSet> buffList)
+	{
+		// 특정 종류 버프의 magnitude를 모두 합해서 return하는 함수.
+		float res = 0;
+		foreach(BuffSet bSet in buffList){
+			foreach(Buff iter in bSet.Effects){
+				if(iter.Type == type) res += iter.Magnitude;
+			}
+		}
+		return res;
+	}
+}
+
+public class Aura : Buff
+{
+	// 오라형 버프
+	public PatternSet AuraScope { get; set; } // 오라의 범위 (PatternSet 사용)
+    public BuffSetCode AuraEffect { get; set; } // 오라 범위 내의 대상에게 부여할 '새로운 Buff'
+    public List<TeamType> AuraTargets { get; set; } // 오라의 대상 (아군, 적군 등)
+	// 동적 범위 지정 관련 속성들
+ 	public bool UseMovePattern { get; set; } = false; // 유닛의 현재 이동 범위를 사용할지 여부
+    public bool UseAttackPattern { get; set; } = false; // 유닛의 현재 공격 범위를 사용할지 여부
+
+	
+	public Aura()
+	{
+		
+	}
+	
+	public Aura(Aura p) : base(p)
+	{
+		this.AuraScope = p.AuraScope;
+		this.AuraEffect = p.AuraEffect;
+		this.AuraTargets = p.AuraTargets;
+		this.UseMovePattern = p.UseMovePattern;
+		this.UseAttackPattern = p.UseAttackPattern;
+	}
+}
+
+public class BuffSet // 진정한 객체로서의 버프. 여러 Buff들의 묶음임.
+{	
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public int Duration { get; set; } // 이 '효과 묶음'의 지속시간
+	//부차적인 속성
+	public Unit Source { get; set; }  // 버프를 준 Source Unit. 유닛에게서 받은 버프가 아니라면 null
+	// 아래 두 항목은 둘 다 참일수는 없지만 둘 다 거짓일 수는 있다. 스킬이나 특성으로 얻은 Buff 등.
+	public bool isBuff { get; set; } // 게임 상에서 "버프"로 분류되는지? 참이면 버프 해제 스킬 등에 영향을 받음.
+	public bool isDebuff { get; set; } // 마찬가지로 게임 상에서 "디버프"로 분류되는지? 만약 참이라면, 정화 스킬 등에 해제됨.
+	// 통상 버프/디버프이더라도 해제 불가 기능이 있을 수 있으므로,
+	public bool Removable { get; set; } // 해제 가능한지. 
+	public bool Visible { get; set; } // 눈에 보이는 버프인지. 스킬이나 특성 등은 보이지 않음!
+
+    
+    // 이 BuffSet이 가진 실제 효과들의 목록
+    public List<Buff> Effects { get; set; }
+	
+	public BuffSet()
+	{ 
+	
+	}
+
+    public BuffSet(BuffSet p)
+	{
+		this.Source = null;
+		this.isBuff = p.isBuff;
+		this.isDebuff = p.isDebuff;
+		this.Removable = p.Removable;
+	}
+}
+
+public class Item
+{
+	public string Name { get; set; }
+	public string Description { get; set; }
+	public List<ItemTag> iTags { get; set; }
+	public Item()
+	{
+		this.iTags = new List<ItemTag>();
+	}
+	public Item(Item p)
+	{
+		
+	}
+}
+
+public class Weapon : Item
+{
+	public int Power { get; set; }
+	public WeaponType Type { get; set; }
+	public List<WeaponTag> wTags { get; set; }
+	public Weapon()
+	{
+		this.Power = 10;
+		this.Type = WeaponType.Spear;
+		this.wTags = new List<WeaponTag>();
+	}
+	public Weapon(Weapon parent)
+	{
+		this.Name = parent.Name;
+		this.iTags = new List<ItemTag>(parent.iTags);
+		this.Power = parent.Power;
+		this.Type = parent.Type;
+		this.wTags = new List<WeaponTag>(parent.wTags);
+	}
+}
+
+public class Trait
+{
+	
+}
+
+public class Skill
+{
+	public string Name { get; set; }
+    public bool IsPassive { get; set; }
+    // 스킬을 가지고 있는 것 만으로 받는 버프. (액티브이면서 패시브 스킬이 동시에 딸린 경우까지 고려.)
+    public List<BuffSet> SkillBuffs { get; set; } 
+	
+	public Skill()
+	{
+		
+	}
+	// 스킬은 수정 가능한 객체가 아니므로, 인스턴스화 생성자는 만들지 않았음.
+	// 업그레이드 스킬 같은 경우, 스킬이 강화되는게 아니라 아예 다른 스킬을 얻는 매커니즘.
+}
+
+public class Actor
+{
+	public Status Stat;
+	public MoveType MoveClass { get; set; }
+    public WeaponType WeaponClass { get; set; }
+	public string Name { get; set; }
+	public Skill UniqueSkill {get; set;}
+	public Weapon Equipment {get; set;}
+	public List<Item> Inventory {get; set;}
+	public List<Trait> Traits {get; set;}
+	
+	public Actor() {} // 기본 생성자는 사용하지 않지만, { } 생성을 위해 만들어둠.
+	public Actor(Actor p)
+	{
+		this.Stat = p.Stat;
+		this.MoveClass = p.MoveClass;
+		this.WeaponClass = p.WeaponClass;
+		this.Name = p.Name;
+		this.UniqueSkill = p.UniqueSkill;
+		if(p.Equipment != null)this.Equipment = new Weapon(p.Equipment);
+		this.Inventory = new List<Item>();
+		foreach(Item i in p.Inventory) this.Inventory.Add(new Item(i)); // 아이템 강화 등을 고려해서, 각각을 새로운 객체로 복사.
+		this.Traits = new List<Trait>(p.Traits); // 특성은 어떤 특성이 있는지만 알면 되므로 각각을 복사할 필요 x.
+	}
+}
+
+
+public class Unit : Actor
+{
+	
+	// Actor와 공유하지 않는 속성
+	public LiveStatus LiveStat { get; set; }
+	public Actor ActorData {get; set;}
+	public Teams Team { get; set; }
+	public List<Behavior> Behaviors { get; set; }
+	
+	// 가장 major한 Unit의 생성자. 주로 플레이어 캐릭터나 적 정예 캐릭터가 판 위에 올라올 때 사용.
+	public Unit(Actor actorData, Teams team) : base(actorData)
+	{
+		ActorData = actorData;
+		this.LiveStat = new LiveStatus(actorData.Stat, actorData.MoveClass, actorData.WeaponClass);
+		this.Team = team;
+		
+		// 기본 Behaviors 추가.
+		this.Behaviors = new List<Behavior>();
+		this.Behaviors.Add(new BasicMoveBehavior(actorData.MoveClass));
+		if(this.Equipment != null)this.Behaviors.Add(new BasicAttackBehavior(this.Equipment));
+	}
+	
+	// 해당 웨이브에만 등장하는 임시 유닛 생성용 생성자.
+	public Unit(MoveType moveType, Weapon weapon, Status status, Teams team, string name)
+    {
+		this.Name = name;
+        this.MoveClass = moveType;
+        this.WeaponClass = weapon.Type;
+		this.Equipment = new Weapon(weapon);
+		this.LiveStat = new LiveStatus(status, moveType, weapon.Type);
+		this.Behaviors = new List<Behavior>();
+		if(moveType != MoveType.Stationary)this.Behaviors.Add(new BasicMoveBehavior(moveType));
+		if(weapon != null)this.Behaviors.Add(new BasicAttackBehavior(this.Equipment));
+		this.Team = team;
+    }
+	
+	public void Update()
+	{
+		
+	}
+
+	public void TurnStart()
+	{
+		
+	}
+
+	public void TurnOver()
+	{
+		
+	}
+	
+	// 피해를 받는 함수.
+	public int TakeDamage(int damage, DamageType damage_type)
+	{	
+		LiveStatus livestat = this.LiveStat;
+		int finalDamage = damage;
+		float residence = 1;
+		switch(damage_type)
+		{
+			case DamageType.Physical:
+				finalDamage -= livestat.Buffed().Defense;
+				residence = 1 - Buff.netBuffMagnitude(BuffType.PhysicalResidence, livestat.Buffs)/100;
+				break;
+			case DamageType.Magical:
+				finalDamage -= livestat.Buffed().MagicDefense;
+				residence = 1 - Buff.netBuffMagnitude(BuffType.MagicalResidence, livestat.Buffs)/100;
+				break;
+			
+		}
+		if (finalDamage < 0) finalDamage = 0;
+		finalDamage = (int)(finalDamage * residence);
+		return livestat.ChangeHp(-finalDamage);
+	}
+
+    public override string ToString()
+    {
+    // 이동 타입의 첫 글자를 반환.
+		string initial = this.MoveClass.ToString().Substring(0, 1);
+		if (this.MoveClass == MoveType.Knight) initial = "N";
+		if (this.Team != Teams.Players) initial = initial.ToLower();
+    return initial;
+    }
+}
+
+public class Wave
+{
+	public Square[,] Map;
+	public List<Unit> Enemies;
+	public Wave()
+	{
+		Map = new Square[8,8];
+		Enemies = new List<Unit>();
+		for(int i = 0; i < 8; i++){
+			for(int j=0; j<8; j++){
+				Square s = new Square(j,i);
+				if(i == 1){
+					// 테스트용 적 폰 배치. 7랭크에 위치할 예정임.
+					Status pawnStatus = new Status(20, 10, 5, 8, 0, 5); // 보병 스탯
+                    Unit myPawn = new Unit(MoveType.Pawn_Down, GameData.AllWeapons[WeaponCode.IronShield], pawnStatus, Teams.Enemies, "방패병");
+					s.PlaceUnit(myPawn);
+					Enemies.Add(myPawn);
+				}
+				if(i == 6){
+					// 테스트용 아군 폰 배치. 2랭크에 위치할 예정임.
+					Status pawnStatus = new Status(20, 10, 5, 8, 0, 5); // 보병 스탯
+                    Unit myPawn = new Unit(MoveType.Pawn_Up, GameData.AllWeapons[WeaponCode.PhantomShield], pawnStatus, Teams.Players, "환영 병사");
+					s.PlaceUnit(myPawn);
+					
+				}
+				if(i == 5 && j == 5){
+					Actor hagen = new Actor(GameData.AllActors[ActorCode.Hagen]);
+                    Unit myPiece = new Unit(hagen, Teams.Players);
+					s.PlaceUnit(myPiece);
+				}
+				Map[i,j] = s;
+			}
+		}
+		
+	}
+}
+
+public class Program
+{
+    // A helper function to parse coordinates like "A1", "F5", etc.
+    private static (int, int) ParseCoordinate(string input, int mapSizeY)
+    {
+        if (string.IsNullOrEmpty(input) || input.Length < 2)
+            return (-1, -1);
+
+        input = input.ToLower();
+        int x = input[0] - 'a';
+        
+        if (!int.TryParse(input.Substring(1), out int yNum))
+            return (-1, -1);
+            
+        int y = mapSizeY - yNum;
+
+        if (x < 0 || x >= mapSizeY || y < 0 || y >= mapSizeY)
+            return (-1, -1);
+
+        return (x, y);
+    }
+
+    public static void Main(string[] args)
+    {
+        // 1. Game Initialization
+        Wave currentWave = new Wave();
+        var map = currentWave.Map;
+        int mapSize = map.GetLength(0);
+        string[,] closerMatrix = new string[mapSize, mapSize];
+        ResetCloserMatrix(closerMatrix);
+
+        Square selectedSquare = null;
+        Behavior selectedBehavior = null;
+        List<UnitAction> possibleActions = null;
+
+        // 2. Main Game Loop
+        while (true)
+        {
+            // Display the current game state
+            DisplayMap(map, closerMatrix);
+
+            if (selectedSquare != null && selectedSquare.Occupant != null)
+            {
+                DisplaySquareInfo(selectedSquare, mapSize);
+            }
+
+            // --- State Machine for Player Actions ---
+
+            // STATE 1: No unit or action is selected. Waiting for the player to choose a unit.
+            if (selectedSquare == null)
+            {
+                Console.WriteLine(GameData.Text.Get(GameData.Text.Key.UI_SelectSquare) + " (e.g., 'F3')");
+                string input = Console.ReadLine();
+                var (x, y) = ParseCoordinate(input, mapSize);
+
+                if (x == -1)
+                {
+                    Console.WriteLine(GameData.Text.Get(GameData.Text.Key.UI_InvalidCoordinate));
+                    Console.ReadLine();
+                    continue;
+                }
+
+                Square targetSquare = map[y, x];
+                if (targetSquare.Occupant != null && targetSquare.Occupant.Team == Teams.Players)
+                {
+                    selectedSquare = targetSquare; // Unit selected! Move to next state.
+                }
+                else
+                {
+                    DisplaySquareInfo(targetSquare, mapSize); // Just show info for non-player squares
+                    Console.ReadLine();
+                }
+            }
+            // STATE 2: A unit is selected. Waiting for the player to choose a behavior (Move/Attack).
+            else if (selectedBehavior == null)
+            {
+                Console.WriteLine(GameData.Text.Get(GameData.Text.Key.UI_ChooseAction));
+                var unitBehaviors = selectedSquare.Occupant.Behaviors;
+                for (int i = 0; i < unitBehaviors.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {unitBehaviors[i].Name} (AP: {unitBehaviors[i].ApCost})");
+                }
+                Console.WriteLine("0. Cancel Selection");
+
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int choice) && choice > 0 && choice <= unitBehaviors.Count)
+                {
+                    selectedBehavior = unitBehaviors[choice - 1];
+                    possibleActions = selectedBehavior.ActionSearcher(selectedSquare, map, selectedBehavior);
+                    HighlightForConsole(possibleActions, closerMatrix); // Highlight the map and move to next state.
+                }
+                else
+                {
+                    selectedSquare = null; // Cancel and return to State 1
+                }
+            }
+            // STATE 3: A behavior is selected. Waiting for the player to choose a target square.
+            else
+            {
+                Console.WriteLine($"Target for {selectedBehavior.Name}? (Enter coordinate, or '0' to cancel)");
+                string input = Console.ReadLine();
+
+                if (input == "0")
+                {
+                    selectedBehavior = null;
+                    possibleActions = null;
+                    ResetCloserMatrix(closerMatrix); // Cancel and return to State 2
+                    continue;
+                }
+
+                var (x, y) = ParseCoordinate(input, mapSize);
+                if (x == -1)
+                {
+                    Console.WriteLine(GameData.Text.Get(GameData.Text.Key.UI_InvalidCoordinate));
+                    Console.ReadLine();
+                    continue;
+                }
+
+                // Check if the chosen target is a valid, accessible action
+                UnitAction chosenAction = possibleActions.Find(action => action.X == x && action.Y == y);
+                if (chosenAction != null && chosenAction.Type == ActionType.Accessible)
+                {
+                    // Execute the action!
+                    Square targetSquare = map[y, x];
+                    string resultMessage = selectedBehavior.Excute(selectedSquare, targetSquare);
+                    
+                    if (!string.IsNullOrEmpty(resultMessage))
+                    {
+                        Console.Clear();
+                        Console.WriteLine(resultMessage);
+                        Console.WriteLine(GameData.Text.Get(GameData.Text.Key.UI_PressEnterToContinue));
+                        Console.ReadLine();
+                    }
+                    
+                    // Reset everything for the next turn/action
+                    selectedSquare = null;
+                    selectedBehavior = null;
+                    possibleActions = null;
+                    ResetCloserMatrix(closerMatrix);
+                }
+                else
+                {
+                    Console.WriteLine("You can't perform that action on that square. Try again.");
+                    Console.ReadLine();
+                }
+            }
+        }
+    }
+	public static void HighlightForConsole(List<UnitAction> actions, string[,] cmatrix)
+	{
+		foreach (var action in actions)
+		{
+			int x = action.X;
+			int y = action.Y;
+
+			if (action.Type == ActionType.Unaccessible)
+			{
+				cmatrix[y, x] = "*";
+			}
+			else if (action.Type == ActionType.Accessible)
+			{
+				cmatrix[y, x] = "$";
+			}
+		}
+	}
+    
+  // (DisplaySquareInfo 와 DisplayMap 함수는 이전과 동일합니다)
+  public static void DisplaySquareInfo(Square square, int map_ysize)
+  {
+    char coordX = (char)('A' + square.X);
+    int coordY = map_ysize - square.Y;
+   
+    Console.WriteLine($"\n--- 선택된 칸 정보 ({coordX}{coordY}) ---");
+    Console.WriteLine($"지형: {square.Terrain}");
+    if (square.Occupant == null)
+    {
+        Console.WriteLine("유닛 없음");
+    }
+    else
+    {
+        Unit unit = square.Occupant;
+        Status finalStat = unit.LiveStat.Buffed();
+        Console.WriteLine("\n[유닛 정보]");
+	    Console.WriteLine($"이름: {unit.Name}");
+        Console.WriteLine($"소속: {unit.Team}");
+        Console.WriteLine($"클래스: {unit.MoveClass}");
+		Console.WriteLine($"무기: {unit.WeaponClass}");
+        Console.WriteLine($"HP: {unit.LiveStat.CurrentHp} / {finalStat.MaxHp}");
+        Console.WriteLine($"공격력: {finalStat.Attack} | 마법공격력: {finalStat.MagicAttack}");
+        Console.WriteLine($"방어력: {finalStat.Defense} | 마법방어력: {finalStat.MagicDefense}");
+        Console.WriteLine($"민첩: {finalStat.Agility}");
+    }
+        Console.WriteLine("--------------------------");
+  }
+
+  public static void DisplayMap(Square[,] map, string[,] cmatrix)
+  {
+		int xsize, ysize;
+		ysize = map.GetLength(0);
+		xsize = map.GetLength(1);
+        Console.Clear();
+        Console.WriteLine("\n  A  B  C  D  E  F  G  H");
+        for (int i = 0; i < ysize; i++)
+        {
+            Console.Write(ysize - i);
+            for (int j = 0; j < xsize; j++)
+            {
+                Console.Write(map[i, j].ToString() + cmatrix[i,j]);
+            }
+            Console.WriteLine();
+        }
+  }
+	
+	public static void ResetCloserMatrix(string[,] cmatrix)
+    {
+        for (int i = 0; i < cmatrix.GetLength(0); i++)
+        {
+             for (int j = 0; j < cmatrix.GetLength(1); j++)
+                {
+                    cmatrix[i, j] = "]";
+                }
+        }
+    }
+}
+
+

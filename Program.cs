@@ -1,5 +1,10 @@
 using System;
 using System.Collections.Generic;
+using GfEngine.Core;
+using GfEngine.Stages;
+using GfEngine.Behaviors;
+using GfEngine.Models.Statuses;
+using GfEngine.Models.Actors;
 public class Program
 {
     // A helper function to parse coordinates like "A1", "F5", etc.
@@ -128,7 +133,7 @@ public class Program
                     
                     if (!string.IsNullOrEmpty(resultMessage))
                     {
-                        Console.Clear();
+                        Console.Write("\x1b[3J\x1b[H\x1b[2J");
                         Console.WriteLine(resultMessage);
                         Console.WriteLine(GameData.Text.Get(GameData.Text.Key.UI_PressEnterToContinue));
                         Console.ReadLine();
@@ -200,7 +205,7 @@ public class Program
 		int xsize, ysize;
 		ysize = map.GetLength(0);
 		xsize = map.GetLength(1);
-        Console.Clear();
+        Console.Write("\x1b[3J\x1b[H\x1b[2J");
         Console.WriteLine("\n  A  B  C  D  E  F  G  H");
         for (int i = 0; i < ysize; i++)
         {

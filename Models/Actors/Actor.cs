@@ -1,6 +1,10 @@
-namespace GfEngine.Models.Actor
+using GfEngine.Models.Items;
+using GfEngine.Models.Statuses;
+using System.Collections.Generic;
+
+namespace GfEngine.Models.Actors
 {
-    public class Actor
+	public class Actor
 	{
 		public Status Stat;
 		public MoveType MoveClass { get; set; }

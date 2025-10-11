@@ -1,4 +1,10 @@
-namespace GfEngine.Models.Stages
+using GfEngine.Behaviors;
+using GfEngine.Models.Actors;
+using GfEngine.Models.Items;
+using GfEngine.Models.Statuses;
+using GfEngine.Models.Buffs;
+using System.Collections.Generic;
+namespace GfEngine.Stages
 {
 	public class Unit : Actor
 	{

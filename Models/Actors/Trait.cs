@@ -1,4 +1,4 @@
-namespace GfEngine.Models.Actor
+namespace GfEngine.Models.Actors
 {
     public class Trait
     {

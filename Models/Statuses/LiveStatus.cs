@@ -1,3 +1,6 @@
+using GfEngine.Core;
+using GfEngine.Models.Buffs;
+using System.Collections.Generic;
 namespace GfEngine.Models.Statuses
 {
 	public class LiveStatus

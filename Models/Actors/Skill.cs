@@ -1,4 +1,6 @@
-namespace GfEngine.Models.Actor
+using GfEngine.Models.Buffs;
+using System.Collections.Generic;
+namespace GfEngine.Models.Actors
 {
 	public class Skill
 	{

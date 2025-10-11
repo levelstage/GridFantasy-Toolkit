@@ -1,3 +1,9 @@
+using GfEngine.Core;
+using GfEngine.Models.Actors;
+using GfEngine.Models.Buffs;
+using GfEngine.Models.Items;
+using GfEngine.Models.Statuses;
+using System.Collections.Generic;
 public static class GameData
 {	
 	// 이동 ApCost 딕셔너리

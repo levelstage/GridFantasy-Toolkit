@@ -1,4 +1,4 @@
-namespace GfEngine.Models.Stages
+namespace GfEngine.Stages
 {
     public class Square
     {

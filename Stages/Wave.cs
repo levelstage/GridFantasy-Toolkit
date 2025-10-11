@@ -1,4 +1,8 @@
-namespace GfEngine.Models.Stages
+using GfEngine.Models.Actors;
+using GfEngine.Models.Items;
+using GfEngine.Models.Statuses;
+using System.Collections.Generic;
+namespace GfEngine.Stages
 {
 	public class Wave
 	{

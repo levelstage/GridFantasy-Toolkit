@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 namespace GfEngine.Models.Items
 {
 	public class Item

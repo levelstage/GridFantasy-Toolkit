@@ -1,3 +1,5 @@
+using GfEngine.Stages;
+using System.Collections.Generic;
 namespace GfEngine.Models.Buffs
 {
 	public class BuffSet // 진정한 객체로서의 버프. 여러 Buff들의 묶음임.

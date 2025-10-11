@@ -1,3 +1,7 @@
+using GfEngine.Core;
+using GfEngine.Stages;
+using System.Collections.Generic;
+
 namespace GfEngine.Behaviors
 {
 	public abstract class Behavior

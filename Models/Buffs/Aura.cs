@@ -1,3 +1,5 @@
+using GfEngine.Core;
+using System.Collections.Generic;
 namespace GfEngine.Models.Buffs
 {
 	public class Aura : Buff

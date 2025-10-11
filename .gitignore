@@ -1,0 +1,45 @@
+# ===== 기본 C# 빌드 결과물 =====
+bin/
+obj/
+
+# ===== 사용자 및 IDE 환경 =====
+.vs/
+.vscode/
+*.user
+*.suo
+
+# ===== 임시 및 로그 파일 =====
+*.tmp
+*.log
+*.pid
+*.cache
+*.db
+*.pdb
+
+# ===== OS별 불필요 파일 =====
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+# Linux
+*.swp
+
+# ===== 백업 및 기타 =====
+*.bak
+*.old
+
+# ===== Rider / Visual Studio Code =====
+.idea/
+.vscode/
+
+# ===== 기타 프로젝트별 불필요 파일 =====
+# (예: Unity, Rider, Rider-based tools)
+Library/
+Temp/
+obj/
+Logs/
+UserSettings/
+
+# ===== GitHub Codespaces / devcontainers =====
+.devcontainer/
+.vscode-server/

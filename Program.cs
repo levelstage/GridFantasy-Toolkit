@@ -4,7 +4,6 @@ using GfEngine.Core;
 using GfEngine.Stages;
 using GfEngine.Behaviors;
 using GfEngine.Models.Statuses;
-using GfEngine.Models.Actors;
 public class Program
 {
     // A helper function to parse coordinates like "A1", "F5", etc.

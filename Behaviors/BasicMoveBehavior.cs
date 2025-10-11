@@ -1,4 +1,6 @@
-public class BasicMoveBehavior : Behavior
+namespace GfEngine.Behaviors
+{
+    public class BasicMoveBehavior : Behavior
 {
 		public BasicMoveBehavior(MoveType moveType) // 이동 behavior 생성자
 		{
@@ -29,4 +31,6 @@ public class BasicMoveBehavior : Behavior
             origin.ClearUnit();
             return "";
 		}
+}
+
 }

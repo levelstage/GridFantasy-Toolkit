@@ -1,5 +1,7 @@
-public class BasicAttackBehavior : Behavior
+namespace GfEngine.Behaviors
 {
+    public class BasicAttackBehavior : Behavior
+    {
     public Weapon Method;
     public BasicAttackBehavior(Weapon weapon) // 공격 behavior 생성자
     {
@@ -9,7 +11,8 @@ public class BasicAttackBehavior : Behavior
         this.Accessible = new List<TeamType> { TeamType.Enemy, TeamType.Neutral };
         // 특수한 공격 판정을 가진 무기는 tag를 따로 부여한다.
         this.Tags = new List<BehaviorTag>();
-        if(GameData.SpecialAttacks.ContainsKey(weapon.Type)){
+        if (GameData.SpecialAttacks.ContainsKey(weapon.Type))
+        {
             this.Tags.Add(GameData.SpecialAttacks[weapon.Type]);
         }
     }
@@ -18,50 +21,54 @@ public class BasicAttackBehavior : Behavior
         Unit attacker = origin.Occupant;
         Unit defender = target.Occupant;
         int dx = origin.X - target.X, dy = origin.Y - target.Y;
-        foreach(Behavior B in defender.Behaviors){
-            if(B is not BasicAttackBehavior)continue;
-            if(B.ApCost > attackCost) continue;
-            foreach(Pattern p in B.Scope.Patterns){
-                if(p.Type == PatternType.Coordinate)
+        foreach (Behavior B in defender.Behaviors)
+        {
+            if (B is not BasicAttackBehavior) continue;
+            if (B.ApCost > attackCost) continue;
+            foreach (Pattern p in B.Scope.Patterns)
+            {
+                if (p.Type == PatternType.Coordinate)
                     // 좌표 처리
-                    if(p.X == dx && p.Y == dy) return B as BasicAttackBehavior; // 해당 좌표가 공격 범위 내에 있으므로 반격 가능
-                else{ 
-                    // 벡터 처리
-                    if (dx * p.Y == dy * p.X) // 벡터 방향 검사
+                    if (p.X == dx && p.Y == dy) return B as BasicAttackBehavior; // 해당 좌표가 공격 범위 내에 있으므로 반격 가능
+                    else
                     {
-                        if (Math.Sign(dx) == Math.Sign(p.X) && Math.Sign(dy) == Math.Sign(p.Y)) // 부호까지 검사
+                        // 벡터 처리
+                        if (dx * p.Y == dy * p.X) // 벡터 방향 검사
                         {
-                            return B as BasicAttackBehavior; // 같은 방향, 같은 부호 => 반격 가능
+                            if (Math.Sign(dx) == Math.Sign(p.X) && Math.Sign(dy) == Math.Sign(p.Y)) // 부호까지 검사
+                            {
+                                return B as BasicAttackBehavior; // 같은 방향, 같은 부호 => 반격 가능
+                            }
                         }
-                        }
-                }
-            }	
+                    }
+            }
         }
         return null;
     }
-    
+
     static int hit(Unit attacker, Unit defender, BasicAttackBehavior B) // attaker가 deffender를 때리는 판정을 하는 함수.
     {
         int damage = attacker.Equipment.Power;
         (AttackType atkType, DamageType dmgType) = GameData.AttackDamageTypes[attacker.WeaponClass];
         // 원래라면 B에 있는 여러 태그들을 체크한다. 지금은 없으므로 주석만 달아놓자.
-        if(atkType == AttackType.Physical) damage += attacker.LiveStat.Buffed().Attack;
+        if (atkType == AttackType.Physical) damage += attacker.LiveStat.Buffed().Attack;
         else damage += attacker.LiveStat.Buffed().MagicAttack;
         return defender.TakeDamage(damage, dmgType); // 가한 피해 return. 
     }
-    
+
     static (Unit, int, Unit, int, List<BattleTag>) fight(Unit first, Unit last, BasicAttackBehavior B_f, BasicAttackBehavior B_l)
     {
         List<BattleTag> tags = new List<BattleTag>(); // B의 여러 태그들을 확인하고 보고해야할 특이사항들을 tags에 담아서 return.
         int damage_first = hit(first, last, B_f);
-        if(last.LiveStat.CurrentHp == 0) {
+        if (last.LiveStat.CurrentHp == 0)
+        {
             tags.Add(BattleTag.killedCounter); // 쓰러뜨렸음을 보고한다.
             return (first, damage_first, last, 0, tags); // 패배한 자는 반격할 수 없다.
         }
         int damage_last = hit(last, first, B_l);
         return (first, damage_first, last, damage_last, tags); // 전투 결과를 먼저 공격한 유닛, 피해, 나중에 공격한 유닛, 피해 순으로 전달.
     }
-    
+
     string explainResult((Unit u1, int d1, Unit u2, int d2, List<BattleTag> tags) battleResult)
     {
         string explainedResult = "";
@@ -70,7 +77,7 @@ public class BasicAttackBehavior : Behavior
         Unit secondAttacker = battleResult.u2;
         int damageToFirst = battleResult.d2;
         List<BattleTag> tags = battleResult.tags;
-        
+
         // 선공자의 공격 메시지 추가.
         explainedResult = ">> " + string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_FirstAttack), firstAttacker.Name, secondAttacker.Name, -damageToSecond);
         if (tags.Contains(BattleTag.killedCounter)) // 후공자가 죽었는지?
@@ -103,8 +110,9 @@ public class BasicAttackBehavior : Behavior
         Unit attacker = origin.Occupant;
         Unit defender = target.Occupant;
         BasicAttackBehavior counter = counterAttack(origin, target, this.ApCost);
-        
-        if(counter == null){
+
+        if (counter == null)
+        {
             int damage = hit(attacker, defender, this);
             List<BattleTag> tags = new List<BattleTag>();
             tags.Add(BattleTag.noCounter);
@@ -112,19 +120,24 @@ public class BasicAttackBehavior : Behavior
         }
         (Unit, int, Unit, int, List<BattleTag>) result;
         // 누가 먼저 때릴지, Agility를 비교. 같으면 공격자 우선.
-        if(attacker.LiveStat.Buffed().Agility >= defender.LiveStat.Buffed().Agility){
+        if (attacker.LiveStat.Buffed().Agility >= defender.LiveStat.Buffed().Agility)
+        {
             result = fight(attacker, defender, this, counter);
         }
-        else {
+        else
+        {
             result = fight(defender, attacker, counter, this);
         }
-        if(attacker.LiveStat.CurrentHp == 0){
+        if (attacker.LiveStat.CurrentHp == 0)
+        {
             origin.ClearUnit();
         }
-        if(defender.LiveStat.CurrentHp == 0){
+        if (defender.LiveStat.CurrentHp == 0)
+        {
             origin.ClearUnit();
         }
-        
+
         return explainResult(result);
     }
+}
 }

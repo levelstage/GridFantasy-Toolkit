@@ -2,7 +2,7 @@ using GfEngine.Models.Actors;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
 
-namespace GfEngine.Stages
+namespace GfEngine.Battles
 {
     public class ActorUnit : Unit
     {

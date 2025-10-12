@@ -24,10 +24,13 @@ namespace GfEngine.Campaign
             Gold = 0;
         }
 
-       
         public void GenerateAllTraitDecks()
         {
-            
+            foreach (Actor character in GameData.AllActors.Values)
+            {
+                if (character.Code == ActorCode.Phantom) continue; // 팬텀은 특성 없음
+                TraitDeck[character.Code] = TraitManager.GenerateTraitDeck(character, GameData.TraitLevels[0]);
+            }
         }
 
         public void AddCharacterToRoster(Actor newCharacter)

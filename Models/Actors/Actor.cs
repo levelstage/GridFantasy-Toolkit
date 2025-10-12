@@ -6,6 +6,7 @@ namespace GfEngine.Models.Actors
 {
 	public class Actor
 	{
+		public ActorCode Code { get; set; }
 		public Status Stat;
 		public GrowthRates BaseGrowthRates;
 		public MoveType MoveClass { get; set; }

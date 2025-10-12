@@ -46,7 +46,7 @@ namespace GfEngine.Logics
 ;
             foreach (int level in GameData.TraitLevels)
             {
-                if(level< startLevel) continue; // 이미 지난 레벨은 건너뜀
+                if (level < startLevel) continue; // 이미 지난 레벨은 건너뜀
 
                 // 스킬 강화 레벨(10, 20)인지 확인
                 if (GameData.SkillUpgradeLevels.Contains(level))

@@ -1,4 +1,4 @@
-namespace GfEngine.Stages
+namespace GfEngine.Battles
 {
     public class Square
     {

@@ -160,7 +160,8 @@ public static class GameData
     {
 		// '전선 구축' 오라가 실제로 주변에 뿌리는 효과 버프
         [BuffSetCode.FrontlineBuff] = new BuffSet
-        {
+		{
+			Code = BuffSetCode.FrontlineBuff,
             Name = Text.Get(Text.Key.BuffSet_FrontlineBuff_Name),
 			Description  = Text.Get(Text.Key.BuffSet_FrontlineBuff_Desc),
 			Effects = new List<Buff>{
@@ -184,7 +185,8 @@ public static class GameData
 		
         // '전선 구축' 스킬이 부여하는 오라 버프(상향 폰)
         [BuffSetCode.FrontlineAura] = new BuffSet
-        {
+		{
+			Code = BuffSetCode.FrontlineAura,
             Name = Text.Get(Text.Key.Skill_Frontline_Name),
             Duration = -1, // 영구 지속 (스킬을 잃지 않는 한)
             Effects = new List<Buff>{ new Aura{
@@ -201,21 +203,25 @@ public static class GameData
 	public static readonly Dictionary<WeaponCode, Weapon> AllWeapons  = new Dictionary<WeaponCode, Weapon> 
 	{
 		[WeaponCode.PhantomShield] = new Weapon{
+			Code = WeaponCode.PhantomShield,
 			Name = Text.Get(Text.Key.Weapon_PhantomShield_Name),
 			Type = WeaponType.Shield_Up,
 			Power = 40
 		},
 		[WeaponCode.IronShield] = new Weapon{
+			Code = WeaponCode.IronShield,
 			Name = Text.Get(Text.Key.Weapon_PhantomShield_Name),
 			Type = WeaponType.Shield_Up,
 			Power = 40
 		},
 		[WeaponCode.LongSword] = new Weapon{
+			Code = WeaponCode.LongSword,
 			Name = Text.Get(Text.Key.Weapon_LongSword_Name),
 			Type = WeaponType.Sword,
 			Power = 50
 		},
 		[WeaponCode.IronSpear] = new Weapon{
+			Code = WeaponCode.IronSpear,
 			Name = Text.Get(Text.Key.Weapon_IronSpear_Name),
 			Type = WeaponType.Spear,
 			Power = 50
@@ -227,6 +233,7 @@ public static class GameData
 	{
 		[SkillCode.Frontline] = new Skill
 		{
+			Code = SkillCode.Frontline,
 			Name = Text.Get(Text.Key.Skill_Frontline_Name),
 			IsPassive = true,
 			// 이 스킬을 가지고 있으면, 'FrontlineAura' 버프를 자신에게 부여.
@@ -237,13 +244,13 @@ public static class GameData
 	public static readonly Dictionary<TraitCode, Trait> AllTraits = new Dictionary<TraitCode, Trait>
     {
         [TraitCode.IronSkin] = new Trait
-        {
-            Code = TraitCode.IronSkin,
-            Name = "철벽",
-            Description = "방어력이 10% 증가합니다.",
-            Type = TraitType.Tank
-        },
-        [TraitCode.Regeneration] = new Trait
+		{
+			Code = TraitCode.IronSkin,
+			Name = "철벽",
+			Description = "방어력이 10% 증가합니다.",
+			Type = TraitType.Tank
+		},
+		[TraitCode.Regeneration] = new Trait
         {
             Code = TraitCode.Regeneration,
             Name = "재생력",
@@ -266,6 +273,7 @@ public static class GameData
 	{
 		[ActorCode.Phantom] = new Actor // 환영 폰. 이 액터 데이터 기반으로 InstantUnit 객체 생성.
 		{
+			Code = ActorCode.Phantom,
 			Name = Text.Get(Text.Key.Actor_Phantom_Name),
 			Stat = new Status(maxHp: 150, defense: 50, magicDefense: 50, attack: 70, magicAttack: 30, agility: 70),
 			MoveClass = MoveType.Pawn_Up,
@@ -280,6 +288,7 @@ public static class GameData
 		
 		[ActorCode.Hagen] = new Actor
 		{
+			Code = ActorCode.Hagen,
 			Name = Text.Get(Text.Key.Actor_Hagen_Name),
 			Stat = new Status(maxHp: 250, defense: 60, magicDefense: 50, attack: 90, magicAttack: 40, agility: 70),
 			MoveClass = MoveType.Knight,

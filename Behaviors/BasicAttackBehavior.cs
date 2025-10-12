@@ -1,6 +1,6 @@
 using GfEngine.Core;
 using GfEngine.Models.Items;
-using GfEngine.Stages;
+using GfEngine.Battles;
 using System.Collections.Generic;
 using System;
 namespace GfEngine.Behaviors

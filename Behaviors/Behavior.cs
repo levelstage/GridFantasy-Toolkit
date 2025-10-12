@@ -1,5 +1,5 @@
 using GfEngine.Core;
-using GfEngine.Stages;
+using GfEngine.Battles;
 using System.Collections.Generic;
 
 namespace GfEngine.Behaviors

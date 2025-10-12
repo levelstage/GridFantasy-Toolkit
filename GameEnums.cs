@@ -128,6 +128,14 @@ public enum Teams // 말 그대로 어느 소속인지
 	Enemies,    // 적 1 소속
 	Neutrals    // 중립
 }
+public enum PortraitEmotion // 캐릭터 초상화의 감정 상태
+{
+    Normal,   // 기본 표정
+    Happy,    // 기쁨
+    Sad,      // 슬픔
+    Angry,    // 분노
+    Surprised // 놀람
+}
 
 public enum TraitRarity // Trait의 희귀도
 {

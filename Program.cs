@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GfEngine.Core;
-using GfEngine.Stages;
+using GfEngine.Battles;
 using GfEngine.Behaviors;
 using GfEngine.Models.Statuses;
 public class Program

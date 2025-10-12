@@ -3,21 +3,23 @@ namespace GfEngine.Models.Items
 {
 	public class Weapon : Item
 	{
+		public WeaponCode Code { get; set; }
 		public int Power { get; set; }
 		public WeaponType Type { get; set; }
-		public List<WeaponTag> wTags { get; set; }
+		public List<WeaponTag> WTags { get; set; }
 		public Weapon()
 		{
-			this.Power = 10;
-			this.Type = WeaponType.Spear;
-			this.wTags = new List<WeaponTag>();
+			Power = 10;
+			Type = WeaponType.Spear;
+			WTags = new List<WeaponTag>();
 		}
 		public Weapon(Weapon parent)
 		{
-			this.Name = parent.Name;
-			this.Power = parent.Power;
-			this.Type = parent.Type;
-			this.wTags = new List<WeaponTag>(parent.wTags);
+			Code = parent.Code;
+			Name = parent.Name;
+			Power = parent.Power;
+			Type = parent.Type;
+			WTags = new List<WeaponTag>(parent.WTags);
 		}
 		public override Item Clone()
 		{

@@ -15,10 +15,13 @@ namespace GfEngine.Models.Items
 		public Weapon(Weapon parent)
 		{
 			this.Name = parent.Name;
-			this.iTags = new List<ItemTag>(parent.iTags);
 			this.Power = parent.Power;
 			this.Type = parent.Type;
 			this.wTags = new List<WeaponTag>(parent.wTags);
+		}
+		public override Item Clone()
+		{
+			return new Weapon(this);
 		}
 	}
 }

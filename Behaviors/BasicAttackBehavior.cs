@@ -10,16 +10,17 @@ namespace GfEngine.Behaviors
         public Weapon Method;
         public BasicAttackBehavior(Weapon weapon) // 공격 behavior 생성자
         {
-            this.Name = GameData.Text.Get(GameData.Text.Key.Command_Attack);
-            this.Scope = GameData.AttackPatterns[weapon.Type];
-            this.ApCost = GameData.AttackApCosts[weapon.Type];
-            this.Accessible = new List<TeamType> { TeamType.Enemy, TeamType.Neutral };
+            Name = GameData.Text.Get(GameData.Text.Key.Command_Attack);
+            Scope = GameData.AttackPatterns[weapon.Type];
+            ApCost = GameData.AttackApCosts[weapon.Type];
+            Accessible = new List<TeamType> { TeamType.Enemy, TeamType.Neutral };
             // 특수한 공격 판정을 가진 무기는 tag를 따로 부여한다.
-            this.Tags = new List<BehaviorTag>();
+            Tags = new List<BehaviorTag>();
             if (GameData.SpecialAttacks.ContainsKey(weapon.Type))
             {
-                this.Tags.Add(GameData.SpecialAttacks[weapon.Type]);
+                Tags.Add(GameData.SpecialAttacks[weapon.Type]);
             }
+            Method = weapon;
         }
         static BasicAttackBehavior counterAttack(Square origin, Square target, int attackCost) // 예상되는 반격을 return하는 함수
         {
@@ -53,8 +54,8 @@ namespace GfEngine.Behaviors
 
         static int hit(Unit attacker, Unit defender, BasicAttackBehavior B) // attaker가 deffender를 때리는 판정을 하는 함수.
         {
-            int damage = attacker.Equipment.Power;
-            (AttackType atkType, DamageType dmgType) = GameData.AttackDamageTypes[attacker.WeaponClass];
+            int damage = B.Method.Power;
+            (AttackType atkType, DamageType dmgType) = GameData.AttackDamageTypes[B.Method.Type];
             // 원래라면 B에 있는 여러 태그들을 체크한다. 지금은 없으므로 주석만 달아놓자.
             if (atkType == AttackType.Physical) damage += attacker.LiveStat.Buffed().Attack;
             else damage += attacker.LiveStat.Buffed().MagicAttack;

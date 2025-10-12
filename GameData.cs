@@ -237,6 +237,7 @@ public static class GameData
 			Stat = new Status(maxHp: 10, defense: 5, magicDefense: 5, attack: 7, magicAttack: 0, agility: 7),
 			MoveClass = MoveType.Pawn_Up,
 			WeaponClass = WeaponType.Shield_Up,
+			Equipment = AllWeapons[WeaponCode.PhantomShield], // 기본 장비
 			UniqueSkill = AllSkills[SkillCode.Frontline], // 전선 유지
 			Traits = new List<Trait>(),
 			Inventory = new List<Item>{

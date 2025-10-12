@@ -44,6 +44,13 @@ public class Program
         {
             // Display the current game state
             DisplayMap(map, closerMatrix);
+            for(int i = 0; i < mapSize; i++)
+            {
+                for(int j = 0; j < mapSize; j++)
+                {
+                    map[i, j].Update();
+                }
+            }
 
             if (selectedSquare != null && selectedSquare.Occupant != null)
             {
@@ -189,8 +196,8 @@ public class Program
         Console.WriteLine("\n[유닛 정보]");
 	    Console.WriteLine($"이름: {unit.Name}");
         Console.WriteLine($"소속: {unit.Team}");
-        Console.WriteLine($"클래스: {unit.MoveClass}");
-		Console.WriteLine($"무기: {unit.WeaponClass}");
+        Console.WriteLine($"클래스: {unit.GetMoveClass()}");
+		Console.WriteLine($"무기: {unit.GetEquipment().Name}");
         Console.WriteLine($"HP: {unit.LiveStat.CurrentHp} / {finalStat.MaxHp}");
         Console.WriteLine($"공격력: {finalStat.Attack} | 마법공격력: {finalStat.MagicAttack}");
         Console.WriteLine($"방어력: {finalStat.Defense} | 마법방어력: {finalStat.MagicDefense}");

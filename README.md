@@ -2,7 +2,7 @@
 
 A personal project to learn C# and practice game engine design by building a grid-based tactical RPG.
 
-## 🎯 My Learning Goals
+## 🎯 My Goals
 
 This project was started to practice and understand several key programming concepts:
 

@@ -8,20 +8,15 @@ namespace GfEngine.Models.Statuses
 		public Status Stat { get; set; }
 		public int CurrentHp { get; set; }
 		public List<BuffSet> Buffs { get; set; }
-		public PatternSet MovePattern;
-		public PatternSet AttackPattern;
 
 		// 생성자: '기본 스탯(Status)'을 바탕으로 '현재 상태'를 생성.
-		public LiveStatus(Status baseStat, MoveType moveClass, WeaponType weapon)
+		public LiveStatus(Status baseStat)
 		{
 			this.Stat = baseStat;
 			// 현재 체력은 최대 체력과 같게 초기화.
 			this.CurrentHp = baseStat.MaxHp;
 			// 빈 버프 리스트 생성.
 			this.Buffs = new List<BuffSet>();
-			// 이동과 공격의 PatternSet 초기화
-			MovePattern = GameData.MovePatterns[moveClass];
-			AttackPattern = GameData.AttackPatterns[weapon];
 		}
 
 		public Status Buffed()

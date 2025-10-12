@@ -26,17 +26,17 @@ namespace GfEngine.Stages
 
         public void Update()
         {
-            this.Occupant.Update();
+            if (Occupant != null) Occupant.Update();
         }
 
         public void TurnStart()
         {
-            this.Occupant.TurnStart();
+            if (Occupant != null) Occupant.TurnStart();
         }
 
         public void TurnOver()
         {
-            this.Occupant.TurnOver();
+            if (Occupant != null) Occupant.TurnOver();
         }
 
         public override string ToString()

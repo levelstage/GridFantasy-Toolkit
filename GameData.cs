@@ -4,6 +4,7 @@ using GfEngine.Models.Buffs;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
 using System.Collections.Generic;
+using System.Linq;
 public static class GameData
 {	
 	// 이동 ApCost 딕셔너리
@@ -94,9 +95,9 @@ public static class GameData
                 // 룩(Rook): 상하좌우 4방향으로 무제한 이동
         [BasicPatternType.Rook] = new PatternSet(new List<Pattern>
         {
-            new Pattern { X = 1, Y = 0, Type = PatternType.Vector }, // Right
+            new Pattern { X = 1, Y = 0, Type = PatternType.Vector }, // Right
             new Pattern { X = 0, Y = 1, Type = PatternType.Vector }, // Down
-            new Pattern { X = -1, Y = 0, Type = PatternType.Vector }, // Left
+            new Pattern { X = -1, Y = 0, Type = PatternType.Vector }, // Left
             new Pattern { X = 0, Y = -1, Type = PatternType.Vector } //Up
         })
     };
@@ -163,17 +164,21 @@ public static class GameData
             Name = Text.Get(Text.Key.BuffSet_FrontlineBuff_Name),
 			Description  = Text.Get(Text.Key.BuffSet_FrontlineBuff_Desc),
 			Effects = new List<Buff>{
-				new Buff{
+				new ScailingBuff{
 					Type = BuffType.DefenseBoost,
-					Magnitude = 5,
+					ScaleFactor = 1.0f,
+					SourceUnit = null, // 나중에 이 버프를 부여한 유닛의 참조로 설정됨.
+					TargetStat = StatType.Defense
 				},
-				new Buff{
+				new ScailingBuff{
 					Type = BuffType.MagicDefenseBoost,
-					Magnitude = 5,
+					ScaleFactor = 1.0f,
+					SourceUnit = null, // 나중에 이 버프를 부여한 유닛의 참조로 설정됨.
+					TargetStat = StatType.MagicDefense
 				}
 			},
-            Duration = -1, // 오라형 버프라서 일단은 지속시간 무한.
-            isBuff = true,
+            Duration = -1, // 오라형 버프라서 지속시간 자체는 무한.
+            IsBuff = true,
             Removable = false // 오라형 버프는 해제 불가능.
         },
 		
@@ -198,43 +203,71 @@ public static class GameData
 		[WeaponCode.PhantomShield] = new Weapon{
 			Name = Text.Get(Text.Key.Weapon_PhantomShield_Name),
 			Type = WeaponType.Shield_Up,
-			Power = 4
+			Power = 40
 		},
 		[WeaponCode.IronShield] = new Weapon{
 			Name = Text.Get(Text.Key.Weapon_PhantomShield_Name),
 			Type = WeaponType.Shield_Up,
-			Power = 4
+			Power = 40
 		},
 		[WeaponCode.LongSword] = new Weapon{
 			Name = Text.Get(Text.Key.Weapon_LongSword_Name),
 			Type = WeaponType.Sword,
-			Power = 5
+			Power = 50
 		},
 		[WeaponCode.IronSpear] = new Weapon{
 			Name = Text.Get(Text.Key.Weapon_IronSpear_Name),
 			Type = WeaponType.Spear,
-			Power = 5
+			Power = 50
 		},
 		
 	};
-	
+
 	public static readonly Dictionary<SkillCode, Skill> AllSkills = new Dictionary<SkillCode, Skill>
+	{
+		[SkillCode.Frontline] = new Skill
+		{
+			Name = Text.Get(Text.Key.Skill_Frontline_Name),
+			IsPassive = true,
+			// 이 스킬을 가지고 있으면, 'FrontlineAura' 버프를 자신에게 부여.
+			SkillBuffs = new List<BuffSet> { AllBuffSets[BuffSetCode.FrontlineAura] }
+		}
+	};
+
+	public static readonly Dictionary<TraitCode, Trait> AllTraits = new Dictionary<TraitCode, Trait>
     {
-        [SkillCode.Frontline] = new Skill
+        [TraitCode.IronSkin] = new Trait
         {
-            Name = Text.Get(Text.Key.Skill_Frontline_Name),
-            IsPassive = true,
-            // 이 스킬을 가지고 있으면, 'FrontlineAura' 버프를 자신에게 부여.
-            SkillBuffs = new List<BuffSet> { AllBuffSets[BuffSetCode.FrontlineAura] }
-        }
+            Code = TraitCode.IronSkin,
+            Name = "철벽",
+            Description = "방어력이 10% 증가합니다.",
+            Type = TraitType.Tank
+        },
+        [TraitCode.Regeneration] = new Trait
+        {
+            Code = TraitCode.Regeneration,
+            Name = "재생력",
+            Description = "매 턴 체력을 회복합니다.",
+            Type = TraitType.Tank
+        },
     };
+	// 테마별 랜덤 특성 풀 (TraitType별로 구분된 특성들의 집합. static 생성자에서 자동 생성됨.)
+	public static readonly Dictionary<TraitType, HashSet<Trait>> ThemedRandomTraitPools = new Dictionary<TraitType, HashSet<Trait>>();
+	
+	// 특성 희귀도별 가중치 설정
+	public static Dictionary<TraitRarity, int> rarityWeights = new Dictionary<TraitRarity, int>
+	{
+		{ TraitRarity.Common, 90 },
+		{ TraitRarity.Rare, 7 },
+		{ TraitRarity.Heroic, 3 }
+	};
 	
 	public static readonly Dictionary<ActorCode, Actor> AllActors  = new Dictionary<ActorCode, Actor> 
 	{
-		[ActorCode.Phantom] = new Actor // 환영 폰. 일괄적인 데이터 관리를 위해 얘네 데이터도 이 딕셔너리에 보관.
+		[ActorCode.Phantom] = new Actor // 환영 폰. 이 액터 데이터 기반으로 InstantUnit 객체 생성.
 		{
 			Name = Text.Get(Text.Key.Actor_Phantom_Name),
-			Stat = new Status(maxHp: 10, defense: 5, magicDefense: 5, attack: 7, magicAttack: 0, agility: 7),
+			Stat = new Status(maxHp: 150, defense: 50, magicDefense: 50, attack: 70, magicAttack: 30, agility: 70),
 			MoveClass = MoveType.Pawn_Up,
 			WeaponClass = WeaponType.Shield_Up,
 			Equipment = AllWeapons[WeaponCode.PhantomShield], // 기본 장비
@@ -248,12 +281,21 @@ public static class GameData
 		[ActorCode.Hagen] = new Actor
 		{
 			Name = Text.Get(Text.Key.Actor_Hagen_Name),
-			Stat = new Status(maxHp: 12, defense: 6, magicDefense: 5, attack: 9, magicAttack: 0, agility: 7),
+			Stat = new Status(maxHp: 250, defense: 60, magicDefense: 50, attack: 90, magicAttack: 40, agility: 70),
 			MoveClass = MoveType.Knight,
 			WeaponClass = WeaponType.Spear,
 			UniqueSkill = null, // 나중에 스킬 객체 추가
 			Traits = new List<Trait>(),
 			Equipment = AllWeapons[WeaponCode.IronSpear],
+			BaseGrowthRates = new GrowthRates
+			{
+				HpRate = 25,
+				DefenseRate = 10,
+				MagicDefenseRate = 8,
+				AttackRate = 4,
+				MagicAttackRate = 2,
+				AgilityRate = 4
+			},
 			Inventory = new List<Item>{
 				new Weapon(AllWeapons[WeaponCode.LongSword])
 			}
@@ -354,7 +396,7 @@ public static class GameData
 			 // BuffSet 이름
 			 [Key.BuffSet_FrontlineBuff_Name] = "전선 지원",
 			 // BuffSet 설명
-			 [Key.BuffSet_FrontlineBuff_Desc] = "아군의 전선 지원으로 방어력이 증가했습니다.",
+			 [Key.BuffSet_FrontlineBuff_Desc] = "아군의 전선 구축으로 방어력이 증가했습니다.",
 			 // Skill 관련
 			 // Skill 이름
 			 [Key.Skill_Frontline_Name] = "전선 구축",
@@ -382,27 +424,37 @@ public static class GameData
 	public static readonly Dictionary<WeaponType, BehaviorTag> SpecialAttacks = new Dictionary<WeaponType, BehaviorTag>{
 		
 	};
-	 public static TeamType GetTeamType(Teams observer, Teams target)
+	public static TeamType GetTeamType(Teams observer, Teams target)
+	{
+		if (target == Teams.Neutrals) // 중립 진영은 모든 대상과 중립.
 		{
-			if (target == Teams.Neutrals) // 중립 진영은 모든 대상과 중립.
-			{
-				return TeamType.Neutral;
-			}
-
-			if (observer == target)
-			{
-				return TeamType.Same; // 같은 진영의 관계는 Same이다. 아군과는 구별한다.
-			}
-
-			// 여기에 더 복잡한 관계를 정의할 수 있음
-			// 예: 플레이어와 적은 서로에게 '적'
-			if ((observer == Teams.Players && target == Teams.Enemies) ||
-				(observer == Teams.Enemies && target == Teams.Players))
-			{
-				return TeamType.Enemy;
-			}
-
-			// 기본값은 중립
 			return TeamType.Neutral;
+		}
+
+		if (observer == target)
+		{
+			return TeamType.Same; // 같은 진영의 관계는 Same이다. 아군과는 구별한다.
+		}
+
+		// 여기에 더 복잡한 관계를 정의할 수 있음
+		// 예: 플레이어와 적은 서로에게 '적'
+		if ((observer == Teams.Players && target == Teams.Enemies) ||
+			(observer == Teams.Enemies && target == Teams.Players))
+		{
+			return TeamType.Enemy;
+		}
+
+		// 기본값은 중립
+		return TeamType.Neutral;
+	}
+	// 특성을 배우는 레벨과 스킬 강화 레벨
+	public static List<int> TraitLevels = new List<int> { 4, 7, 10, 13, 16, 20 };
+	public static HashSet<int> SkillUpgradeLevels = new HashSet<int> { 10, 20 };
+
+		static GameData()
+		{
+			ThemedRandomTraitPools = AllTraits.Values
+										.GroupBy(trait => trait.Type)
+										.ToDictionary(group => group.Key, group => new HashSet<Trait>(group));
 		}
 }

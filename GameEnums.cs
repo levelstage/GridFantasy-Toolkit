@@ -1,3 +1,5 @@
+// Type들
+
 public enum BasicPatternType // 체스의 다섯 기물의 패턴을 저장해둔 dictioanry에 접근하기 위한 keys.
 {
 	King, Knight, Bishop, Queen, Rook
@@ -28,13 +30,6 @@ public enum BuffType // 각 버프의 실질적 효과를 식별하기 위한 �
 	MaxHpBoost,DefenseBoost,MagicDefenseBoost, AttackBoost, MagicAttackBoost, AgilityBoost, PhysicalResidence, MagicalResidence
 }
 
-public enum Teams // 말 그대로 어느 소속인지
-{
-    Players,    // 플레이어 소속
-    Enemies,    // 적 1 소속
-    Neutrals    // 중립
-}
-
 public enum TeamType // 출처와 대상의 관계. 이 대상이 어떤 behavior의 대상이 되는지를 확인하기 위한 타입.
 {
 	Same, Ally, Neutral, Enemy, Air
@@ -55,6 +50,21 @@ public enum ActionType // 검색된 액션이 유효한지 아닌지 알려주�
 	Accessible, Unaccessible
 }
 
+public enum StatType // Status의 각 속성들을 식별하기 위한 타입.
+{
+	MaxHp, Defense, MagicDefense, Attack, MagicAttack, Agility
+}
+
+public enum TraitType
+{
+    Unique,     // 캐릭터 고유의 스킬 강화
+    Aura,       // 오라 관련
+    Tank,       // 방어/생존 관련
+    Damage,     // 공격 관련
+    Utility     // 유틸리티 관련
+}
+
+// Tag들
 public enum BehaviorTag // 해당 Behavior의 특성을 세세하게 설명하는 태그.
 {
 	PawnFirstUp, PawnFirstDown
@@ -75,9 +85,10 @@ public enum WeaponTag
 
 }
 
+// Code들
 public enum ActorCode // 각각의 Actor들의 고유번호.
 {
-	Phantom, Hagen, Gideon, 
+	Phantom, Hagen, Gideon
 }
 
 public enum WeaponCode // 각각의 Weapon들의 고유번호
@@ -95,4 +106,30 @@ public enum BuffSetCode
 	FrontlineAura, FrontlineBuff
 }
 
-//Enum 끝.
+public enum TraitCode
+{
+    // Unique
+	HagenUnique1, HagenUnique2, GideonUnique1, GideonUnique2,
+	// Aura
+	FrontlineAura, LastStandAura,
+	// Tank
+	IronWall, Stonewall, Fortitude, IronSkin, Regeneration,
+	// Damage
+	PowerStrike, MagicBurst, SwiftStrike,
+	// Utility
+	QuickRecovery, EvasionBoost, CounterBoost
+}
+
+// 기타
+
+public enum Teams // 말 그대로 어느 소속인지
+{
+	Players,    // 플레이어 소속
+	Enemies,    // 적 1 소속
+	Neutrals    // 중립
+}
+
+public enum TraitRarity // Trait의 희귀도
+{
+	Common, Rare, Heroic, Mythic
+}

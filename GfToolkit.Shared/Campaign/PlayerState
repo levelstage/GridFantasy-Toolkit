@@ -1,0 +1,41 @@
+using GfToolkit.Shared.Models.Actors;
+using GfToolkit.Shared.Models.Items;
+using System.Collections.Generic;
+namespace GfToolkit.Shared.Campaign
+{
+    public class PlayerState
+    {
+        public int GameSeed { get; set; }
+        public int Gold { get; set; }
+        public int Level { get; set; }
+        public int Experience { get; set; }
+        public int NextLevelExperience { get; set; }
+        public List<Actor> Roster { get; set; }
+        public List<Item> PartyInventory { get; set; }
+        public Dictionary<ActorCode, Dictionary<int, List<Trait>>> TraitDeck { get; private set; }
+
+        public PlayerState()
+        {
+            Level = 1;
+            Experience = 0;
+            NextLevelExperience = 100;
+            Roster = new List<Actor>();
+            PartyInventory = new List<Item>();
+            Gold = 0;
+        }
+
+        public void GenerateAllTraitDecks()
+        {
+            foreach (Actor character in GameData.AllActors.Values)
+            {
+                if (character.Code == ActorCode.Phantom) continue; // 팬텀은 특성 없음
+                TraitDeck[character.Code] = TraitManager.GenerateTraitDeck(character, GameData.TraitLevels[0]);
+            }
+        }
+
+        public void AddCharacterToRoster(Actor newCharacter)
+        {
+            Roster.Add(newCharacter);
+        }
+    }
+}

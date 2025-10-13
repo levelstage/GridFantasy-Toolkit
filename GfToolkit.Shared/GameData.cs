@@ -1,11 +1,8 @@
-using GfToolkit.Shared.Core;
-using GfToolkit.Shared.Models.Actors;
-using GfToolkit.Shared.Models.Buffs;
-using GfToolkit.Shared.Models.Items;
-using GfToolkit.Shared.Models.Statuses;
 using System.Collections.Generic;
 using System.Linq;
-public static class GameData
+namespace GfToolkit.Shared
+{
+    public static class GameData
 {	
 	// 이동 ApCost 딕셔너리
 	public static readonly Dictionary<MoveType, int> MoveApCosts = new Dictionary<MoveType, int>{
@@ -467,3 +464,5 @@ public static class GameData
 										.ToDictionary(group => group.Key, group => new HashSet<Trait>(group));
 		}
 }
+}
+

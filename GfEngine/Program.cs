@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GfToolkit.Shared;
 using GfToolkit.Shared.Core;
 using GfToolkit.Shared.Battles;
 using GfToolkit.Shared.Behaviors;

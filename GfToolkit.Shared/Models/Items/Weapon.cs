@@ -3,7 +3,7 @@ namespace GfToolkit.Shared.Models.Items
 {
 	public class Weapon : Item
 	{
-		public WeaponCode Code { get; set; }
+		public string Code { get; set; }
 		public int Power { get; set; }
 		public WeaponType Type { get; set; }
 		public List<WeaponTag> WTags { get; set; }

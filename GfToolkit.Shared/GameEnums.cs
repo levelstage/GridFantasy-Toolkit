@@ -11,9 +11,9 @@ namespace GfToolkit.Shared
 		Stationary, King, Pawn_Up, Pawn_Up_Advanced, Pawn_Down, Pawn_Down_Advanced, Knight, Bishop, Rook, Queen
 	}
 
-	public enum WeaponType // 캐릭터에게 주어질 수 있는 모든 종류의 무기의 식별번호 역할을 함.
+	public enum WeaponType // 캐릭터에게 주어질 수 있는 모든 무기군.
 	{
-		Sword, Shield_Up, Shield_Down, Spear, Cannon, Bow, Fireball
+		Sword, Shield_Up, Shield_Down, Spear, Cannon, Bow, MagicMissile
 	}
 
 	public enum AttackType // 공격이 공격력을 참고하는지, 마법 공격력을 참고하는지 확인. 나중에 방어력 참고 공격 이런것도 생각중.
@@ -28,7 +28,7 @@ namespace GfToolkit.Shared
 
 	public enum BuffType // 각 버프의 실질적 효과를 식별하기 위한 타입. 같은 타입의 버프들은 중첩된다.
 	{
-		MaxHpBoost,DefenseBoost,MagicDefenseBoost, AttackBoost, MagicAttackBoost, AgilityBoost, PhysicalResidence, MagicalResidence
+		MaxHpBoost, DefenseBoost, MagicDefenseBoost, AttackBoost, MagicAttackBoost, AgilityBoost, PhysicalResidence, MagicalResidence
 	}
 
 	public enum TeamType // 출처와 대상의 관계. 이 대상이 어떤 behavior의 대상이 되는지를 확인하기 위한 타입.
@@ -84,41 +84,6 @@ namespace GfToolkit.Shared
 	public enum WeaponTag
 	{
 
-	}
-
-	// Code들
-	public enum ActorCode // 각각의 Actor들의 고유번호.
-	{
-		Phantom, Hagen, Gideon
-	}
-
-	public enum WeaponCode // 각각의 Weapon들의 고유번호
-	{
-		PhantomShield, IronShield, LongSword, IronSpear
-	}
-
-	public enum SkillCode
-	{
-		Frontline
-	}
-
-	public enum BuffSetCode
-	{
-		FrontlineAura, FrontlineBuff
-	}
-
-	public enum TraitCode
-	{
-		// Unique
-		HagenUnique1, HagenUnique2, GideonUnique1, GideonUnique2,
-		// Aura
-		FrontlineAura, LastStandAura,
-		// Tank
-		IronWall, Stonewall, Fortitude, IronSkin, Regeneration,
-		// Damage
-		PowerStrike, MagicBurst, SwiftStrike,
-		// Utility
-		QuickRecovery, EvasionBoost, CounterBoost
 	}
 
 	// 기타

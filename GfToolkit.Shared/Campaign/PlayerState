@@ -12,7 +12,7 @@ namespace GfToolkit.Shared.Campaign
         public int NextLevelExperience { get; set; }
         public List<Actor> Roster { get; set; }
         public List<Item> PartyInventory { get; set; }
-        public Dictionary<ActorCode, Dictionary<int, List<Trait>>> TraitDeck { get; private set; }
+        public Dictionary<string, Dictionary<int, List<Trait>>> TraitDeck { get; private set; }
 
         public PlayerState()
         {
@@ -28,7 +28,7 @@ namespace GfToolkit.Shared.Campaign
         {
             foreach (Actor character in GameData.AllActors.Values)
             {
-                if (character.Code == ActorCode.Phantom) continue; // 팬텀은 특성 없음
+                if (character.Code == "Phantom") continue; // 팬텀은 특성 없음
                 TraitDeck[character.Code] = TraitManager.GenerateTraitDeck(character, GameData.TraitLevels[0]);
             }
         }

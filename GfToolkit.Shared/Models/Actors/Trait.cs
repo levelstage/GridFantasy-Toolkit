@@ -5,7 +5,7 @@ namespace GfToolkit.Shared.Models.Actors
 {
     public class Trait : IEquatable<Trait>
     {
-        public TraitCode Code { get; set; } // 특성 고유 ID (예: "Hagen_U_01")
+        public string Code { get; set; } // 특성 고유 ID (예: "Hagen_U_01")
         public string Name { get; set; }
         public string Description { get; set; }
 
@@ -26,7 +26,7 @@ namespace GfToolkit.Shared.Models.Actors
         public bool Equals(Trait other)
         {
             if (other == null) return false;
-            return this.Code == other.Code;
+            return Code == other.Code;
         }
         public override int GetHashCode()
         {

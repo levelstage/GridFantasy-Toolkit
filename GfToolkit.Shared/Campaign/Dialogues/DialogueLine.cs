@@ -2,7 +2,7 @@ namespace GfToolkit.Shared.Campaign.Dialogues
 {
     public class DialogueLine
     {
-        public ActorCode Speaker { get; set; }
+        public string Speaker { get; set; }
         public string Text { get; set; }
 
         public PortraitEmotion Emotion { get; set; }

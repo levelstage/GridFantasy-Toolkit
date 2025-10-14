@@ -6,7 +6,7 @@ namespace GfToolkit.Shared.Models.Actors
 {
 	public class Actor
 	{
-		public ActorCode Code { get; set; }
+		public string Code { get; set; }
 		public Status Stat;
 		public GrowthRates BaseGrowthRates;
 		public MoveType MoveClass { get; set; }
@@ -35,8 +35,8 @@ namespace GfToolkit.Shared.Models.Actors
 			Inventory = new List<Item>(p.Inventory);
 			foreach (Item i in p.Inventory) Inventory.Add(i.Clone()); // 아이템 각각을 새로운 객체로 복사.
 			Traits = new List<Trait>(p.Traits); // 특성은 어떤 특성이 있는지만 알면 되므로 각각을 복사할 필요 x.
-			FixedTraits = new Dictionary<int, List<Trait>>(p.FixedTraits);
-			UniqueSkillTraits = new Dictionary<int, List<Trait>>(p.UniqueSkillTraits);
+			//FixedTraits = new Dictionary<int, List<Trait>>(p.FixedTraits);
+			//UniqueSkillTraits = new Dictionary<int, List<Trait>>(p.UniqueSkillTraits);
 		}
 	}
 }

@@ -4,7 +4,7 @@ namespace GfToolkit.Shared.Models.Actors
 {
 	public class Skill
 	{
-		public SkillCode Code { get; set; }
+		public string Code { get; set; }
 		public string Name { get; set; }
 		public bool IsPassive { get; set; }
 		public List<BuffSet> SkillBuffs { get; set; } 	// 스킬을 가지고 있는 것 만으로 받는 버프. (액티브이면서 패시브 스킬이 동시에 딸린 경우까지 고려.)

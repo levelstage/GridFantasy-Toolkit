@@ -1,4 +1,4 @@
-using GfToolkit.Shared.Stages;
+using GfToolkit.Shared.Battles;
 using System.Collections.Generic;
 namespace GfToolkit.Shared.Behaviors
 {

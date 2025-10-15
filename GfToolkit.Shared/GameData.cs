@@ -170,13 +170,13 @@ namespace GfToolkit.Shared
             Name = Text.Get(Text.Key.BuffSet_FrontlineBuff_Name),
 			Description  = Text.Get(Text.Key.BuffSet_FrontlineBuff_Desc),
 			Effects = new List<Buff>{
-				new ScailingBuff{
+				new ScalingBuff{
 					Type = BuffType.DefenseBoost,
 					ScaleFactor = 1.0f,
 					SourceUnit = null, // 나중에 이 버프를 부여한 유닛의 참조로 설정됨.
 					TargetStat = StatType.Defense
 				},
-				new ScailingBuff{
+				new ScalingBuff{
 					Type = BuffType.MagicDefenseBoost,
 					ScaleFactor = 1.0f,
 					SourceUnit = null, // 나중에 이 버프를 부여한 유닛의 참조로 설정됨.

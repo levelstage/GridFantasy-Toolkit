@@ -4,7 +4,7 @@ using GfToolkit.Shared.Battles;
 
 namespace GfToolkit.Shared.Models.Buffs
 {
-	public class ScailingBuff : Buff
+	public class ScalingBuff : Buff
 	{
 		public float ScaleFactor { get; set; } // 스케일링 계수
         public Unit SourceUnit { get; set; } // 스케일링 기준 유닛

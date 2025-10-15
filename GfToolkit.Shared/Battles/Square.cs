@@ -6,6 +6,7 @@ namespace GfToolkit.Shared.Battles
         public int X { get; set; }
         public int Y { get; set; }
         public Unit Occupant { get; set; } // 이 변수가 null인지 아닌지로 점유 상태를 판단.
+        public List<GroundEffect> GroundEffects { get; set; } = new List<GroundEffect>(); // 이 칸에 걸려있는 지형 효과들.
 
         public Square(int x, int y, TerrainType type = TerrainType.Plains)
         {

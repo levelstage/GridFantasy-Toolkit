@@ -18,7 +18,7 @@ namespace GfToolkit.Shared.Behaviors
 			}
 
 		}
-		public override string Excute(Square origin, Square target)
+		public override string Execute(Square origin, Square target, Square[,] map)
 		{
 			//폰에 대한 예외처리. 폰의 이동방식을 전진한 폰의 이동방식으로 바꿔준다.
 			if (this.Tags.Contains(BehaviorTag.PawnFirstDown))

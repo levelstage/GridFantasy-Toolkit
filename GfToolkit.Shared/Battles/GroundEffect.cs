@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using GfEngine.Models.Buffs;
+using GfToolkit.Shared.Models.Buffs;
+using GfToolkit.Shared;
 
-namespace GfEngine.Battle
+namespace GfToolkit.Shared.Battles
 {
     public class GroundEffect
     {

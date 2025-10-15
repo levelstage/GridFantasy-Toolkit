@@ -40,13 +40,7 @@ namespace GfToolkit.Shared
 	{
 		Plains, Swamp, Water
 	}
-
-	public enum PatternType // PatternSet에 들어있는 Pattern이 좌표인지 벡터인지 구분하기 위한 타입.
-	{ 
-		Coordinate, Vector, Pvector
-	}
-
-	public enum ActionType // 검색된 액션이 유효한지 아닌지 알려주기 위한 타입.
+	public enum TargetType // 검색된 액션이 유효한지 아닌지 알려주기 위한 타입.
 	{
 		Accessible, Unaccessible
 	}

@@ -2,8 +2,6 @@
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GfToolkit.Shared", "GfToolkit.Shared.csproj", "{3FC6FCC0-FD27-942C-A53E-C82119CCE5B2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GfEngine", "GfEngine\GfEngine.csproj", "{3FA7E782-674C-45D1-9B48-36215E49CD18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GfToolkit.Shared", "GfToolkit.Shared\GfToolkit.Shared.csproj", "{30F021EC-3BE1-483D-95C7-4461778D0259}"

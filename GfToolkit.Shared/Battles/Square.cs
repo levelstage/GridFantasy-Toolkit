@@ -10,19 +10,19 @@ namespace GfToolkit.Shared.Battles
 
         public Square(int x, int y, TerrainType type = TerrainType.Plains)
         {
-            this.X = x;
-            this.Y = y;
-            this.Terrain = type;
-            this.Occupant = null; // 처음에는 비어있으므로 null로 초기화
+            X = x;
+            Y = y;
+            Terrain = type;
+            Occupant = null; // 처음에는 비어있으므로 null로 초기화
         }
 
         public void PlaceUnit(Unit occupant)
         {
-            this.Occupant = occupant;
+            Occupant = occupant;
         }
         public void ClearUnit()
         {
-            this.Occupant = null;
+            Occupant = null;
         }
 
         public void Update()
@@ -52,9 +52,9 @@ namespace GfToolkit.Shared.Battles
             }
 
             // Occupant가 null이 아니면 (유닛이 있으면)
-            if (this.Occupant != null)
+            if (Occupant != null)
             {
-                content = this.Occupant.ToString(); // Unit의 ToString()을 호출
+                content = Occupant.ToString(); // Unit의 ToString()을 호출
             }
             return open_text + content;
         }

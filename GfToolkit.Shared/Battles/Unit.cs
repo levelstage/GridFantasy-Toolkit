@@ -13,7 +13,7 @@ namespace GfToolkit.Shared.Battles
 		public Teams Team { get; set; }
 		public List<Behavior> Behaviors { get; set; }
 
-		private void Update_Behaviors()
+		private void InitializeBehaviors()
 		{
 			// 행동 리스트 초기화
 			Behaviors = new List<Behavior>();
@@ -24,7 +24,7 @@ namespace GfToolkit.Shared.Battles
 
 		public void Update()
 		{
-			Update_Behaviors();
+			InitializeBehaviors();
 		}
 
 		public void TurnStart()

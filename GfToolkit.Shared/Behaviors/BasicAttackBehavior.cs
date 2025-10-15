@@ -32,22 +32,23 @@ namespace GfToolkit.Shared.Behaviors
                 if (B is not BasicAttackBehavior) continue;
                 if (B.ApCost > attackCost) continue;
                 foreach (Pattern p in B.Scope.Patterns)
-                {
-                    if (p.Type == PatternType.Coordinate)
-                        // 좌표 처리
-                        if (p.X == dx && p.Y == dy) return B as BasicAttackBehavior; // 해당 좌표가 공격 범위 내에 있으므로 반격 가능
-                        else
+
+                    if (p is VectorPattern)
+                    {
+                        // 벡터 처리
+                        if (dx * p.Y == dy * p.X) // 벡터 방향 검사
                         {
-                            // 벡터 처리
-                            if (dx * p.Y == dy * p.X) // 벡터 방향 검사
+                            if (Math.Sign(dx) == Math.Sign(p.X) && Math.Sign(dy) == Math.Sign(p.Y)) // 부호까지 검사
                             {
-                                if (Math.Sign(dx) == Math.Sign(p.X) && Math.Sign(dy) == Math.Sign(p.Y)) // 부호까지 검사
-                                {
-                                    return B as BasicAttackBehavior; // 같은 방향, 같은 부호 => 반격 가능
-                                }
+                                return B as BasicAttackBehavior; // 같은 방향, 같은 부호 => 반격 가능
                             }
                         }
-                }
+                    }
+                    else
+                    {
+                        // 좌표 처리
+                        if (p.X == dx && p.Y == dy) return B as BasicAttackBehavior; // 해당 좌표가 공격 범위 내에 있으므로 반격 가능
+                    }
             }
             return null;
         }
@@ -111,7 +112,7 @@ namespace GfToolkit.Shared.Behaviors
             // = Console.WriteLine($"{secondAttacker.Name}: HP {secondAttacker.LiveStat.CurrentHp} / {secondAttacker.LiveStat.Buffed().MaxHp}");
             return explainedResult;
         }
-        public override string Excute(Square origin, Square target)
+        public override string Execute(Square origin, Square target, Square[,] map)
         {
             Unit attacker = origin.Occupant;
             Unit defender = target.Occupant;

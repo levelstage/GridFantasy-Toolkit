@@ -53,57 +53,57 @@ namespace GfToolkit.Shared
 		 // 킹(King): 주변 8칸으로 1칸씩 이동
         [BasicPatternType.King] = new PatternSet(new List<Pattern>
         {
-            new Pattern { X = -1, Y = -1, Type = PatternType.Coordinate }, // Up-Left
-            new Pattern { X = 0,  Y = -1, Type = PatternType.Coordinate }, // Up
-            new Pattern { X = 1,  Y = -1, Type = PatternType.Coordinate }, // Up-Right
-            new Pattern { X = -1, Y = 0,  Type = PatternType.Coordinate }, // Left
-            new Pattern { X = 1,  Y = 0,  Type = PatternType.Coordinate }, // Right
-            new Pattern { X = -1, Y = 1,  Type = PatternType.Coordinate }, // Down-Left
-            new Pattern { X = 0,  Y = 1,  Type = PatternType.Coordinate }, // Down
-            new Pattern { X = 1,  Y = 1,  Type = PatternType.Coordinate }  // Down-Right
+            new Pattern { X = -1, Y = -1}, // Up-Left
+            new Pattern { X = 0,  Y = -1}, // Up
+            new Pattern { X = 1,  Y = -1}, // Up-Right
+            new Pattern { X = -1, Y = 0}, // Left
+            new Pattern { X = 1,  Y = 0}, // Right
+            new Pattern { X = -1, Y = 1}, // Down-Left
+            new Pattern { X = 0,  Y = 1}, // Down
+            new Pattern { X = 1,  Y = 1}  // Down-Right
         }),
         
         // 퀸(Queen): 8방향으로 끝까지 이동
         [BasicPatternType.Queen] = new PatternSet(new List<Pattern>
         {
-            new Pattern { X = -1, Y = -1, Type = PatternType.Vector }, // Up-Left
-            new Pattern { X = 0,  Y = -1, Type = PatternType.Vector }, // Up
-            new Pattern { X = 1,  Y = -1, Type = PatternType.Vector }, // Up-Right
-            new Pattern { X = -1, Y = 0,  Type = PatternType.Vector }, // Left
-            new Pattern { X = 1,  Y = 0,  Type = PatternType.Vector }, // Right
-            new Pattern { X = -1, Y = 1,  Type = PatternType.Vector }, // Down-Left
-            new Pattern { X = 0,  Y = 1,  Type = PatternType.Vector }, // Down
-            new Pattern { X = 1,  Y = 1,  Type = PatternType.Vector }  // Down-Right
+            new VectorPattern { X = -1, Y = -1}, // Up-Left
+            new VectorPattern { X = 0,  Y = -1}, // Up
+            new VectorPattern { X = 1,  Y = -1}, // Up-Right
+            new VectorPattern { X = -1, Y = 0}, // Left
+            new VectorPattern { X = 1,  Y = 0}, // Right
+            new VectorPattern { X = -1, Y = 1}, // Down-Left
+            new VectorPattern { X = 0,  Y = 1}, // Down
+            new VectorPattern { X = 1,  Y = 1}  // Down-Right
         }),
 
         // 비숍(Bishop): 대각선 4방향으로 끝까지 이동
         [BasicPatternType.Bishop] = new PatternSet(new List<Pattern>
         {
-            new Pattern { X = -1, Y = -1, Type = PatternType.Vector }, // Up-Left
-            new Pattern { X = 1,  Y = -1, Type = PatternType.Vector }, // Up-Right
-            new Pattern { X = -1, Y = 1,  Type = PatternType.Vector }, // Down-Left
-            new Pattern { X = 1,  Y = 1,  Type = PatternType.Vector }  // Down-Right
+            new VectorPattern { X = -1, Y = -1}, // Up-Left
+            new VectorPattern { X = 1,  Y = -1}, // Up-Right
+            new VectorPattern { X = -1, Y = 1}, // Down-Left
+            new VectorPattern { X = 1,  Y = 1}  // Down-Right
         }),
 		
         // 나이트(Knight): 자신을 중심으로 한 반지름 루트5 원 위로 점프
         [BasicPatternType.Knight] = new PatternSet(new List<Pattern>
         {
-            new Pattern { X = 1, Y = -2, Type = PatternType.Coordinate },
-            new Pattern { X = 2, Y = -1, Type = PatternType.Coordinate },
-            new Pattern { X = 2, Y = 1, Type = PatternType.Coordinate },
-            new Pattern { X = 1, Y = 2, Type = PatternType.Coordinate },
-            new Pattern { X = -1, Y = 2, Type = PatternType.Coordinate },
-            new Pattern { X = -2, Y = 1, Type = PatternType.Coordinate },
-            new Pattern { X = -2, Y = -1, Type = PatternType.Coordinate },
-            new Pattern { X = -1, Y = -2, Type = PatternType.Coordinate }
+            new Pattern { X = 1, Y = -2},
+            new Pattern { X = 2, Y = -1},
+            new Pattern { X = 2, Y = 1},
+            new Pattern { X = 1, Y = 2},
+            new Pattern { X = -1, Y = 2},
+            new Pattern { X = -2, Y = 1},
+            new Pattern { X = -2, Y = -1},
+            new Pattern { X = -1, Y = -2}
         }),
                 // 룩(Rook): 상하좌우 4방향으로 무제한 이동
         [BasicPatternType.Rook] = new PatternSet(new List<Pattern>
         {
-            new Pattern { X = 1, Y = 0, Type = PatternType.Vector }, // Right
-            new Pattern { X = 0, Y = 1, Type = PatternType.Vector }, // Down
-            new Pattern { X = -1, Y = 0, Type = PatternType.Vector }, // Left
-            new Pattern { X = 0, Y = -1, Type = PatternType.Vector } //Up
+            new VectorPattern { X = 1, Y = 0}, // Right
+            new VectorPattern { X = 0, Y = 1}, // Down
+            new VectorPattern { X = -1, Y = 0}, // Left
+            new VectorPattern { X = 0, Y = -1} //Up
         })
     };
 	
@@ -120,24 +120,24 @@ namespace GfToolkit.Shared
 		// 상향 폰(Pawn_Up): 
         [MoveType.Pawn_Up] = new PatternSet(new List<Pattern>
         {
-        new Pattern { X = 0, Y = -1, Type = PatternType.Coordinate }, //Up1
-                new Pattern { X = 0, Y = -2, Type = PatternType.Coordinate } //Up2
+        new Pattern { X = 0, Y = -1}, //Up1
+                new Pattern { X = 0, Y = -2} //Up2
         }),
 		// 하향 폰(Pawn_Down)
 		[MoveType.Pawn_Down] = new PatternSet(new List<Pattern>
         {
-        new Pattern { X = 0, Y = 1, Type = PatternType.Coordinate }, //Down1
-                    new Pattern { X = 0, Y = 2, Type = PatternType.Coordinate } //Down2
+        new Pattern { X = 0, Y = 1}, //Down1
+                    new Pattern { X = 0, Y = 2} //Down2
         }),
                 // 한 번 이상 전진한 상향 폰(Pawn_Up_Advanced): 
         [MoveType.Pawn_Up_Advanced] = new PatternSet(new List<Pattern>
         {
-        new Pattern { X = 0, Y = -1, Type = PatternType.Coordinate }
+        new Pattern { X = 0, Y = -1}
         }),
                 // 한 번 이상 전진한 하향 폰(Pawn_Down_Advanced): 
                 [MoveType.Pawn_Down_Advanced] = new PatternSet(new List<Pattern>
         {
-        new Pattern { X = 0, Y = 1, Type = PatternType.Coordinate }
+        new Pattern { X = 0, Y = 1}
         })
     };
 	
@@ -147,13 +147,13 @@ namespace GfToolkit.Shared
         [WeaponType.Sword] = BasicPatternSets[BasicPatternType.King], // 검. 킹처럼 주변 8칸 공격
         [WeaponType.Shield_Up] = new PatternSet(new List<Pattern> // 방패. 폰처럼 전방 대각선 공격
         {
-            new Pattern { X = -1, Y = -1, Type = PatternType.Coordinate },
-            new Pattern { X = 1, Y = -1, Type = PatternType.Coordinate }
+            new Pattern { X = -1, Y = -1},
+            new Pattern { X = 1, Y = -1}
         }),
         [WeaponType.Shield_Down] = new PatternSet(new List<Pattern> // 방패. 폰처럼 전방 대각선 공격
         {
-            new Pattern { X = -1, Y = 1, Type = PatternType.Coordinate },
-            new Pattern { X = 1, Y = 1, Type = PatternType.Coordinate }
+            new Pattern { X = -1, Y = 1},
+            new Pattern { X = 1, Y = 1}
         }),
                 [WeaponType.Spear] = BasicPatternSets[BasicPatternType.Knight], // 창. 나이트처럼 원형 범위 공격
                 [WeaponType.Bow] = BasicPatternSets[BasicPatternType.Bishop], // 활. 비숍처럼 대각선 범위 공격
@@ -332,7 +332,7 @@ namespace GfToolkit.Shared
 			UI_Battle_FirstAttack,
 			UI_Battle_DefenderDied,
 			UI_Battle_DefenderCantCounter,
-			UI_Battle_ExcuteCounterAttack,
+			UI_Battle_ExecuteCounterAttack,
 			UI_Battle_FinalStateIndicator,
 			UI_Battle_AttackerFinalState,
 			
@@ -383,7 +383,7 @@ namespace GfToolkit.Shared
 			 [Key.UI_Battle_FirstAttack] =  "{0}, {1}에게 공격! [{2}]의 피해!",
 			 [Key.UI_Battle_DefenderDied] =  "{0}, 쓰러져 공격할 수 없습니다!",
 			 [Key.UI_Battle_DefenderCantCounter] =  "{0}, 반격할 수 없습니다!",
-			 [Key.UI_Battle_ExcuteCounterAttack] =  "{0}, {1}에게 공격! [{2}]의 피해!",
+			 [Key.UI_Battle_ExecuteCounterAttack] =  "{0}, {1}에게 공격! [{2}]의 피해!",
 			 [Key.UI_Battle_FinalStateIndicator] =  "전투 결과",
 			 [Key.UI_Battle_AttackerFinalState] =  "{0}: HP {1} / {2}",
 			 

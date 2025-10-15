@@ -38,7 +38,7 @@ public class Program
 
         Square selectedSquare = null;
         Behavior selectedBehavior = null;
-        List<UnitAction> possibleActions = null;
+        List<BehaviorTarget> possibleActions = null;
 
         // 2. Main Game Loop
         while (true)
@@ -100,7 +100,7 @@ public class Program
                 if (int.TryParse(input, out int choice) && choice > 0 && choice <= unitBehaviors.Count)
                 {
                     selectedBehavior = unitBehaviors[choice - 1];
-                    possibleActions = selectedBehavior.ActionSearcher(selectedSquare, map, selectedBehavior);
+                    possibleActions = selectedBehavior.Scope.ActionSearcher(selectedSquare, map, selectedBehavior.Accessible);
                     HighlightForConsole(possibleActions, closerMatrix); // Highlight the map and move to next state.
                 }
                 else
@@ -131,12 +131,12 @@ public class Program
                 }
 
                 // Check if the chosen target is a valid, accessible action
-                UnitAction chosenAction = possibleActions.Find(action => action.X == x && action.Y == y);
-                if (chosenAction != null && chosenAction.Type == ActionType.Accessible)
+                BehaviorTarget chosenAction = possibleActions.Find(action => action.X == x && action.Y == y);
+                if (chosenAction != null && chosenAction.Type == TargetType.Accessible)
                 {
                     // Execute the action!
                     Square targetSquare = map[y, x];
-                    string resultMessage = selectedBehavior.Excute(selectedSquare, targetSquare);
+                    string resultMessage = selectedBehavior.Execute(selectedSquare, targetSquare, map);
                     
                     if (!string.IsNullOrEmpty(resultMessage))
                     {
@@ -160,18 +160,18 @@ public class Program
             }
         }
     }
-	public static void HighlightForConsole(List<UnitAction> actions, string[,] cmatrix)
+	public static void HighlightForConsole(List<BehaviorTarget> actions, string[,] cmatrix)
 	{
 		foreach (var action in actions)
 		{
 			int x = action.X;
 			int y = action.Y;
 
-			if (action.Type == ActionType.Unaccessible)
+			if (action.Type == TargetType.Unaccessible)
 			{
 				cmatrix[y, x] = "*";
 			}
-			else if (action.Type == ActionType.Accessible)
+			else if (action.Type == TargetType.Accessible)
 			{
 				cmatrix[y, x] = "$";
 			}

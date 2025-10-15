@@ -52,12 +52,12 @@ namespace GfToolkit.Shared.Battles
 
         public override MoveType GetMoveClass()
         {
-            return this.MoveClass;
+            return MoveClass;
         }
 
         public override Weapon GetEquipment()
         {
-            return this.Equipment;
+            return Equipment;
         }
     }
 }

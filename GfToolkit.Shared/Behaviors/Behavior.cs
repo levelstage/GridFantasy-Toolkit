@@ -7,6 +7,7 @@ namespace GfToolkit.Shared.Behaviors
 	public abstract class Behavior
 	{
 		public string Name { get; set; }
+		public string Description { get; set; }
 		public PatternSet Scope { get; set; }
 		public List<BehaviorTag> Tags { get; set; }
 		public List<TeamType> Accessible { get; set; }
@@ -14,6 +15,7 @@ namespace GfToolkit.Shared.Behaviors
 		public Behavior()
 		{
 			Name = "Undefined Behavior";
+			Description = "No description.";
 			Tags = new List<BehaviorTag>();
 			Accessible = new List<TeamType> { TeamType.Enemy }; // 기본값: 적군만 공격 가능
 			ApCost = 1; // 기본 행동력 소모량

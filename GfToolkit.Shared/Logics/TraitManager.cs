@@ -34,16 +34,17 @@ namespace GfToolkit.Shared.Logics
             return availablePool.Last();
         }
 
-        public static Dictionary<int, List<Trait>> GetTraitDeck(Actor character,int startLevel=4)
+        // 캐릭터의 특성 덱을 생성하는 함수
+        public static Dictionary<int, List<Trait>> GetTraitDeck(Actor character, int startLevel = 4)
         {
             Dictionary<int, List<Trait>> TraitDeck = character.FixedTraits;
             HashSet<Trait> primalAntiPool = new HashSet<Trait>(character.Traits);
             if (character.ForbiddenTraits != null)
             {
-                foreach(var trait in character.ForbiddenTraits) primalAntiPool.Add(trait);
+                foreach (var trait in character.ForbiddenTraits) primalAntiPool.Add(trait);
             }
             bool hasHeroicTrait = character.Traits.Any(t => t.Rarity == TraitRarity.Heroic);
-;
+            ;
             foreach (int level in GameData.TraitLevels)
             {
                 if (level < startLevel) continue; // 이미 지난 레벨은 건너뜀
@@ -69,10 +70,7 @@ namespace GfToolkit.Shared.Logics
                     {
                         HashSet<Trait> antiPool = new HashSet<Trait>(primalAntiPool);
                         // 영웅 특성을 이미 가진 경우, 영웅 특성은 뽑지 않도록 함
-                        if (hasHeroicTrait)
-                        {
-                            antiPool.UnionWith(randomPool.Where(t => t.Rarity == TraitRarity.Heroic));
-                        }
+                        if (hasHeroicTrait) antiPool.UnionWith(randomPool.Where(t => t.Rarity == TraitRarity.Heroic));
                         Trait randomTrait = GetWeightedRandomTrait(randomPool, antiPool);
                         if (randomTrait != null)
                         {
@@ -81,7 +79,7 @@ namespace GfToolkit.Shared.Logics
                     }
                 }
             }
-            return TraitDeck; 
+            return TraitDeck;
         }
     }
 }

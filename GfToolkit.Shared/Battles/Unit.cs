@@ -4,6 +4,7 @@ using GfToolkit.Shared.Models.Items;
 using GfToolkit.Shared.Models.Statuses;
 using GfToolkit.Shared.Models.Buffs;
 using System.Collections.Generic;
+using GfToolkit.Shared.Logics;
 namespace GfToolkit.Shared.Battles
 {
 	public abstract class Unit
@@ -50,11 +51,11 @@ namespace GfToolkit.Shared.Battles
 			{
 				case DamageType.Physical:
 					finalDamage -= livestat.Buffed().Defense;
-					residence = 1 - Buff.netBuffMagnitude(BuffType.PhysicalResidence, livestat.Buffs) / 100;
+					residence = 1 - BattleManager.NetBuffMagnitude(BuffType.PhysicalResidence, livestat.Buffs) / 100;
 					break;
 				case DamageType.Magical:
 					finalDamage -= livestat.Buffed().MagicDefense;
-					residence = 1 - Buff.netBuffMagnitude(BuffType.MagicalResidence, livestat.Buffs) / 100;
+					residence = 1 - BattleManager.NetBuffMagnitude(BuffType.MagicalResidence, livestat.Buffs) / 100;
 					break;
 
 			}

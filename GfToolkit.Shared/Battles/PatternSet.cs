@@ -18,7 +18,7 @@ namespace GfToolkit.Shared.Battles
 			Penetration = penetration;
 		}
 
-		public List<BehaviorTarget> ActionSearcher(Square startSquare, Square[,] map, List<TeamType> accessible)
+		public List<BehaviorTarget> TargetSearcher(Square startSquare, Square[,] map, List<TeamType> accessible)
 		{
 			List<BehaviorTarget> possibleActions = new List<BehaviorTarget>();
 			int startX = startSquare.X;

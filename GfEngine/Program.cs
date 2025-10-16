@@ -100,7 +100,7 @@ public class Program
                 if (int.TryParse(input, out int choice) && choice > 0 && choice <= unitBehaviors.Count)
                 {
                     selectedBehavior = unitBehaviors[choice - 1];
-                    possibleActions = selectedBehavior.Scope.ActionSearcher(selectedSquare, map, selectedBehavior.Accessible);
+                    possibleActions = selectedBehavior.Scope.TargetSearcher(selectedSquare, map, selectedBehavior.Accessible);
                     HighlightForConsole(possibleActions, closerMatrix); // Highlight the map and move to next state.
                 }
                 else

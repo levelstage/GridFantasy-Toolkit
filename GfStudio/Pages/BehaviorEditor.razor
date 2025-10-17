@@ -1,0 +1,103 @@
+@using GfToolkit.Shared.Behaviors
+@page "/behavior-editor"
+@inject IJSRuntime JS
+@using GfStudio.Services
+@using GfToolkit.Shared
+@inject EditorDataService DataService
+
+<div class="editor-container">
+    <div class="left-panel">
+        <h3>Behaviors</h3>
+        <ul>
+            @foreach (var b in DataService.Behaviors)
+            {
+                <li @onclick="() => SelectBehavior(b)">@b.Name (@b.GetType().Name)</li>
+            }
+        </ul>
+        <select @bind="newBehaviorType">
+            <option value="AreaAttack">AreaAttack</option>
+            <option value="SelfEffect">SelfEffect</option>
+        </select>
+        <button @onclick="() => NewBehavior(newBehaviorType)">New Behavior</button>
+        <button @onclick="SaveBehavior">Save</button>
+        <button @onclick="DeleteBehavior">Delete</button>
+    </div>
+
+    <div class="right-panel">
+        @if (DataService.CurrentBehavior != null)
+        {
+            <h3>Edit Behavior</h3>
+            <div>
+                <label>Name:</label>
+                <input @bind="DataService.CurrentBehavior.Name" />
+            </div>
+            <div>
+                <label>Description:</label>
+                <textarea @bind="DataService.CurrentBehavior.Description"></textarea>
+            </div>
+            <div>
+                <label>AP Cost:</label>
+                <input type="number" @bind="DataService.CurrentBehavior.ApCost" />
+            </div>
+
+            @if (DataService.CurrentBehavior is AreaAttackBehavior area)
+            {
+                <div>
+                    <label>Power:</label>
+                    <input type="number" @bind="area.Power" />
+                </div>
+                <div>
+                    <label>Damage Type:</label>
+                    <select @bind="area.DamageType">
+                        @foreach (DamageType dt in Enum.GetValues(typeof(DamageType)))
+                        {
+                            <option value="@dt">@dt</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label>Applied BuffSet:</label>
+                    <input @bind="area.AppliedBuffSet.Name" placeholder="BuffSet Name" />
+                </div>
+            }
+
+            @if (DataService.CurrentBehavior is SelfEffectBehavior self)
+            {
+                <div>
+                    <label>Changing HP:</label>
+                    <input type="number" @bind="self.ChangingHp" />
+                </div>
+                <div>
+                    <label>Effect BuffSet:</label>
+                    <input @bind="self.Effect.Name" placeholder="BuffSet Name" />
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    string newBehaviorType = "AreaAttack";
+    void SelectBehavior(Behavior b)
+    {
+        DataService.CurrentBehavior = b;
+    }
+
+    void NewBehavior(string type)
+    {
+        if (type == "AreaAttack")
+            DataService.CurrentBehavior = new AreaAttackBehavior();
+        else if (type == "SelfEffect")
+            DataService.CurrentBehavior = new SelfEffectBehavior();
+    }
+
+    void SaveBehavior()
+    {
+        DataService.AddOrUpdateBehavior();
+    }
+
+    void DeleteBehavior()
+    {
+        DataService.DeleteBehavior(DataService.CurrentBehavior);
+    }
+}

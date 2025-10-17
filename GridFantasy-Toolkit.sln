@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GfEngine", "GfEngine\GfEngi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GfToolkit.Shared", "GfToolkit.Shared\GfToolkit.Shared.csproj", "{30F021EC-3BE1-483D-95C7-4461778D0259}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GfStudio", "GfStudio\GfStudio.csproj", "{08AE26B4-BD32-446F-A418-C005E9F79F69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{30F021EC-3BE1-483D-95C7-4461778D0259}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30F021EC-3BE1-483D-95C7-4461778D0259}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30F021EC-3BE1-483D-95C7-4461778D0259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08AE26B4-BD32-446F-A418-C005E9F79F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08AE26B4-BD32-446F-A418-C005E9F79F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08AE26B4-BD32-446F-A418-C005E9F79F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08AE26B4-BD32-446F-A418-C005E9F79F69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

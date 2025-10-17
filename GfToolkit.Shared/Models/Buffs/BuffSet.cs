@@ -27,6 +27,7 @@ namespace GfToolkit.Shared.Models.Buffs
 
 		public BuffSet(BuffSet p)
 		{
+			Code = p.Code;
 			Name = p.Name;
 			Description = p.Description;
 			Duration = p.Duration;

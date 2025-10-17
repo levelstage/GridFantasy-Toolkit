@@ -1,7 +1,7 @@
 namespace GfToolkit.Shared
 {
 	// Type들
-	public enum BasicPatternType // 체스의 다섯 기물의 패턴을 저장해둔 dictioanry에 접근하기 위한 keys.
+	public enum BasicPatternType // 기본적인 패턴을 저장해둔 dictioanry에 접근하기 위한 keys.
 	{
 		King, Knight, Bishop, Queen, Rook
 	}

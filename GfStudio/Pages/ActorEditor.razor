@@ -1,0 +1,169 @@
+﻿@page "/actor-editor"
+@inject IJSRuntime JS
+
+<h2>Actor Editor</h2>
+
+<div>
+    <label>Code:</label>
+    <input @bind="actor.Code" />
+</div>
+<div>
+    <label>Name:</label>
+    <input @bind="actor.Name" />
+</div>
+
+<hr />
+<h4>Initial Stats</h4>
+<div>
+    <label>Max HP:</label> <input type="number" @bind="actor.MaxHP" />
+    <label>Defense:</label> <input type="number" @bind="actor.Defense" />
+    <label>Magic Defense:</label> <input type="number" @bind="actor.MagicDefense" />
+    <label>Attack:</label> <input type="number" @bind="actor.Attack" />
+    <label>Magic Attack:</label> <input type="number" @bind="actor.MagicAttack" />
+    <label>Agility:</label> <input type="number" @bind="actor.Agility" />
+</div>
+
+<hr />
+<h4>Base Growth</h4>
+<div>
+    <label>Max HP:</label> <input type="number" @bind="actor.GrowthMaxHP" />
+    <label>Defense:</label> <input type="number" @bind="actor.GrowthDefense" />
+    <label>Magic Defense:</label> <input type="number" @bind="actor.GrowthMagicDefense" />
+    <label>Attack:</label> <input type="number" @bind="actor.GrowthAttack" />
+    <label>Magic Attack:</label> <input type="number" @bind="actor.GrowthMagicAttack" />
+    <label>Agility:</label> <input type="number" @bind="actor.GrowthAgility" />
+</div>
+
+<hr />
+<h4>Class / Weapon</h4>
+<div>
+    <label>Move Type:</label>
+    <input @bind="actor.MoveType" />
+    <label>Weapon Type:</label>
+    <input @bind="actor.WeaponType" />
+</div>
+
+<hr />
+<h4>Unique Skill / Equipment</h4>
+<div>
+    <label>Unique Skill Code:</label> <input @bind="actor.UniqueSkillCode" />
+    <label>Equipment Code:</label> <input @bind="actor.EquipmentCode" />
+</div>
+
+<hr />
+<h4>Inventory</h4>
+<div>
+    <input @bind="newInventoryItem" placeholder="Item Code" />
+    <button @onclick="AddInventory">Add</button>
+</div>
+<ul>
+    @foreach (var item in actor.InventoryCodes)
+    {
+        <li>@item <button @onclick="() => RemoveInventory(item)">Remove</button></li>
+    }
+</ul>
+
+<hr />
+<h4>Traits</h4>
+<div>
+    <label>Fixed Traits:</label>
+    <input @bind="newFixedTrait" placeholder="Trait Code" />
+    <button @onclick="AddFixedTrait">Add</button>
+</div>
+<ul>
+    @foreach (var trait in actor.FixedTraitCodes)
+    {
+        <li>@trait <button @onclick="() => RemoveFixedTrait(trait)">Remove</button></li>
+    }
+</ul>
+
+<div>
+    <label>Forbidden Traits:</label>
+    <input @bind="newForbiddenTrait" placeholder="Trait Code" />
+    <button @onclick="AddForbiddenTrait">Add</button>
+</div>
+<ul>
+    @foreach (var trait in actor.ForbiddenTraitCodes)
+    {
+        <li>@trait <button @onclick="() => RemoveForbiddenTrait(trait)">Remove</button></li>
+    }
+</ul>
+
+<hr />
+<button @onclick="SaveActor">Save as JSON</button>
+<button @onclick="LoadSample">Load Sample JSON</button>
+
+@code {
+    private ActorEditorModel actor = new ActorEditorModel();
+
+    private string newInventoryItem = "";
+    private string newFixedTrait = "";
+    private string newForbiddenTrait = "";
+
+    private void AddInventory()
+    {
+        if (!string.IsNullOrWhiteSpace(newInventoryItem))
+        {
+            actor.InventoryCodes.Add(newInventoryItem);
+            newInventoryItem = "";
+        }
+    }
+
+    private void RemoveInventory(string code) => actor.InventoryCodes.Remove(code);
+
+    private void AddFixedTrait()
+    {
+        if (!string.IsNullOrWhiteSpace(newFixedTrait))
+        {
+            actor.FixedTraitCodes.Add(newFixedTrait);
+            newFixedTrait = "";
+        }
+    }
+
+    private void RemoveFixedTrait(string code) => actor.FixedTraitCodes.Remove(code);
+
+    private void AddForbiddenTrait()
+    {
+        if (!string.IsNullOrWhiteSpace(newForbiddenTrait))
+        {
+            actor.ForbiddenTraitCodes.Add(newForbiddenTrait);
+            newForbiddenTrait = "";
+        }
+    }
+
+    private void RemoveForbiddenTrait(string code) => actor.ForbiddenTraitCodes.Remove(code);
+
+    private async Task SaveActor()
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(actor, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+        await JS.InvokeVoidAsync("downloadFile", $"{actor.Code}.json", json);
+    }
+
+    private void LoadSample()
+    {
+        actor = new ActorEditorModel
+        {
+            Code = "ACT001",
+            Name = "Hero",
+            MaxHP = 100,
+            Defense = 10,
+            MagicDefense = 5,
+            Attack = 15,
+            MagicAttack = 8,
+            Agility = 12,
+            GrowthMaxHP = 5,
+            GrowthDefense = 1,
+            GrowthMagicDefense = 1,
+            GrowthAttack = 2,
+            GrowthMagicAttack = 1,
+            GrowthAgility = 1,
+            MoveType = "Ground",
+            WeaponType = "Sword",
+            UniqueSkillCode = "SKL001",
+            EquipmentCode = "WEA001",
+            InventoryCodes = new List<string> { "ITM001", "ITM002" },
+            FixedTraitCodes = new List<string> { "TRT001" },
+            ForbiddenTraitCodes = new List<string> { "TRT999" }
+        };
+    }
+}

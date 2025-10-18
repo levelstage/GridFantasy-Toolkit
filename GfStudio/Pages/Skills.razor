@@ -1,0 +1,62 @@
+@page "/skills"
+<DatabaseLayout>
+    @*중앙: 항목 리스트 *@
+    <ListContent>
+        <DataListLayout Items="ActorData" TItem="(int, string)">
+            <ListItemTemplate>
+                <MudListItem Value = "context">
+                    @($"{context.Item1.ToString("D4")} {context.Item2}")
+                </MudListItem>
+            </ListItemTemplate>
+        </DataListLayout>
+    </ListContent>
+    @code {
+    private List<(int,string)> ActorData = new List<(int,string)>{
+        (0, "Hagen"), (1, "valery")
+    };
+    }
+    <EditorContent>
+        @* SkillEditor 컴포넌트의 UI 뼈대입니다. *@
+
+<MudPaper Class="pa-4" Style="height: 100%; overflow-y: auto;">
+    <MudStack Spacing="4">
+
+        @* --- 기본 정보 --- *@
+        <MudText Typo="Typo.h5">Skill Settings</MudText>
+        <MudTextField T="string" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField T="string" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="5" />
+        <MudSwitch T="bool" Label="Passive Skill" Color="Color.Primary" />
+
+        @* --- 팝업 선택 항목들 --- *@
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudStack Spacing="2">
+
+                <div>
+                    <MudText Inline="true">Skill Buffs (Passive): </MudText>
+                    @* 여기에 선택된 버프셋 칩들이 표시됩니다. *@
+                    <MudChip T="string" Color="Color.Success">Iron Skin</MudChip>
+                    <MudChip T="string" Color="Color.Success">Focus</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+
+                <div>
+                    <MudText Inline="true">Skill Behavior: </MudText>
+                    @* 여기에 선택된 비헤이비어 칩이 표시됩니다. *@
+                    <MudChip T="string" Color="Color.Primary">Fireball Behavior</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                </div>
+                
+            </MudStack>
+        </MudPaper>
+
+    </MudStack>
+</MudPaper>
+
+@code {
+    // 여기에 SkillViewModel 클래스와 로직을 구현합니다.
+    // 1. Name, IsPassive, Description 등의 속성을 가진 ViewModel을 만듭니다.
+    // 2. SkillBuffs와 SkillBehavior는 ID 리스트나 객체로 관리합니다.
+    // 3. 각 팝업 버튼 클릭 시 MudDialog를 띄우는 로직을 구현합니다.
+}
+    </EditorContent>
+</DatabaseLayout>

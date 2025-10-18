@@ -1,0 +1,25 @@
+@* 이것이 우리의 새로운 '액자' 컴포넌트입니다. *@
+
+<MudGrid Spacing="2" Style="height: 100%;">
+
+    @* 1. 왼쪽: 목록이 들어올 자리 *@
+    <MudItem xs="4" Style="max-width: 150px">
+        @ListContent
+    </MudItem>
+
+    @* 2. 오른쪽: 상세 에디터가 들어올 자리 *@
+    <MudItem xs="8">
+        @EditorContent
+    </MudItem>
+
+</MudGrid>
+
+@code {
+    // "이 컴포넌트는 ListContent 라는 이름의 빈 공간을 가집니다."
+    [Parameter]
+    public RenderFragment ListContent { get; set; }
+
+    // "이 컴포넌트는 EditorContent 라는 이름의 빈 공간을 가집니다."
+    [Parameter]
+    public RenderFragment EditorContent { get; set; }
+}

@@ -21,20 +21,20 @@ namespace GfToolkit.Shared.Battles
 					{
 						// 테스트용 적 폰 배치. 7랭크에 위치할 예정임.
 						Status pawnStatus = new Status(20, 10, 5, 8, 0, 5); // 보병 스탯
-						Unit myPawn = new InstantUnit("방패병", pawnStatus, MoveType.Pawn_Down, GameData.AllWeapons["IronShield"], Teams.Enemies);
+						Unit myPawn = new InstantUnit("방패병", pawnStatus, MoveType.Pawn_Down, GameData.AllWeapons[1], Teams.Enemies);
 						s.PlaceUnit(myPawn);
 						Enemies.Add(myPawn);
 					}
 					if (i == 6)
 					{
 						// 테스트용 아군 폰 배치. 2랭크에 위치할 예정임.
-						Unit myPawn = new InstantUnit(GameData.AllActors["Phantom"], Teams.Players);
+						Unit myPawn = new InstantUnit(GameData.AllActors[0], Teams.Players);
 						s.PlaceUnit(myPawn);
 
 					}
 					if (i == 5 && j == 5)
 					{
-						Actor hagen = new Actor(GameData.AllActors["Hagen"]);
+						Actor hagen = new Actor(GameData.AllActors[1]);
 						Unit myPiece = new ActorUnit(hagen, Teams.Players);
 						s.PlaceUnit(myPiece);
 					}

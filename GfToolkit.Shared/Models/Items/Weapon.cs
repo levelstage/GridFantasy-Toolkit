@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using GfToolkit.Shared.Models.Buffs;
 namespace GfToolkit.Shared.Models.Items
 {
 	public class Weapon : Item
 	{
-		public string Code { get; set; }
 		public int Power { get; set; }
 		public WeaponType Type { get; set; }
+		public BuffSet EquipBuff { get; set; }
 		public List<WeaponTag> WTags { get; set; }
 		public Weapon()
 		{
@@ -15,6 +16,7 @@ namespace GfToolkit.Shared.Models.Items
 		}
 		public Weapon(Weapon parent)
 		{
+			
 			Code = parent.Code;
 			Name = parent.Name;
 			Power = parent.Power;

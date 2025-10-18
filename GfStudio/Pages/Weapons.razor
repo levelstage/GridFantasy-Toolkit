@@ -1,0 +1,80 @@
+@page "/weapons"
+<DatabaseLayout>
+    @*중앙: 항목 리스트 *@
+    <ListContent>
+        <DataListLayout Items="ActorData" TItem="(int, string)">
+            <ListItemTemplate>
+                <MudListItem Value = "context">
+                    @($"{context.Item1.ToString("D4")} {context.Item2}")
+                </MudListItem>
+            </ListItemTemplate>
+        </DataListLayout>
+    </ListContent>
+    @code {
+    private List<(int,string)> ActorData = new List<(int,string)>{
+        (0, "Hagen"), (1, "valery")
+    };
+    }
+    <EditorContent>
+        @* WeaponEditor 컴포넌트의 UI 뼈대입니다. *@
+
+<MudPaper Class="pa-4" Style="height: 100%; overflow-y: auto;">
+    <MudStack Spacing="4">
+
+        @* --- 공통 속성 (SymbolItem Base) --- *@
+        <MudText Typo="Typo.h5">Weapon Settings</MudText>
+        <MudTextField T="string" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField T="string" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="3" />
+
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudStack Spacing="2">
+                <div>
+                    <MudText Inline="true">Item Buffs (Passive): </MudText>
+                    @* 여기에 기본 아이템 버프 칩들이 표시됩니다 *@
+                    <MudChip T="string" Color="Color.Success">Slight Charisma Boost</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+                <div>
+                    <MudText Inline="true">Item Tags: </MudText>
+                    @* 여기에 기본 아이템 태그 칩들이 표시됩니다 *@
+                    <MudChip T="string" Color="Color.Info">Legendary</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+            </MudStack>
+        </MudPaper>
+
+        @* --- 무기 전용 속성 --- *@
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudText Typo="Typo.h6" GutterBottom="true">Weapon Properties</MudText>
+            <MudNumericField T="int" Label="Power" Variant="Variant.Outlined" Margin="Margin.Dense" />
+            <MudStack Spacing="2" Class="mt-2">
+                <div>
+                    <MudText Inline="true">Type: </MudText>
+                    @* 여기에 선택된 무기 타입 칩이 표시됩니다 *@
+                    <MudChip T="string" Color="Color.Primary">Sword</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                </div>
+                <div>
+                    <MudText Inline="true">Equip Buff: </MudText>
+                    @* 여기에 장착 시 발동하는 버프셋 칩이 표시됩니다 *@
+                    <MudChip T="string" Color="Color.Success">Warrior's Might</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                </div>
+                <div>
+                    <MudText Inline="true">Weapon Tags: </MudText>
+                    @* 여기에 무기 전용 태그 칩들이 표시됩니다 *@
+                    <MudChip T="string" Color="Color.Warning">Two-Handed</MudChip>
+                    <MudChip T="string" Color="Color.Error">Unbreakable</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+            </MudStack>
+        </MudPaper>
+        
+    </MudStack>
+</MudPaper>
+
+@code {
+    // 여기에 WeaponViewModel 클래스와 로직을 구현합니다.
+}
+    </EditorContent>
+</DatabaseLayout>

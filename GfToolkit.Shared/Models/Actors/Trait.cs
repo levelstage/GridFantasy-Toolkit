@@ -5,7 +5,7 @@ namespace GfToolkit.Shared.Models.Actors
 {
     public class Trait : IEquatable<Trait>
     {
-        public string Code { get; set; } // 특성 고유 ID (예: "Hagen_U_01")
+        public int Code { get; set; } // 특성 고유 ID (예: "Hagen_U_01")
         public string Name { get; set; }
         public string Description { get; set; }
 

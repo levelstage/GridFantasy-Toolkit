@@ -4,7 +4,7 @@ namespace GfToolkit.Shared.Models.Buffs
 {
 	public class BuffSet // 진정한 객체로서의 버프. 여러 Buff들의 묶음임.
 	{
-		public string Code { get; set; }
+		public int Code { get; set; }
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public int Duration { get; set; } // 이 '효과 묶음'의 지속시간

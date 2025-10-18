@@ -1,0 +1,61 @@
+@page "/buffsets"
+<DatabaseLayout>
+    @*중앙: 항목 리스트 *@
+    <ListContent>
+        <DataListLayout Items="ActorData" TItem="(int, string)">
+            <ListItemTemplate>
+                <MudListItem Value = "context">
+                    @($"{context.Item1.ToString("D4")} {context.Item2}")
+                </MudListItem>
+            </ListItemTemplate>
+        </DataListLayout>
+    </ListContent>
+    @code {
+    private List<(int,string)> ActorData = new List<(int,string)>{
+        (0, "Hagen"), (1, "valery")
+    };
+    }
+    <EditorContent>
+        @* BuffSetEditor 컴포넌트의 UI 뼈대입니다. *@
+
+<MudPaper Class="pa-4" Style="height: 100%; overflow-y: auto;">
+    <MudStack Spacing="4">
+
+        @* --- 기본 정보 --- *@
+        <MudText Typo="Typo.h5">Buff Set Settings</MudText>
+        <MudTextField T="string" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField T="string" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="3" />
+        <MudNumericField T="int" Label="Duration (Turns)" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+        @* --- Boolean 속성 (스위치) --- *@
+        <MudPaper Outlined="true" Class="pa-3 d-flex justify-space-around">
+            <MudSwitch T="bool" Label="Is Buff" Color="Color.Primary" />
+            <MudSwitch T="bool" Label="Is Debuff" Color="Color.Error" />
+            <MudSwitch T="bool" Label="Removable" Color="Color.Warning" />
+            <MudSwitch T="bool" Label="Visible" Color="Color.Info" />
+        </MudPaper>
+
+
+        @* --- 팝업 선택 항목 (Effects) --- *@
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudText Typo="Typo.h6" GutterBottom="true">Effects</MudText>
+            <div class="d-flex flex-wrap gap-2">
+                @* 여기에 선택된 개별 버프 효과 칩들이 표시됩니다. *@
+                <MudChip T="string" Color="Color.Success">ATK +20%</MudChip>
+                <MudChip T="string" Color="Color.Error">DEF -10</MudChip>
+                <MudChip T="string" Color="Color.Default">Poison</MudChip>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+            </div>
+        </MudPaper>
+
+    </MudStack>
+</MudPaper>
+
+@code {
+    // 여기에 BuffSetViewModel 클래스와 로직을 구현합니다.
+    // 1. Name, Description, Duration 및 4개의 bool 속성을 가진 ViewModel을 만듭니다.
+    // 2. Effects는 개별 버프(Buff) 객체의 리스트로 관리합니다.
+    // 3. Add 버튼 클릭 시 팝업을 띄워 리스트에 추가할 개별 버프를 선택하는 로직을 구현합니다.
+}
+    </EditorContent>
+</DatabaseLayout>

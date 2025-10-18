@@ -1,6 +1,6 @@
 public class ActorEditorModel
 {
-    public string Code { get; set; } = "";
+    public int Code { get; set; } = 0;
     public string Name { get; set; } = "";
 
     // 초기 스테이터스

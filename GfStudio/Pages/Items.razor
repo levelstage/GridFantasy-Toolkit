@@ -1,0 +1,76 @@
+@page "/items"
+<DatabaseLayout>
+    @*중앙: 항목 리스트 *@
+    <ListContent>
+        <DataListLayout Items="ActorData" TItem="(int, string)">
+            <ListItemTemplate>
+                <MudListItem Value = "context">
+                    @($"{context.Item1.ToString("D4")} {context.Item2}")
+                </MudListItem>
+            </ListItemTemplate>
+        </DataListLayout>
+    </ListContent>
+    @code {
+    private List<(int,string)> ActorData = new List<(int,string)>{
+        (0, "Hagen"), (1, "valery")
+    };
+    }
+    <EditorContent>
+        @* ItemEditor 컴포넌트의 UI 뼈대입니다. *@
+
+<MudPaper Class="pa-4" Style="height: 100%; overflow-y: auto;">
+    <MudStack Spacing="4">
+
+        @* --- 아이템 클래스 선택 --- *@
+        <MudSelect T="string" Label="Item Class" Variant="Variant.Outlined">
+            <MudSelectItem T="string" Value="@("SymbolItem")">Symbol Item (기본)</MudSelectItem>
+            <MudSelectItem T="string" Value="@("ActiveItem")">Active Item (사용 가능)</MudSelectItem>
+        </MudSelect>
+
+        @* --- 공통 속성 --- *@
+        <MudText Typo="Typo.h5">Item Settings</MudText>
+        <MudTextField T="string" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField T="string" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="4" />
+
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudStack Spacing="2">
+                <div>
+                    <MudText Inline="true">Item Buffs (Passive): </MudText>
+                    @* 여기에 선택된 버프셋 칩들이 표시됩니다 *@
+                    <MudChip T="string" Color="Color.Success">Minor Stat Boost</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+                <div>
+                    <MudText Inline="true">Item Tags: </MudText>
+                    @* 여기에 선택된 태그 칩들이 표시됩니다 *@
+                    <MudChip T="string" Color="Color.Info">Quest Item</MudChip>
+                    <MudChip T="string" Color="Color.Warning">Crafting Material</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+            </MudStack>
+        </MudPaper>
+
+        @* --- 선택된 클래스에 따른 추가 속성 (ActiveItem일 경우) --- *@
+        
+        @* @if (선택된_클래스 == "ActiveItem") { *@
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudText Typo="Typo.h6">Active Item Properties</MudText>
+            <div class="mt-2">
+                <MudText Inline="true">Usage Behavior: </MudText>
+                @* 여기에 선택된 비헤이비어 칩이 표시됩니다 *@
+                <MudChip T="string" Color="Color.Primary">Use Potion Behavior</MudChip>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+            </div>
+        </MudPaper>
+        @* } *@
+        
+    </MudStack>
+</MudPaper>
+
+@code {
+    // 여기에 ItemViewModel 클래스와 로직을 구현합니다.
+    // 1. Item Class (enum)를 가지는 ViewModel을 만듭니다.
+    // 2. MudSelect의 선택 값에 따라 @if문을 제어하여 동적으로 UI를 표시합니다.
+}
+    </EditorContent>
+</DatabaseLayout>

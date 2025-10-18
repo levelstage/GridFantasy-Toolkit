@@ -1,0 +1,105 @@
+@page "/"
+
+<PageTitle>GIStudio</PageTitle>
+
+<DatabaseLayout>
+
+    @*중앙: 항목 리스트 *@
+    <ListContent>
+        <DataListLayout Items="ActorData" TItem="(int, string)">
+            <ListItemTemplate>
+                <MudListItem Value = "context">
+                    @($"{context.Item1.ToString("D4")} {context.Item2}")
+                </MudListItem>
+            </ListItemTemplate>
+        </DataListLayout>
+    </ListContent>
+    @code {
+    private List<(int,string)> ActorData = new List<(int,string)>{
+        (0, "Hagen"), (1, "valery")
+    };
+    }
+
+    @*우측: 상세 에디터 *@
+    <EditorContent>
+    <MudPaper Class="pa-4" Style="height: 100%; overflow-y: auto;">
+    <MudStack Spacing="4">
+
+        @* --- 기본 정보 --- *@
+        <MudTextField T=string Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+        @* --- 초기 능력치 (Initial Stats) --- *@
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudText Typo="Typo.h6" GutterBottom="true">Initial Stats</MudText>
+            <MudGrid Spacing="1">
+                <MudItem xs="4"><MudNumericField T="int" Label="Max HP" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Defense" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Magic Defense" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Attack" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Magic Attack" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Agility" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        @* --- 성장률 (Base Growth) --- *@
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudText Typo="Typo.h6" GutterBottom="true">Base Growth</MudText>
+            <MudGrid Spacing="1">
+                <MudItem xs="4"><MudNumericField T="int" Label="Max HP" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Defense" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Magic Defense" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Attack" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Magic Attack" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+                <MudItem xs="4"><MudNumericField T="int" Label="Agility" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        @* --- 팝업 선택 항목들 --- *@
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudStack Spacing="1">
+                
+                <div>
+                    <MudText Inline="true">Weapon Type: </MudText>
+                    @* 선택된 무기군 칩들이 여기에 표시됩니다 *@
+                    <MudChip T=int Color="Color.Primary">Sword</MudChip> 
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+
+                <div>
+                    <MudText Inline="true">Skills: </MudText>
+                    <MudChip T=string Color="Color.Secondary">Fireball</MudChip>
+                    <MudChip T=string Color="Color.Secondary">Heal</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+                
+                <div>
+                    <MudText Inline="true">Initial Weapon: </MudText>
+                    <MudChip T=string Color="Color.Info">Iron Sword</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                </div>
+
+                <div>
+                    <MudText Inline="true">Inventory: </MudText>
+                    <MudChip T=string Color="Color.Success">Potion (3)</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+
+                <div>
+                    <MudText Inline="true">Fixed Traits: </MudText>
+                    <MudChip T=string Color="Color.Warning">Warrior's Spirit</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+
+                <div>
+                    <MudText Inline="true">Forbidden Traits: </MudText>
+                    <MudChip T=string Color="Color.Error">Cowardice</MudChip>
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+            </MudStack>
+        </MudPaper>
+
+    </MudStack>
+</MudPaper>
+</EditorContent>
+
+</DatabaseLayout>

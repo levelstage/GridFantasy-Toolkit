@@ -1,16 +1,30 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+<MudLayout>
+    @* --- 왼쪽 사이드바 (모든 페이지 공통) --- *@
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2" Variant="DrawerVariant.Persistent">
+        <MudNavMenu Class="mt-2">
+            <MudText Typo="Typo.h6" Class="px-4 py-2">Database</MudText>
+            <MudNavLink Href="/">Actors</MudNavLink>
+            <MudNavLink Href="/behaviors">Behaviors</MudNavLink>
+            <MudNavLink Href="/skills">Skills</MudNavLink>
+            <MudNavLink Href="/items">Items</MudNavLink>
+            <MudNavLink Href="/weapons">Weapons</MudNavLink>
+            <MudNavLink Href="/buffsets">Buffsets</MudNavLink>
+            <MudNavLink Href="/traits">Traits</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+
+    @* --- 메인 콘텐츠 영역 (페이지마다 바뀔 알맹이) --- *@
+    <MudMainContent Class="pa-2">
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true; // 사이드바는 항상 열려있도록 설정
+}

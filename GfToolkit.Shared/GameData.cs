@@ -161,12 +161,12 @@ namespace GfToolkit.Shared
                 [WeaponType.MagicMissile] = BasicPatternSets[BasicPatternType.Queen] // 화염구. 퀸처럼 전방향 공격
     };
 	
-	public static readonly Dictionary<string, BuffSet> AllBuffSets = new Dictionary<string, BuffSet>
+	public static readonly Dictionary<int, BuffSet> AllBuffSets = new Dictionary<int, BuffSet>
     {
 		// '전선 구축' 오라가 실제로 주변에 뿌리는 효과 버프
-        ["FrontlineBuff"] = new BuffSet
+        [0] = new BuffSet
 		{
-			Code = "FrontlineBuff",
+			Code = 0,
             Name = Text.Get(Text.Key.BuffSet_FrontlineBuff_Name),
 			Description  = Text.Get(Text.Key.BuffSet_FrontlineBuff_Desc),
 			Effects = new List<Buff>{
@@ -189,14 +189,14 @@ namespace GfToolkit.Shared
         },
 		
         // '전선 구축' 스킬이 부여하는 오라 버프(상향 폰)
-        ["FrontlineAura"] = new BuffSet
+        [1] = new BuffSet
 		{
-			Code = "FrontlineAura",
+			Code = 1,
             Name = Text.Get(Text.Key.Skill_Frontline_Name),
             Duration = -1, // 영구 지속 (스킬을 잃지 않는 한)
             Effects = new List<Buff>{ new Aura{
             AuraTargets = new List<TeamType> { TeamType.Same, TeamType.Ally },
-            AuraEffect = "FrontlineBuff", // 오라 효과: '방어 태세' 버프를 부여
+            AuraEffect = 0, // 오라 효과: '방어 태세' 버프를 부여
 			UseAttackPattern = true
 			}
 			}
@@ -205,28 +205,28 @@ namespace GfToolkit.Shared
        
     };
 	
-	public static readonly Dictionary<string, Weapon> AllWeapons  = new Dictionary<string, Weapon> 
+	public static readonly Dictionary<int, Weapon> AllWeapons  = new Dictionary<int, Weapon> 
 	{
-		["PhantomShield"] = new Weapon{
-			Code = "PhantomShield",
+		[0] = new Weapon{
+			Code = 1,
 			Name = Text.Get(Text.Key.Weapon_PhantomShield_Name),
 			Type = WeaponType.Shield_Up,
 			Power = 40
 		},
-		["IronShield"] = new Weapon{
-			Code = "IronShield",
+		[1] = new Weapon{
+			Code = 1,
 			Name = Text.Get(Text.Key.Weapon_PhantomShield_Name),
 			Type = WeaponType.Shield_Up,
 			Power = 40
 		},
-		["LongSword"] = new Weapon{
-			Code = "LongSword",
+		[2] = new Weapon{
+			Code = 2,
 			Name = Text.Get(Text.Key.Weapon_LongSword_Name),
 			Type = WeaponType.Sword,
 			Power = 50
 		},
-		["IronSpear"] = new Weapon{
-			Code = "IronSpear",
+		[3] = new Weapon{
+			Code = 3,
 			Name = Text.Get(Text.Key.Weapon_IronSpear_Name),
 			Type = WeaponType.Spear,
 			Power = 50
@@ -234,30 +234,30 @@ namespace GfToolkit.Shared
 		
 	};
 
-	public static readonly Dictionary<string, Skill> AllSkills = new Dictionary<string, Skill>
+	public static readonly Dictionary<int, Skill> AllSkills = new Dictionary<int, Skill>
 	{
-		["Frontline"] = new Skill
+		[0] = new Skill
 		{
-			Code = "Frontline",
+			Code = 0,
 			Name = Text.Get(Text.Key.Skill_Frontline_Name),
 			IsPassive = true,
 			// 이 스킬을 가지고 있으면, 'FrontlineAura' 버프를 자신에게 부여.
-			SkillBuffs = new List<BuffSet> { AllBuffSets["FrontlineAura"] }
+			SkillBuff = AllBuffSets[1]
 		}
 	};
 
-	public static readonly Dictionary<string, Trait> AllTraits = new Dictionary<string, Trait>
+	public static readonly Dictionary<int, Trait> AllTraits = new Dictionary<int, Trait>
     {
-        ["IronSkin"] = new Trait
+        [0] = new Trait
 		{
-			Code = "IronSkin",
+			Code = 0,
 			Name = "철벽",
 			Description = "방어력이 10% 증가합니다.",
 			Type = TraitType.Tank
 		},
-		["Regeneration"] = new Trait
+		[1] = new Trait
         {
-            Code = "Regeneration",
+            Code = 1,
             Name = "재생력",
             Description = "매 턴 체력을 회복합니다.",
             Type = TraitType.Tank
@@ -274,33 +274,33 @@ namespace GfToolkit.Shared
 		{ TraitRarity.Heroic, 3 }
 	};
 	
-	public static readonly Dictionary<string, Actor> AllActors  = new Dictionary<string, Actor> 
+	public static readonly Dictionary<int, Actor> AllActors  = new Dictionary<int, Actor> 
 	{
-		["Phantom"] = new Actor // 환영 폰. 이 액터 데이터 기반으로 InstantUnit 객체 생성.
+		[0] = new Actor // 환영 폰. 이 액터 데이터 기반으로 InstantUnit 객체 생성.
 		{
-			Code = "Phantom",
+			Code = 0,
 			Name = Text.Get(Text.Key.Actor_Phantom_Name),
 			Stat = new Status(maxHp: 150, defense: 50, magicDefense: 50, attack: 70, magicAttack: 30, agility: 70),
 			MoveClass = MoveType.Pawn_Up,
 			WeaponClass = WeaponType.Shield_Up,
-			Equipment = AllWeapons["PhantomShield"], // 기본 장비
-			UniqueSkill = AllSkills["Frontline"], // 전선 유지
+			Equipment = AllWeapons[0], // 기본 장비
+			UniqueSkill = AllSkills[0], // 전선 유지
 			Traits = new List<Trait>(),
 			Inventory = new List<Item>{
-				new Weapon(AllWeapons["PhantomShield"])
+				new Weapon(AllWeapons[0])
 			}
 		},
 		
-		["Hagen"] = new Actor
+		[1] = new Actor
 		{
-			Code = "Hagen",
+			Code = 1,
 			Name = Text.Get(Text.Key.Actor_Hagen_Name),
 			Stat = new Status(maxHp: 250, defense: 60, magicDefense: 50, attack: 90, magicAttack: 40, agility: 70),
 			MoveClass = MoveType.Knight,
 			WeaponClass = WeaponType.Spear,
 			UniqueSkill = null, // 나중에 스킬 객체 추가
 			Traits = new List<Trait>(),
-			Equipment = AllWeapons["LongSword"], // 기본 장비
+			Equipment = AllWeapons[2], // 기본 장비
 			BaseGrowthRates = new GrowthRates
 			{
 				HpRate = 25,

@@ -6,7 +6,7 @@ namespace GfToolkit.Shared.Models.Actors
 {
 	public class Actor
 	{
-		public string Code { get; set; }
+		public int Code { get; set; }
 		public Status Stat;
 		public GrowthRates BaseGrowthRates;
 		public MoveType MoveClass { get; set; }

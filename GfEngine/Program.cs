@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using GfToolkit.Shared;
-using GfToolkit.Shared.Core;
-using GfToolkit.Shared.Battles;
-using GfToolkit.Shared.Behaviors;
-using GfToolkit.Shared.Models.Statuses;
+using GfEngine.Core;
+using GfEngine.Battles;
+using GfEngine.Behaviors;
+using GfEngine.Models.Statuses;
 public class Program
 {
     // A helper function to parse coordinates like "A1", "F5", etc.

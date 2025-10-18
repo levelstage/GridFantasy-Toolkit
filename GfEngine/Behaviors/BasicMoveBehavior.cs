@@ -1,5 +1,7 @@
 using GfEngine.Battles;
 using System.Collections.Generic;
+using GfToolkit.Shared;
+
 namespace GfEngine.Behaviors
 {
 	public class BasicMoveBehavior : Behavior

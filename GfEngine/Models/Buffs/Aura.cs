@@ -1,5 +1,6 @@
 using GfEngine.Battles;
 using System.Collections.Generic;
+using GfToolkit.Shared;
 namespace GfEngine.Models.Buffs
 {
 	public class Aura : Buff

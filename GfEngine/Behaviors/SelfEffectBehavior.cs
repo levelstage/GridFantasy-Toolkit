@@ -1,5 +1,7 @@
 using GfEngine.Models.Buffs;
 using GfEngine.Battles;
+using GfToolkit.Shared;
+using System.Collections.Generic;
 namespace GfEngine.Behaviors
 {
     // 자기 자신에게만 효과를 발동시키는 모든 Behavior

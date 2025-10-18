@@ -1,6 +1,7 @@
 using GfEngine.Core;
 using GfEngine.Battles;
 using System.Collections.Generic;
+using GfToolkit.Shared;
 
 namespace GfEngine.Behaviors
 {

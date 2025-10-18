@@ -1,7 +1,8 @@
 using GfEngine.Models.Actors;
 using GfEngine.Models.Items;
+using GfEngine.Logics;
 using System.Collections.Generic;
-namespace GfEngine.Campaign
+namespace GfEngine.Campaigns
 {
     public class PlayerState
     {
@@ -12,7 +13,7 @@ namespace GfEngine.Campaign
         public int NextLevelExperience { get; set; }
         public List<Actor> Roster { get; set; }
         public List<Item> PartyInventory { get; set; }
-        public Dictionary<string, Dictionary<int, List<Trait>>> TraitDeck { get; private set; }
+        public Dictionary<int, Dictionary<int, List<Trait>>> TraitDeck { get; private set; }
 
         public PlayerState()
         {
@@ -28,8 +29,8 @@ namespace GfEngine.Campaign
         {
             foreach (Actor character in GameData.AllActors.Values)
             {
-                if (character.Code == "Phantom") continue; // 팬텀은 특성 없음
-                TraitDeck[character.Code] = TraitManager.GenerateTraitDeck(character, GameData.TraitLevels[0]);
+                if (character.Code == 0) continue; // 팬텀은 특성 없음
+                TraitDeck[character.Code] = TraitManager.GetTraitDeck(character, GameData.TraitLevels[0]);
             }
         }
 

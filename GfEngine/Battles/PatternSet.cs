@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using GfToolkit.Shared;
+
 namespace GfEngine.Battles
 {
 	public class PatternSet

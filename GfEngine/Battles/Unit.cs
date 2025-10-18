@@ -5,6 +5,7 @@ using GfEngine.Models.Statuses;
 using GfEngine.Models.Buffs;
 using System.Collections.Generic;
 using GfEngine.Logics;
+using GfToolkit.Shared;
 namespace GfEngine.Battles
 {
 	public abstract class Unit

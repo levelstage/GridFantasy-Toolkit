@@ -1,3 +1,4 @@
+using GfToolkit.Shared;
 namespace GfEngine.Battles
 {
 	public class BehaviorTarget

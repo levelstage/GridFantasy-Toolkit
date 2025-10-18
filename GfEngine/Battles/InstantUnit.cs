@@ -4,6 +4,7 @@ using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
 using GfEngine.Models.Buffs;
 using System.Collections.Generic;
+using GfToolkit.Shared;
 namespace GfEngine.Battles
 {
     public class InstantUnit : Unit

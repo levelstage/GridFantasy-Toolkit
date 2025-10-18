@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GfEngine.Campaign.Dialogues
+namespace GfEngine.Campaigns.Dialogues
 {
     public class Conversation
     {

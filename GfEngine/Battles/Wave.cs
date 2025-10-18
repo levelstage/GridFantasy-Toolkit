@@ -2,6 +2,7 @@ using GfEngine.Models.Actors;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
 using System.Collections.Generic;
+using GfToolkit.Shared;
 namespace GfEngine.Battles
 {
 	public class Wave

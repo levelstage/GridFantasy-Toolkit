@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GfToolkit.Shared;
 
 namespace GfEngine.Models.Buffs
 {

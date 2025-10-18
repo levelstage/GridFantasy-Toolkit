@@ -1,5 +1,6 @@
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
+using GfToolkit.Shared;
 using System.Collections.Generic;
 
 namespace GfEngine.Models.Actors
@@ -20,8 +21,7 @@ namespace GfEngine.Models.Actors
 		// 레벨업에 따른 고정 특성, 스킬 강화 특성.
 		public Dictionary<int, List<Trait>> FixedTraits { get; set; }
 		public Dictionary<int, List<Trait>> UniqueSkillTraits { get; set; }
-		// 이 캐릭터에게 금지된 특성들. (고유스킬과의 과한 시너지, 충돌 등으로 인해)
-		public List<Trait> ForbiddenTraits { get; set; }
+		public List<Trait> ForbiddenTraits { get; set; } // 이 캐릭터에게 금지된 특성들. (고유스킬과의 과한 시너지, 충돌 등으로 인해)
 
 		public Actor() { } // 기본 생성자는 사용하지 않지만, { } 생성을 위해 만들어둠.
 		public Actor(Actor p)

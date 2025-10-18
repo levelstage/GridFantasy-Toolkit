@@ -7,8 +7,9 @@ using GfEngine.Models.Actors;
 using GfEngine.Models.Buffs;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
+using GfToolkit.Shared;
 
-namespace GfToolkit.Shared
+namespace GfEngine
 {
     public static class GameData
 {	

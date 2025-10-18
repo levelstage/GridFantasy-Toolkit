@@ -1,4 +1,5 @@
 using GfEngine.Models.Buffs;
+using GfToolkit.Shared;
 using System.Collections.Generic;
 namespace GfEngine.Models.Statuses
 {

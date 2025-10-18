@@ -2,6 +2,7 @@ using GfEngine.Core;
 using GfEngine.Models.Actors; // Trait 클래스를 쓰기 위해 추가
 using System.Collections.Generic;
 using System.Linq;
+using GfToolkit.Shared;
 
 namespace GfEngine.Logics
 {

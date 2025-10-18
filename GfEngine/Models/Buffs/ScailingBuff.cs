@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using GfEngine.Battles;
+using GfToolkit.Shared;
 
 namespace GfEngine.Models.Buffs
 {

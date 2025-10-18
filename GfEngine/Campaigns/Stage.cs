@@ -1,7 +1,7 @@
-using GfEngine.Campaign.Dialogues;
+using GfEngine.Campaigns.Dialogues;
 using GfEngine.Battles;
 
-namespace GfEngine.Campaign
+namespace GfEngine.Campaigns
 {
     // CampaignEvent -> Stage 로 이름 변경!
     public class Stage

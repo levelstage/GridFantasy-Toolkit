@@ -1,4 +1,6 @@
 using GfEngine.Models.Buffs;
+using GfToolkit.Shared;
+using System.Collections.Generic;
 namespace GfEngine.Logics
 {
     public static class BattleManager

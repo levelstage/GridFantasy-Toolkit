@@ -5,6 +5,7 @@ using GfEngine.Core;
 using GfEngine.Battles;
 using GfEngine.Behaviors;
 using GfEngine.Models.Statuses;
+using GfEngine;
 public class Program
 {
     // A helper function to parse coordinates like "A1", "F5", etc.

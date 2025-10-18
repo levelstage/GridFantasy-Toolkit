@@ -1,4 +1,5 @@
-namespace GfEngine.Campaign.Dialogues
+using GfToolkit.Shared;
+namespace GfEngine.Campaigns.Dialogues
 {
     public class DialogueLine
     {

@@ -3,6 +3,7 @@ using GfEngine.Models.Items;
 using GfEngine.Battles;
 using System.Collections.Generic;
 using System;
+using GfToolkit.Shared;
 namespace GfEngine.Behaviors
 {
     public class BasicAttackBehavior : Behavior

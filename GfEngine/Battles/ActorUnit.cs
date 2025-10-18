@@ -1,6 +1,7 @@
 using GfEngine.Models.Actors;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
+using GfToolkit.Shared;
 
 namespace GfEngine.Battles
 {

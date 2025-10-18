@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GfEngine.Models.Buffs;
+using GfToolkit.Shared;
 namespace GfEngine.Models.Items
 {
 	public class Weapon : Item

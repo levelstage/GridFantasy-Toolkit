@@ -1,4 +1,5 @@
 using GfEngine.Battles;
+using GfEngine.Logics;
 using GfEngine.Models.Buffs;
 using GfToolkit.Shared;
 using System.Collections.Generic;
@@ -9,15 +10,17 @@ namespace GfEngine.Behaviors
     public class AreaAttackBehavior : Behavior
     {
         public PatternSet Area;
-        public int Power;
+        public int DamageConstant;
+        public List<(StatType, float)> Coefficients;
         public DamageType DamageType;
-        public BuffSet AppliedBuffSet;
+        public BuffSet ApplyingBuffSet;
 
         // 생성자에서 피해량, 피해 타입, 공격 범위(PatternSet) 등 '데이터'를 받는다.
         public AreaAttackBehavior() : base()
         {
             Name = ""; // 기본 이름
-            Power = 10; // 기본 피해량
+            DamageConstant = 0; // 기본 피해량
+            Coefficients = new List<(StatType, float)>(); // 계수 없음.
             DamageType = DamageType.Physical; // 기본 피해 타입
         }
 
@@ -31,8 +34,13 @@ namespace GfEngine.Behaviors
                     Square sq = map[bt.Y, bt.X];
                     if (sq.Occupant != null)
                     {
-                        sq.Occupant.TakeDamage(Power, DamageType);
-                        sq.Occupant.LiveStat.Buffs.Add(new BuffSet(AppliedBuffSet));
+                        int damage = DamageConstant;
+                        foreach ((StatType, float) iter in Coefficients)
+                        {
+                            damage += BattleManager.GetModifiedStat(origin.Occupant.LiveStat.Buffed(), iter.Item1, iter.Item2);
+                        }
+                        sq.Occupant.TakeDamage(damage, DamageType);
+                        sq.Occupant.LiveStat.Buffs.Add(new BuffSet(ApplyingBuffSet));
                     }
                 }
             }

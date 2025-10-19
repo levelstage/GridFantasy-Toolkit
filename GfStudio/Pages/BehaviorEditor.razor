@@ -1,0 +1,151 @@
+@* BehaviorEditor 컴포넌트의 UI 뼈대 (T 타입 지정 완료) *@
+@page "/behaviors"
+@using GfToolkit.Shared.Dtos.Behaviors
+@inject IDialogService DialogService
+<DatabaseLayout>
+<ListContent>
+        <DataListLayout Items="_behaviors" TItem="BehaviorDto" OnItemSelected="HandleBehaviorSelected">
+            <ListItemTemplate>
+                <MudListItem Value = "context">
+                    @($"{context.Code.ToString("D4")} {context.Name}")
+                </MudListItem>
+            </ListItemTemplate>
+        </DataListLayout>
+</ListContent>
+<EditorContent>
+    <MudPaper Class="pa-4" Style="height: 100%;">
+        <MudGrid Spacing="4">
+
+            <MudItem xs="12" sm="6">
+                <MudStack Spacing="4">
+
+                    <MudText Typo="Typo.h5">Behavior Settings</MudText>
+                    <MudGrid>
+                        <MudItem xs="8">
+                            <MudTextField T="string" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="_selectedBehavior.Name"/>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudNumericField T="int" Label="AP Cost" Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="_selectedBehavior.ApCost"/>
+                        </MudItem>
+                    </MudGrid>
+                    <MudTextField T="string" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="3" @bind-Value="_selectedBehavior.Description"/>
+
+                    <MudSelect T="string" Label="Behavior Type" @bind-Value="_selectedBehavior.Type">
+                        @foreach(string item in _behaviorTypes)
+                        {
+                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudPaper Outlined="true" Class="pa-3">
+                        <MudStack Spacing="2">
+                            <div>
+                                <MudText Inline="true">Scope: </MudText>
+                                <MudChip T="string" Color="Color.Primary">@_selectedBehavior.Scope</MudChip>
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                            </div>
+                            <div>
+                                <MudText Inline="true">Tags: </MudText>
+                                @foreach(BehaviorTag iter in _selectedBehavior.Tags){
+                                    <MudChip T="string" Color="Color.Secondary">@iter</MudChip>
+                                }
+                                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                            </div>
+                            <div>
+                                <MudText Inline="true">Valid Targets: </MudText>
+                                @foreach(TeamType iter in _selectedBehavior.Accessible){
+                                    <MudChip T="string" Color="Color.Info">@iter</MudChip>
+                                }
+                                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                            </div>
+                        </MudStack>
+                    </MudPaper>
+                </MudStack>
+            </MudItem>
+
+            <MudItem xs="12" sm="6">
+                <MudStack Spacing="4">
+                    
+                    @if (_selectedBehavior is AreaAttackBehaviorDto aab)
+                    {
+                        <MudPaper Outlined="true" Class="pa-3" Style="height:100%">
+                        <MudStack Spacing="3">
+                            <MudText Typo="Typo.h6">Area Attack Properties</MudText>
+
+                            <MudGrid Spacing="2">
+                                <MudItem xs="6">
+                                    <MudSelect T="BasicPatternType" Label="Area" Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="aab.Area">
+                                        @foreach(BasicPatternType iter in _patternTypeOptions)
+                                        {
+                                            <MudSelectItem T="BasicPatternType" Value="iter">@iter</MudSelectItem>
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+                                <MudItem xs="6">
+                                    <MudSelect T="DamageType" Label="Damage Type" Variant="Variant.Outlined" Margin="Margin.Dense">
+                                        @foreach(DamageType iter in _damageTypeOptions)
+                                        {
+                                            <MudSelectItem T="DamageType" Value="iter">@iter</MudSelectItem>
+                                        }
+                                    </MudSelect>
+                                </MudItem>
+                                <MudItem xs="12">
+                                    <MudNumericField T="int" Label="Damage Constant" HelperText="계수 계산에 더해지는 고정 피해량" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                </MudItem>
+                            </MudGrid>
+                            
+                            <div class="d-flex align-center">
+                                <MudTextField T="string" Label="Applied BuffSet" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                            ReadOnly="true" Value=@"AreaAttack_GetApplyingBuffName(aab.ApplyingBuffSetCode)" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" />
+                            </div>
+
+                            <MudPaper Outlined="true" Style="display: flex; flex-direction: column;">
+                                <MudToolBar Dense="true">
+                                    <MudText Typo="Typo.subtitle1">Coefficients</MudText>
+                                    <MudSpacer />
+                                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                </MudToolBar>
+
+                                <MudTable T="(StatType, float)" Items="aab.Coefficients" Dense="true" Hover="true" Breakpoint="Breakpoint.None">
+                                    <HeaderContent>
+                                        <MudTh>Target Stat</MudTh>
+                                        <MudTh>Scale Factor</MudTh>
+                                        <MudTh>Actions</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd>@context.Item1</MudTd>
+                                        <MudTd>@context.Item2</MudTd>
+                                        <MudTd>
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" />
+                                        </MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            </MudPaper>
+
+                        </MudStack>
+                    </MudPaper>
+                    }
+                    else if (_selectedBehavior is SelfEffectBehaviorDto seb)
+                    {
+                        <MudPaper Outlined="true" Class="pa-3" Style="height:100%">
+                            <MudText Typo="Typo.h6">Self Effect Properties</MudText>
+                            <MudStack Spacing="2" Class="mt-2">
+                                <MudNumericField T="int" Label="Changing HP (음수 가능)" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                <div>
+                                    <MudText Inline="true">Effect: </MudText>
+                                    <MudChip T="string" Color="Color.Success">Regeneration</MudChip>
+                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                                </div>
+                            </MudStack>
+                        </MudPaper>
+                    }
+                    
+                </MudStack>
+            </MudItem>
+
+        </MudGrid>
+    </MudPaper>
+</EditorContent>
+</DatabaseLayout>

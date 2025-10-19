@@ -10,6 +10,10 @@ namespace GfStudio.Pages
     {
         private List<BuffSetDto> _buffSets = GameDataDto.Database.BuffSets;
         private BuffSetDto _selectedBuffSet { get; set; }
+        protected override void OnInitialized()
+        {
+            _selectedBuffSet = _buffSets.FirstOrDefault();
+        }
         private void HandleBuffSetSelected(BuffSetDto selected)
         {
             _selectedBuffSet = selected;
@@ -70,36 +74,36 @@ namespace GfStudio.Pages
                 StateHasChanged();
             }
         }
-    private async Task OpenChangeMaxDialog()
+        private async Task OpenChangeMaxDialog()
         {
-        var parameters = new DialogParameters<ChangeMaxDialog>
-        {
-            { x => x._oldMaximum, _buffSets.Count }, // 기존 maximum 전달.
-        };
-        var dialog = await DialogService.ShowAsync<ChangeMaxDialog>("Change Maximum Value", parameters);
-        var result = await dialog.Result;
-
-        if (result != null && !result.Canceled)
-        {
-            var newMax = (int)result.Data;
-            var currentCount = _buffSets.Count;
-
-            // 새로운 최대치가 현재 개수보다 많으면, 빈 항목을 추가합니다.
-            if (newMax > currentCount)
+            var parameters = new DialogParameters<ChangeMaxDialog>
             {
-                for (int i = currentCount; i < newMax; i++)
+                { x => x._oldMaximum, _buffSets.Count }, // 기존 maximum 전달.
+            };
+            var dialog = await DialogService.ShowAsync<ChangeMaxDialog>("Change Maximum Value", parameters);
+            var result = await dialog.Result;
+
+            if (result != null && !result.Canceled)
+            {
+                var newMax = (int)result.Data;
+                var currentCount = _buffSets.Count;
+
+                // 새로운 최대치가 현재 개수보다 많으면, 빈 항목을 추가합니다.
+                if (newMax > currentCount)
                 {
-                    _buffSets.Add(new BuffSetDto { Code = i, Name = "" });
+                    for (int i = currentCount; i < newMax; i++)
+                    {
+                        _buffSets.Add(new BuffSetDto { Code = i, Name = "" });
+                    }
                 }
+                // 새로운 최대치가 현재 개수보다 적으면, 뒤에서부터 항목을 삭제합니다.
+                else if (newMax < currentCount)
+                {
+                    _buffSets.RemoveRange(newMax, currentCount - newMax);
+                }
+                
+                StateHasChanged(); // 리스트가 변경되었으니 화면을 새로고침합니다.
             }
-            // 새로운 최대치가 현재 개수보다 적으면, 뒤에서부터 항목을 삭제합니다.
-            else if (newMax < currentCount)
-            {
-                _buffSets.RemoveRange(newMax, currentCount - newMax);
-            }
-            
-            StateHasChanged(); // 리스트가 변경되었으니 화면을 새로고침합니다.
         }
-    }
     }
 }

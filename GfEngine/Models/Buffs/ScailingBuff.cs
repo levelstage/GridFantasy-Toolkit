@@ -8,7 +8,7 @@ namespace GfEngine.Models.Buffs
 	public class ScalingBuff : Buff
 	{
 		public float ScaleFactor { get; set; } // 스케일링 계수
-        public Unit SourceUnit { get; set; } // 스케일링 기준 유닛
         public StatType TargetStat { get; set; } // 이 버프가 참고할 스탯의 종류
+		public bool SelfSourced; // True라면 버프가 걸린 객체, False라면 버프 부여자의 스탯을 참조함.
 	}
 }

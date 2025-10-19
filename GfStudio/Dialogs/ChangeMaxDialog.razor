@@ -1,0 +1,35 @@
+@using MudBlazor
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Change Maximum</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudNumericField T="int" Label="New Maximum Value" Variant="Variant.Outlined" 
+                         @bind-Value="_newMaximum" For="@(() => _newMaximum)" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Confirm</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    public IMudDialogInstance MudDialog { get; set; }
+    [Parameter] public required int _oldMaximum { get; set; }
+    protected override void OnInitialized()
+    {
+        _newMaximum = _oldMaximum;
+    }
+
+    private int _newMaximum = 0;
+
+    private void Submit()
+    {
+        // 입력받은 숫자를 결과로 담아 팝업을 닫습니다.
+        MudDialog.Close(DialogResult.Ok(_newMaximum));
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}

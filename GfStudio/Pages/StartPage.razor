@@ -1,0 +1,83 @@
+@page "/"
+@layout EmptyLayout
+@using System.Text.Json
+@using GfToolkit.Shared.Dtos
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="d-flex flex-column align-center justify-center" Style="height:100vh;">
+    
+    <MudText Typo="Typo.h3" GutterBottom="true">Welcome to GfStudio</MudText>
+    <MudText Typo="Typo.h6" Color="Color.Dark" Class="mb-8">프로젝트를 새로 만들거나 기존 파일을 불러오세요.</MudText>
+
+    <MudGrid Spacing="4" Justify="Justify.Center">
+        
+        @* --- 1. 새 프로젝트 카드 --- *@
+        <MudItem xs="12" sm="6">
+            <MudCard Elevation="3" Style="height: 100%;">
+                <MudCardContent Class="d-flex flex-column align-center justify-center text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Large" Color="Color.Primary" Class="mb-4" />
+                    <MudText Typo="Typo.h5" GutterBottom="true">새 프로젝트</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Dark">빈 데이터로 새로운 프로젝트를 시작합니다.</MudText>
+                </MudCardContent>
+                <MudCardActions Class="justify-center">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateNewProject" Class="mb-4">
+                        새로 만들기
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+
+        @* --- 2. 불러오기 카드 (InputFile 숨기기 트릭) --- *@
+        <MudItem xs="12" sm="6">
+            <MudCard Elevation="3" Style="height: 100%;">
+                <MudCardContent Class="d-flex flex-column align-center justify-center text-center">
+                    <MudIcon Icon="@Icons.Material.Filled.FileUpload" Size="Size.Large" Color="Color.Secondary" Class="mb-4" />
+                    <MudText Typo="Typo.h5" GutterBottom="true">불러오기</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Dark">기존 gamedata.json 파일을 불러옵니다.</MudText>
+                </MudCardContent>
+                <MudCardActions Class="justify-center">
+                    @* 2-1. 보이지 않는 실제 파일 업로더 *@
+                    <InputFile OnChange="LoadProjectFromFile" accept=".json" style="display:none" id="fileUploadInput" />
+                    
+                    @* 2-2. 사용자에게 보이는 예쁜 버튼 *@
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="TriggerFileUpload" Class="mb-4">
+                        파일 선택
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private void CreateNewProject()
+    {
+        GameDataDto.Database = new GameDataDto();
+        NavManager.NavigateTo("/actors");
+    }
+
+    private async Task LoadProjectFromFile(InputFileChangeEventArgs e)
+    {
+        if (e.File == null) return;
+        try
+        {
+            using var stream = e.File.OpenReadStream(maxAllowedSize: 50 * 1024 * 1024);
+            using var reader = new StreamReader(stream);
+            var json = await reader.ReadToEndAsync();
+            GameDataDto.Database = JsonSerializer.Deserialize<GameDataDto>(json);
+            NavManager.NavigateTo("/actors");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading file: {ex.Message}");
+        }
+    }
+
+    // InputFile을 숨기고 예쁜 버튼으로 클릭을 트리거하는 C# 메서드
+    private async Task TriggerFileUpload()
+    {
+        await JSRuntime.InvokeVoidAsync("document.getElementById('fileUploadInput').click");
+    }
+}

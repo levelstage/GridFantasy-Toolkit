@@ -4,7 +4,7 @@
 <MudPaper Class="d-flex flex-column" Style="height: 100%;">
     
     @* --- 실제 목록 --- *@
-    <MudList T="TItem" Clickable="true" Style="overflow-y: auto; flex-grow: 1;" SelectedValueChanged="OnSelectionChanged">
+    <MudList T="TItem" Clickable="true" Style="flex-grow: 1; height: 90vh; overflow-y: auto;" SelectedValueChanged="OnSelectionChanged">
         @* 밖에서 전달받은 데이터 목록(Items)을 반복합니다. *@
         @if (Items != null)
         {
@@ -16,7 +16,7 @@
     </MudList>
 
     @* --- 하단 버튼 --- *@
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ma-2">"New..."</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ma-2" OnClick="OnBottomButtonClicked">"Change Maximum"</MudButton>
 
 </MudPaper>
 
@@ -28,4 +28,5 @@
     {
         await OnItemSelected.InvokeAsync(item);
     }
+    [Parameter] public EventCallback OnBottomButtonClicked { get; set; }
 }

@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@inject ILogger<MainLayout> Logger
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -17,6 +19,7 @@
             <MudNavLink Href="/weapons">Weapons</MudNavLink>
             <MudNavLink Href="/buffsets">Buffsets</MudNavLink>
             <MudNavLink Href="/traits">Traits</MudNavLink>
+            <MudButton OnClick="SaveProjectAsync">Save Project</MudButton>
         </MudNavMenu>
     </MudDrawer>
 
@@ -28,4 +31,24 @@
 
 @code {
     private bool _drawerOpen = true; // 사이드바는 항상 열려있도록 설정
+    private async Task SaveProjectAsync()
+    {
+        try
+        {
+            // 1. 현재 앱의 모든 데이터를 GameDataDto 객체에 담습니다.
+            //    (실제로는 각 에디터의 데이터를 취합해야 합니다)
+            //    _gameData.Actors = ...
+            //    _gameData.BuffSets = ...
+
+            // 2. JsonSerializer를 사용해 객체를 JSON 문자열로 변환합니다.
+            var json = JsonSerializer.Serialize(GameDataDto.Database, new JsonSerializerOptions { WriteIndented = true });
+
+            // 3. IJSRuntime을 통해 JavaScript 함수를 호출합니다.
+            await JSRuntime.InvokeVoidAsync("saveAsFile", "gamedata.json", json);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to save project.");
+        }
+    }
 }

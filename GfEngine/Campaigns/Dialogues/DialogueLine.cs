@@ -11,7 +11,7 @@ namespace GfEngine.Campaigns.Dialogues
         public DialogueLine()
         {
             // 기본값은 'Normal'로 설정해두면 편해.
-            this.Emotion = PortraitEmotion.Normal;
+            Emotion = PortraitEmotion.Normal;
         }
     }
 }

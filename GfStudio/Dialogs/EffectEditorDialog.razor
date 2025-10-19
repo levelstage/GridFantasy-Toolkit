@@ -1,0 +1,230 @@
+@inject IDialogService DialogService
+<MudDialog Style="width:500px; min-height:300px;">
+    <DialogContent>
+        <MudRadioGroup T="string" Value="_selectedEffectType" ValueChanged="OnRadioValueChanged">
+            <MudRadio Value="@("Basic")" Color="Color.Default">Basic</MudRadio>
+            <MudRadio Value="@("Aura")" Color="Color.Info">Aura</MudRadio>
+            <MudRadio Value="@("Scaling")" Color="Color.Secondary">Scaling</MudRadio>
+        </MudRadioGroup>
+
+        <MudDivider Class="my-4" />
+        <MudSelect T="BuffEffect" Label="Buff Effect Type" Variant="Variant.Outlined" @bind-Value="_viewModel.Type" For="@(() => _viewModel.Type)" Disabled="@_buffEffectTypeDisabled">
+        @foreach(BuffEffect iter in _buffEffectOptions){
+            if(iter == BuffEffect.Aura) continue;
+            <MudSelectItem T="BuffEffect" value=@iter>@iter.ToString()</MudSelectItem>
+        }
+        </MudSelect>
+        <MudNumericField T="float" Label="Magnitude" Variant="Variant.Outlined" @bind-Value="_viewModel.Magnitude" For="@(() => _viewModel.Magnitude)" Disabled = "@_magnitudeDisabled"/>
+        @if (_selectedEffectType == "Aura")
+        {
+            <MudDivider/>
+               <MudText Typo="Typo.h6">Aura Properties</MudText>
+                <MudSelect T="BasicPatternType" Label="Aura Scope" Variant="Variant.Outlined" @bind-Value="_viewModel.AuraScope" For="@(() => _viewModel.AuraScope)" Disabled="@_auraScopeSelectorDisabled">
+                    @foreach(BasicPatternType iter in _patternTypeOptions){
+                        <MudSelectItem T="BasicPatternType" value=@iter>@iter.ToString()</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudSwitch T="bool" Label="Use Move Pattern" Color="Color.Primary" Value="_viewModel.UseMovePattern" ValueChanged="OnUseMovePatternSwitchChagned" Disabled = "@_useMovePatternSwitchDisabled"/>
+                <MudSwitch T="bool" Label="Use Attack Pattern" Color="Color.Primary" Value="_viewModel.UseAttackPattern" ValueChanged="OnUseAttackPatternSwitchChagned" Disabled = "@_useAttackPatternSwitchDisabled"/>
+                <div class="d-flex align-center">
+                <MudTextField T="string" Label="Aura Buff" Variant="Variant.Outlined" 
+                            ReadOnly="true" Value="@GetSelectedAuraBuffName()" />
+                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="OpenBuffSetPicker" Class="ml-2" />
+                </div>
+                <MudSelect T="TeamType" Label="Aura Targets" Variant="Variant.Outlined" MultiSelection="true" @bind-SelectedValues="_viewModel.AuraTargets" >
+                    @foreach(TeamType iter in _teamTypeOptions){
+                        <MudSelectItem T="TeamType" value=@iter>@iter.ToString()</MudSelectItem>
+                    }
+                </MudSelect>
+        }
+        else if (_selectedEffectType == "Scaling")
+        {
+            <MudDivider/>
+            <MudText Typo="Typo.h6">Scaling Properties</MudText>
+            <MudNumericField T="float" Label="Scale Factor" Variant="Variant.Outlined" @bind-Value="_viewModel.ScaleFactor" For="@(() => _viewModel.ScaleFactor)" />
+            <MudSelect T="StatType" Label="Target Stat" Variant="Variant.Outlined" @bind-Value="_viewModel.TargetStat" For="@(() => _viewModel.TargetStat)">
+                @foreach(StatType iter in _statTypeOptions){
+                    <MudSelectItem T="StatType" value=@iter>@iter.ToString()</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSwitch T="bool" Label="is SelfSourced" Color="Color.Primary" @bind-Value="_viewModel.SelfSourced"/>
+        }
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">취소</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">확인</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    public IMudDialogInstance MudDialog { get; set; }
+    [Parameter] public List<BuffSetDto> AllBuffSets { get; set; } = new();
+    [Parameter] public BuffDto EffectToEdit { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (EffectToEdit != null)
+        {
+            if(EffectToEdit is AuraDto aura){
+                _selectedEffectType = "Aura";
+                _viewModel.Type = aura.Type;
+                _viewModel.Magnitude = aura.Magnitude;
+                _viewModel.AuraScope = aura.AuraScope;
+                _viewModel.AuraBuffCode = aura.AuraBuffCode;
+                _viewModel.AuraTargets = new List<TeamType>(aura.AuraTargets);
+                OnUseMovePatternSwitchChagned(aura.UseMovePattern);
+                OnUseAttackPatternSwitchChagned(aura.UseAttackPattern);
+            }
+            else if (EffectToEdit is ScalingBuffDto scaling)
+            {
+                _selectedEffectType = "Scaling";
+                _viewModel.Type = scaling.Type;
+                _viewModel.Magnitude = scaling.Magnitude;
+                _viewModel.ScaleFactor = scaling.ScaleFactor;
+                _viewModel.TargetStat = scaling.TargetStat;
+                _viewModel.SelfSourced = scaling.SelfSourced;
+            }
+            else // 기본 BuffDto일 경우
+            {
+                _viewModel.Type = EffectToEdit.Type;
+                _viewModel.Magnitude = EffectToEdit.Magnitude;
+            }
+        } 
+    }
+
+    private class EffectViewModel
+    {
+        public BuffEffect Type { get; set; }
+        public float Magnitude { get; set; }
+        public BasicPatternType AuraScope { get; set; }
+        public int AuraBuffCode { get; set; }
+        public IEnumerable<TeamType> AuraTargets { get; set; } = new List<TeamType>();
+        public bool UseMovePattern { get; set; }
+        public bool UseAttackPattern { get; set; }
+        public float ScaleFactor { get; set; }
+        public StatType TargetStat { get; set; }
+        public bool SelfSourced { get; set; }
+    }
+
+    private EffectViewModel _viewModel = new();
+    private string _selectedEffectType = "Basic";
+    private IEnumerable<BuffEffect> _buffEffectOptions = Enum.GetValues<BuffEffect>();
+    private IEnumerable<BasicPatternType> _patternTypeOptions = Enum.GetValues<BasicPatternType>();
+    private IEnumerable<TeamType> _teamTypeOptions = Enum.GetValues<TeamType>();
+    private IEnumerable<StatType> _statTypeOptions = Enum.GetValues<StatType>();
+    private bool _auraScopeSelectorDisabled = false;
+    private bool _magnitudeDisabled = false;
+    private bool _buffEffectTypeDisabled = false;
+    private bool _useMovePatternSwitchDisabled = false;
+    private bool _useAttackPatternSwitchDisabled = false;
+
+    private async Task OpenBuffSetPicker()
+    {
+        // 1. 새 팝업에 전달할 파라미터를 만듭니다.
+        var parameters = new DialogParameters<BuffSetPickerDialog>
+        {
+            { x => x.AllBuffSets, this.AllBuffSets }
+        };
+
+        // 2. BuffSetPickerDialog를 띄웁니다.
+        var dialog = await DialogService.ShowAsync<BuffSetPickerDialog>("Select BuffSet", parameters);
+        var result = await dialog.Result;
+
+        // 3. 사용자가 버프셋을 선택했다면
+        if (result != null && !result.Canceled)
+        {
+            var selectedBuffSet = result.Data as BuffSetDto;
+            // 4. 선택된 버프셋의 Code를 우리 ViewModel에 저장합니다.
+            _viewModel.AuraBuffCode = selectedBuffSet.Code;
+            StateHasChanged();
+        }
+    }
+
+    // 선택된 버프의 이름을 화면에 표시하기 위한 도우미 메서드
+    private string GetSelectedAuraBuffName()
+    {
+        var buffSet = AllBuffSets.FirstOrDefault(b => b.Code == _viewModel.AuraBuffCode);
+        return buffSet != null ? $"{buffSet.Code:D4} {buffSet.Name}" : "Not Found";
+    }
+    
+    private void Submit()
+    {
+        BuffDto resultDto = _selectedEffectType switch
+        {
+            "Aura" => new AuraDto
+            {
+                Type = _viewModel.Type,
+                Magnitude = _viewModel.Magnitude,
+                AuraScope = _viewModel.AuraScope,
+                AuraBuffCode = _viewModel.AuraBuffCode,
+                AuraTargets = new List<TeamType>(_viewModel.AuraTargets),
+                UseMovePattern = _viewModel.UseMovePattern,
+                UseAttackPattern = _viewModel.UseAttackPattern
+            },
+            "Scaling" => new ScalingBuffDto
+            {
+                Type = _viewModel.Type,
+                Magnitude = _viewModel.Magnitude,
+                ScaleFactor = _viewModel.ScaleFactor,
+                TargetStat = _viewModel.TargetStat,
+                SelfSourced = _viewModel.SelfSourced
+            },
+            _ => new BuffDto
+            {
+                Type = _viewModel.Type,
+                Magnitude = _viewModel.Magnitude
+            }
+        };
+        
+        MudDialog.Close(DialogResult.Ok(resultDto));
+    }
+
+    private void OnRadioValueChanged(string value)
+    {
+        _selectedEffectType = value;
+        if(value == "Aura"){
+            _magnitudeDisabled = true;
+            _buffEffectTypeDisabled = true;
+            _viewModel.Type = BuffEffect.Aura;
+            _viewModel.Magnitude = 0;
+        }
+        else if(value == "Scaling"){
+            _magnitudeDisabled = true;
+        }
+        else{
+            _magnitudeDisabled = false;
+            _buffEffectTypeDisabled = false;
+            _viewModel.Type = BuffEffect.MaxHpBoost;
+        }
+    }
+    private void OnUseMovePatternSwitchChagned(bool value)
+    {
+        _viewModel.UseMovePattern = value;
+        if(value){
+            _viewModel.UseAttackPattern = false;
+            _auraScopeSelectorDisabled = true;
+            _useAttackPatternSwitchDisabled = true;
+        }
+        else{
+            _auraScopeSelectorDisabled = false;
+            _useAttackPatternSwitchDisabled = false;
+        }
+    }
+    private void OnUseAttackPatternSwitchChagned(bool value)
+    {
+        _viewModel.UseAttackPattern = value;
+        if(value){
+            _viewModel.UseMovePattern = false;
+            _auraScopeSelectorDisabled = true;
+            _useMovePatternSwitchDisabled = true;
+        }
+        else{
+            _auraScopeSelectorDisabled = false;
+            _useMovePatternSwitchDisabled = false;
+        }
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}

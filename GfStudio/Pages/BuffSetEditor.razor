@@ -3,7 +3,7 @@
 <DatabaseLayout>
     @*중앙: 항목 리스트 *@
     <ListContent>
-        <DataListLayout Items="_buffSets" TItem="BuffSetDto" OnItemSelected="HandleBuffSetSelected">
+        <DataListLayout Items="_buffSets" TItem="BuffSetDto" OnItemSelected="HandleBuffSetSelected" OnBottomButtonClicked="OpenChangeMaxDialog">
             <ListItemTemplate>
                 <MudListItem Value = "context">
                     @($"{context.Code.ToString("D4")} {context.Name}")
@@ -23,14 +23,15 @@
                 @* @bind-Value를 사용해 데이터를 연결합니다. *@
                 <MudTextField T="string" Label="Name" @bind-Value="_selectedBuffSet.Name" />
                 <MudTextField T="string" Label="Description" @bind-Value="_selectedBuffSet.Description" Lines="3" />
+                <MudNumericField T="int" Label="Icon ID" Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="_selectedBuffSet.IconCode" />
                 <MudNumericField T="int" Label="Duration (Turns)" @bind-Value="_selectedBuffSet.Duration" />
                 
                 <MudPaper Outlined="true" Class="pa-3 d-flex flex-wrap justify-space-around">
                     @* MudSwitch는 @bind-Checked를 사용합니다. *@
-                    <MudSwitch T="bool" Label="Is Buff" @bind-Checked="_selectedBuffSet.IsBuff" Color="Color.Primary" />
-                    <MudSwitch T="bool" Label="Is Debuff" @bind-Checked="_selectedBuffSet.IsDebuff" Color="Color.Error" />
-                    <MudSwitch T="bool" Label="Removable" @bind-Checked="_selectedBuffSet.IsRemovable" Color="Color.Warning" />
-                    <MudSwitch T="bool" Label="Visible" @bind-Checked="_selectedBuffSet.IsVisible" Color="Color.Info" />
+                    <MudSwitch T="bool" Label="Is Buff" @bind-Value="_selectedBuffSet.IsBuff" Color="Color.Primary" />
+                    <MudSwitch T="bool" Label="Is Debuff" @bind-Value="_selectedBuffSet.IsDebuff" Color="Color.Error" />
+                    <MudSwitch T="bool" Label="Removable" @bind-Value="_selectedBuffSet.IsRemovable" Color="Color.Warning" />
+                    <MudSwitch T="bool" Label="Visible" @bind-Value="_selectedBuffSet.IsVisible" Color="Color.Info" />
                 </MudPaper>
                 
         @* --- 개별 효과(Effects) 목록 --- *@
@@ -54,11 +55,11 @@
                     {
                         case AuraDto aura:
                             <MudTd><MudChip T="string" Color="Color.Info">Aura</MudChip></MudTd>
-                            <MudTd>Grants Buff '@aura.AuraBuffCode' to '@aura.AuraTargets' in '@aura.AuraScope' area</MudTd>
+                            <MudTd>Grants Buff '@aura.AuraBuffCode' in '@aura.AuraScope' area</MudTd>
                             break;
                         case ScalingBuffDto scaling:
                             <MudTd><MudChip T="string" Color="Color.Secondary">Scaling Buff</MudChip></MudTd>
-                            <MudTd>@scaling.Type : @scaling.Magnitude (scales with @scaling.TargetStat * @scaling.ScaleFactor)</MudTd>
+                            <MudTd>@scaling.Type : @scaling.Magnitude + (@scaling.TargetStat * @scaling.ScaleFactor)</MudTd>
                             break;
                         default:
                             <MudTd><MudChip T="string" Color="Color.Default">Basic Buff</MudChip></MudTd>
@@ -66,8 +67,8 @@
                             break;
                     }
                     <MudTd>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="() => OnEditEffectClicked(context)"/>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="() => OnDeleteEffectClicked(context)"/>
                     </MudTd>
                 </RowTemplate>
                 <NoRecordsContent>

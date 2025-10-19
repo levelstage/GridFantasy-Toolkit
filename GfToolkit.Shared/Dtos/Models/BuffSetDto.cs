@@ -3,6 +3,7 @@ namespace GfToolkit.Shared.Dtos.Models
     public class BuffSetDto
     {
         public int Code { get; set; }
+        public int IconCode { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Duration { get; set; } // 지속 턴 수
@@ -12,8 +13,18 @@ namespace GfToolkit.Shared.Dtos.Models
         public bool IsDebuff { get; set; }
         public bool IsRemovable { get; set; }
         public bool IsVisible { get; set; }
-        
+
         // 이 묶음에 포함된 개별 버프 효과들의 리스트
-        public List<BuffDto> Effects { get; set; } = new();
+        public List<BuffDto> Effects { get; set; }
+        public BuffSetDto()
+        {
+            Code = -1;
+            Name = "";
+            IconCode = 0;
+            Description = "";
+            Duration = -1;
+            IsBuff = IsDebuff = IsRemovable = IsVisible = false;
+            Effects = new List<BuffDto>();
+        }
     }
 }

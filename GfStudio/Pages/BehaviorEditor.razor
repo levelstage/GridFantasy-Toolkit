@@ -30,7 +30,7 @@
                     </MudGrid>
                     <MudTextField T="string" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="3" @bind-Value="_selectedBehavior.Description"/>
 
-                    <MudSelect T="string" Label="Behavior Type" @bind-Value="_selectedBehavior.Type">
+                    <MudSelect T="string" Label="Behavior Type" Value="_selectedBehavior.Type" ValueChanged="OnBehaviorTypeChange">
                         @foreach(string item in _behaviorTypes)
                         {
                             <MudSelectItem T="string" Value="item">@item</MudSelectItem>
@@ -90,14 +90,14 @@
                                     </MudSelect>
                                 </MudItem>
                                 <MudItem xs="12">
-                                    <MudNumericField T="int" Label="Damage Constant" HelperText="계수 계산에 더해지는 고정 피해량" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                                    <MudNumericField T="int" Label="Damage Constant" HelperText="계수 계산에 더해지는 피해량 상수" Variant="Variant.Outlined" Margin="Margin.Dense" />
                                 </MudItem>
                             </MudGrid>
                             
                             <div class="d-flex align-center">
                                 <MudTextField T="string" Label="Applied BuffSet" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                            ReadOnly="true" Value=@"AreaAttack_GetApplyingBuffName(aab.ApplyingBuffSetCode)" />
-                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" />
+                                            ReadOnly="true" Value="@AreaAttack_GetApplyingBuffName(aab.ApplyingBuffSetCode)" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" OnClick="AreaAttack_PickBuffSet"/>
                             </div>
 
                             <MudPaper Outlined="true" Style="display: flex; flex-direction: column;">

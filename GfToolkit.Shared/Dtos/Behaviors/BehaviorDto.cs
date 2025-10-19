@@ -12,7 +12,7 @@ namespace GfToolkit.Shared.Dtos.Behaviors
 		public string Type { get; set; }
 
 		public BehaviorDto()
-        {
+		{
 			Code = 0;
 			Name = "";
 			Description = "";
@@ -20,6 +20,16 @@ namespace GfToolkit.Shared.Dtos.Behaviors
 			Tags = new();
 			Accessible = new List<TeamType> { TeamType.Enemy, TeamType.Neutral };
 			ApCost = 0;
+		}
+		public BehaviorDto(BehaviorDto parent)
+        {
+			Code = parent.Code;
+			Name = parent.Name;
+			Description = parent.Description;
+			Scope = parent.Scope;
+			Tags = parent.Tags;
+			Accessible = parent.Accessible;
+			ApCost = parent.ApCost;
         }
     }
 }

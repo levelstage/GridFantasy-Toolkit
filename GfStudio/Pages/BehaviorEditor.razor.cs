@@ -25,6 +25,20 @@ namespace GfStudio.Pages
         {
             _selectedBehavior = selected;
         }
+        private async Task AreaAttack_PickBuffSet()
+        {
+            var parameters = new DialogParameters<BuffSetPickerDialog>
+            {
+                { x => x.AllBuffSets, GameDataDto.Database.BuffSets}, // Database의 모든 BuffSet 전달.
+            };
+            var dialog = await DialogService.ShowAsync<BuffSetPickerDialog>("Select Buffset", parameters);
+            var result = await dialog.Result;
+            if (result != null && !result.Canceled && _selectedBehavior is AreaAttackBehaviorDto)
+            {
+                (_selectedBehavior as AreaAttackBehaviorDto).ApplyingBuffSetCode = ((BuffSetDto)result.Data).Code;
+                StateHasChanged();
+            }
+        }
         private async Task OpenChangeMaxDialog()
         {
             var parameters = new DialogParameters<ChangeMaxDialog>
@@ -56,11 +70,29 @@ namespace GfStudio.Pages
                 StateHasChanged(); // 리스트가 변경되었으니 화면을 새로고침합니다.
             }
         }
+
+        private void OnBehaviorTypeChange(string value)
+        {
+            if (value == _selectedBehavior.Type) return;
+            if (value == "AreaAttack")
+            {
+                AreaAttackBehaviorDto aab = new AreaAttackBehaviorDto(_selectedBehavior);
+                GameDataDto.Database.Behaviors[aab.Code] = aab;
+                _selectedBehavior = aab;
+            }
+            else if (value == "SelfEffect")
+            {
+                SelfEffectBehaviorDto seb = new SelfEffectBehaviorDto(_selectedBehavior);
+                GameDataDto.Database.Behaviors[seb.Code] = seb;
+                _selectedBehavior = seb;
+            }
+            StateHasChanged();
+        }
         
         private string AreaAttack_GetApplyingBuffName(int code)
         {
             if (code < 0) return "None";
-            return _behaviors[code].Name;
+            return GameDataDto.Database.BuffSets[code].Name;
         }
 
     }

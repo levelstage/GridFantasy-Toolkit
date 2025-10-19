@@ -10,5 +10,11 @@ namespace GfToolkit.Shared.Dtos.Behaviors
             ChangingHp = 0;
             Type = "SelfEffect";
         }
+        public SelfEffectBehaviorDto(BehaviorDto parent) : base(parent)
+        {
+            EffectCode = -1;
+            ChangingHp = 0;
+            Type = "SelfEffect";
+        }
     }
 }

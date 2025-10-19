@@ -52,11 +52,11 @@ namespace GfEngine.Battles
 			{
 				case DamageType.Physical:
 					finalDamage -= livestat.Buffed().Defense;
-					residence = 1 - BattleManager.NetBuffMagnitude(BuffType.PhysicalResidence, livestat.Buffs) / 100;
+					residence = 1 - BattleManager.NetBuffMagnitude(BuffEffect.PhysicalResidence, livestat.Buffs) / 100;
 					break;
 				case DamageType.Magical:
 					finalDamage -= livestat.Buffed().MagicDefense;
-					residence = 1 - BattleManager.NetBuffMagnitude(BuffType.MagicalResidence, livestat.Buffs) / 100;
+					residence = 1 - BattleManager.NetBuffMagnitude(BuffEffect.MagicalResidence, livestat.Buffs) / 100;
 					break;
 
 			}

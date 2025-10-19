@@ -4,7 +4,7 @@
 <MudPaper Class="d-flex flex-column" Style="height: 100%;">
     
     @* --- 실제 목록 --- *@
-    <MudList T="TItem" Clickable="true" Style="overflow-y: auto; flex-grow: 1;">
+    <MudList T="TItem" Clickable="true" Style="overflow-y: auto; flex-grow: 1;" SelectedValueChanged="OnSelectionChanged">
         @* 밖에서 전달받은 데이터 목록(Items)을 반복합니다. *@
         @if (Items != null)
         {
@@ -21,14 +21,11 @@
 </MudPaper>
 
 @code {
-    // 이 컴포넌트는 어떤 종류(TItem)의 데이터를 다룰지 밖에서 알려줘야 합니다.
-    // [Parameter]
-    // public List<TItem> Items { get; set; }
-
-    // 각 항목을 어떤 모양으로 그릴지 밖에서 알려줘야 합니다.
-    [Parameter]
-    public List<TItem> Items { get; set; } = new List<TItem>();
-    // 하단 버튼의 텍스트를 밖에서 정할 수 있습니다.
-    [Parameter]
-    public required RenderFragment<TItem> ListItemTemplate { get; set; }
+    [Parameter] public List<TItem> Items { get; set; } = new List<TItem>();
+    [Parameter] public required RenderFragment<TItem> ListItemTemplate { get; set; }
+    [Parameter] public EventCallback<TItem> OnItemSelected { get; set; }
+    private async Task OnSelectionChanged(TItem item)
+    {
+        await OnItemSelected.InvokeAsync(item);
+    }
 }

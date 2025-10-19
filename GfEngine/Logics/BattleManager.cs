@@ -5,7 +5,7 @@ namespace GfEngine.Logics
 {
     public static class BattleManager
     {
-        public static float NetBuffMagnitude(BuffType type, List<BuffSet> buffList)
+        public static float NetBuffMagnitude(BuffEffect effect, List<BuffSet> buffList)
         {
             // 특정 종류 버프의 magnitude를 모두 합해서 return하는 함수.
             float res = 0;
@@ -13,7 +13,7 @@ namespace GfEngine.Logics
             {
                 foreach (Buff iter in bSet.Effects)
                 {
-                    if (iter.Type == type) res += iter.Magnitude;
+                    if (iter.Effect == effect) res += iter.Magnitude;
                 }
             }
             return res;

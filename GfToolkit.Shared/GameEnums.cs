@@ -26,9 +26,17 @@ namespace GfToolkit.Shared
 		Physical, Magical, True
 	}
 
-	public enum BuffType // 각 버프의 실질적 효과를 식별하기 위한 타입. 같은 타입의 버프들은 중첩된다.
+	public enum BuffEffect // 각 버프의 실질적 효과를 식별하기 위한 타입. 같은 타입의 버프들은 중첩된다.
 	{
-		MaxHpBoost, DefenseBoost, MagicDefenseBoost, AttackBoost, MagicAttackBoost, AgilityBoost, PhysicalResidence, MagicalResidence
+		MaxHpBoost,
+		DefenseBoost,
+		MagicDefenseBoost,
+		AttackBoost,
+		MagicAttackBoost,
+		AgilityBoost,
+		PhysicalResidence,
+		MagicalResidence,
+		Aura
 	}
 
 	public enum TeamType // 출처와 대상의 관계. 이 대상이 어떤 behavior의 대상이 되는지를 확인하기 위한 타입.

@@ -1,0 +1,90 @@
+@inject IDialogService DialogService
+@page "/buffsets"
+<DatabaseLayout>
+    @*중앙: 항목 리스트 *@
+    <ListContent>
+        <DataListLayout Items="_buffSets" TItem="BuffSetDto" OnItemSelected="HandleBuffSetSelected">
+            <ListItemTemplate>
+                <MudListItem Value = "context">
+                    @($"{context.Code.ToString("D4")} {context.Name}")
+                </MudListItem>
+            </ListItemTemplate>
+        </DataListLayout>
+    </ListContent>
+    <EditorContent>
+      @* BuffSetEditor 컴포넌트의 UI 뼈대입니다. *@
+        @if (_selectedBuffSet != null)
+        {
+        @* 여기에 BuffSetEditor UI 껍데기를 넣고, 데이터를 연결합니다. *@
+        <MudPaper Class="pa-4" Style="height: 100%; overflow-y: auto;">
+            <MudStack Spacing="4">
+                <MudText Typo="Typo.h5">Buff Set Settings</MudText>
+                
+                @* @bind-Value를 사용해 데이터를 연결합니다. *@
+                <MudTextField T="string" Label="Name" @bind-Value="_selectedBuffSet.Name" />
+                <MudTextField T="string" Label="Description" @bind-Value="_selectedBuffSet.Description" Lines="3" />
+                <MudNumericField T="int" Label="Duration (Turns)" @bind-Value="_selectedBuffSet.Duration" />
+                
+                <MudPaper Outlined="true" Class="pa-3 d-flex flex-wrap justify-space-around">
+                    @* MudSwitch는 @bind-Checked를 사용합니다. *@
+                    <MudSwitch T="bool" Label="Is Buff" @bind-Checked="_selectedBuffSet.IsBuff" Color="Color.Primary" />
+                    <MudSwitch T="bool" Label="Is Debuff" @bind-Checked="_selectedBuffSet.IsDebuff" Color="Color.Error" />
+                    <MudSwitch T="bool" Label="Removable" @bind-Checked="_selectedBuffSet.IsRemovable" Color="Color.Warning" />
+                    <MudSwitch T="bool" Label="Visible" @bind-Checked="_selectedBuffSet.IsVisible" Color="Color.Info" />
+                </MudPaper>
+                
+        @* --- 개별 효과(Effects) 목록 --- *@
+        <MudPaper Outlined="true" Style="display: flex; flex-direction: column;">
+            <MudToolBar Dense="true">
+                <MudText Typo="Typo.h6">Effects</MudText>
+                <MudSpacer />
+                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="OpenAddEffectDialog"/>
+            </MudToolBar>
+
+            @* 1. Items에 실제 데이터(_selectedBuffSet.Effects)를 연결합니다. *@
+            <MudTable T="BuffDto" Items="_selectedBuffSet.Effects" Dense="true" Hover="true">
+                <HeaderContent>
+                    <MudTh>Effect Type</MudTh>
+                    <MudTh>Summary</MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    @* 2. @switch를 사용해 context의 실제 타입을 확인합니다. *@
+                    @switch (context)
+                    {
+                        case AuraDto aura:
+                            <MudTd><MudChip T="string" Color="Color.Info">Aura</MudChip></MudTd>
+                            <MudTd>Grants Buff '@aura.AuraBuffCode' to '@aura.AuraTargets' in '@aura.AuraScope' area</MudTd>
+                            break;
+                        case ScalingBuffDto scaling:
+                            <MudTd><MudChip T="string" Color="Color.Secondary">Scaling Buff</MudChip></MudTd>
+                            <MudTd>@scaling.Type : @scaling.Magnitude (scales with @scaling.TargetStat * @scaling.ScaleFactor)</MudTd>
+                            break;
+                        default:
+                            <MudTd><MudChip T="string" Color="Color.Default">Basic Buff</MudChip></MudTd>
+                            <MudTd>@context.Type : @context.Magnitude</MudTd>
+                            break;
+                    }
+                    <MudTd>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" />
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText>No effects added to this BuffSet.</MudText>
+                </NoRecordsContent>
+            </MudTable>
+        </MudPaper>
+            </MudStack>
+        </MudPaper>
+        
+    }
+    else
+    {
+        @* --- 선택된 항목이 없을 때 보여줄 메시지 --- *@
+        <MudPaper Class="d-flex align-center justify-center" Style="height: 100%;">
+            <MudText Typo="Typo.h6">Select a BuffSet from the list to edit.</MudText>
+        </MudPaper>
+    }
+    </EditorContent>
+</DatabaseLayout>

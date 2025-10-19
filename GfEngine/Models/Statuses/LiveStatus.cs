@@ -26,14 +26,14 @@ namespace GfEngine.Models.Statuses
 			{
 				foreach (Buff iter in bSet.Effects)
 				{
-					switch (iter.Type)
+					switch (iter.Effect)
 					{
-						case BuffType.MaxHpBoost: buffed_status.MaxHp += (int)iter.Magnitude; break;
-						case BuffType.DefenseBoost: buffed_status.Defense += (int)iter.Magnitude; break;
-						case BuffType.MagicDefenseBoost: buffed_status.MagicDefense += (int)iter.Magnitude; break;
-						case BuffType.AttackBoost: buffed_status.Attack += (int)iter.Magnitude; break;
-						case BuffType.MagicAttackBoost: buffed_status.MagicAttack += (int)iter.Magnitude; break;
-						case BuffType.AgilityBoost: buffed_status.Agility += (int)iter.Magnitude; break;
+						case BuffEffect.MaxHpBoost: buffed_status.MaxHp += (int)iter.Magnitude; break;
+						case BuffEffect.DefenseBoost: buffed_status.Defense += (int)iter.Magnitude; break;
+						case BuffEffect.MagicDefenseBoost: buffed_status.MagicDefense += (int)iter.Magnitude; break;
+						case BuffEffect.AttackBoost: buffed_status.Attack += (int)iter.Magnitude; break;
+						case BuffEffect.MagicAttackBoost: buffed_status.MagicAttack += (int)iter.Magnitude; break;
+						case BuffEffect.AgilityBoost: buffed_status.Agility += (int)iter.Magnitude; break;
 					}
 				}
 

@@ -317,56 +317,57 @@ namespace GfEngine
 
 	 public static class Text
     {
-        // 텍스트의 '고유 키' 역할을 할 Enum (나중에 Index로도 써먹을 수 있을듯.)
-        public enum Key
-        {
-            // 명령어
-            Command_Move,
-            Command_Attack,
-            Command_Cancel,
+			// 텍스트의 '고유 키' 역할을 할 Enum (나중에 Index로도 써먹을 수 있을듯.)
+			public enum Key
+			{
+				// 명령어
+				Command_Move,
+				Command_Attack,
+				Command_Cancel,
 
-            // UI 메시지
-            UI_SelectSquare,
-            UI_ChooseAction,
-            UI_InvalidCoordinate,
-            UI_PressEnterToContinue,
-			UI_Battle_FirstAttack,
-			UI_Battle_DefenderDied,
-			UI_Battle_DefenderCantCounter,
-			UI_Battle_ExecuteCounterAttack,
-			UI_Battle_FinalStateIndicator,
-			UI_Battle_AttackerFinalState,
-			
-			// 캐릭터 이름
-			Actor_Phantom_Name,
-			Actor_Hagen_Name,
-			Actor_Gideon_Name,
-			Actor_Elara_Name,
-			Actor_Cassandra_Name,
-			
-			// 무기 이름
-			Weapon_PhantomShield_Name,
-			Weapon_IronShield_Name,
-			Weapon_LongSword_Name,
-			Weapon_IronSpear_Name,
-				
-			// 무기 설명
-			Weapon_PhantomShield_Desc,
-			Weapon_IronShield_Desc,
-			Weapon_LongSword_Desc,
-			Weapon_IronSpear_Desc,
-			
-			// 스킬 이름
-			Skill_Frontline_Name,
-			
-			// 버프 이름
-			BuffSet_FrontlineBuff_Name,
-			
-			// 버프 설명
-			BuffSet_FrontlineBuff_Desc,
-			
-			
-        }
+				// UI 메시지
+				UI_SelectSquare,
+				UI_ChooseAction,
+				UI_InvalidCoordinate,
+				UI_PressEnterToContinue,
+				UI_Battle_FirstAttack,
+				UI_Battle_DefenderDied,
+				UI_Battle_DefenderCantCounter,
+				UI_Battle_ExecuteCounterAttack,
+				UI_Battle_FinalStateIndicator,
+				UI_Battle_AttackerFinalState,
+				UI_Behavior_CharacterMoved,
+
+				// 캐릭터 이름
+				Actor_Phantom_Name,
+				Actor_Hagen_Name,
+				Actor_Gideon_Name,
+				Actor_Elara_Name,
+				Actor_Cassandra_Name,
+
+				// 무기 이름
+				Weapon_PhantomShield_Name,
+				Weapon_IronShield_Name,
+				Weapon_LongSword_Name,
+				Weapon_IronSpear_Name,
+
+				// 무기 설명
+				Weapon_PhantomShield_Desc,
+				Weapon_IronShield_Desc,
+				Weapon_LongSword_Desc,
+				Weapon_IronSpear_Desc,
+
+				// 스킬 이름
+				Skill_Frontline_Name,
+
+				// 버프 이름
+				BuffSet_FrontlineBuff_Name,
+
+				// 버프 설명
+				BuffSet_FrontlineBuff_Desc,
+
+
+			}
 
 		 // 한국어 텍스트 데이터 딕셔너리
 		 private static readonly Dictionary<Key, string> Korean = new Dictionary<Key, string>
@@ -381,13 +382,15 @@ namespace GfEngine
 			 [Key.UI_InvalidCoordinate] = "잘못된 좌표입니다.",
 			 [Key.UI_PressEnterToContinue] = "계속하려면 엔터를 누르세요...",
 			 // 기본 공격 관련 UI 메시지
-			 [Key.UI_Battle_FirstAttack] =  "{0}, {1}에게 공격! [{2}]의 피해!",
-			 [Key.UI_Battle_DefenderDied] =  "{0}, 쓰러져 공격할 수 없습니다!",
-			 [Key.UI_Battle_DefenderCantCounter] =  "{0}, 반격할 수 없습니다!",
-			 [Key.UI_Battle_ExecuteCounterAttack] =  "{0}, {1}에게 공격! [{2}]의 피해!",
-			 [Key.UI_Battle_FinalStateIndicator] =  "전투 결과",
-			 [Key.UI_Battle_AttackerFinalState] =  "{0}: HP {1} / {2}",
-			 
+			 [Key.UI_Battle_FirstAttack] = "{0}, {1}에게 공격! [{2}]의 피해!",
+			 [Key.UI_Battle_DefenderDied] = "{0}, 쓰러져 공격할 수 없습니다!",
+			 [Key.UI_Battle_DefenderCantCounter] = "{0}, 반격할 수 없습니다!",
+			 [Key.UI_Battle_ExecuteCounterAttack] = "{0}, {1}에게 공격! [{2}]의 피해!",
+			 [Key.UI_Battle_FinalStateIndicator] = "전투 결과",
+			 [Key.UI_Battle_AttackerFinalState] = "{0}: HP {1} / {2}",
+			 // 각종 Behavior 관련 UI 메시지
+			 [Key.UI_Behavior_CharacterMoved] = "{0}, {1}로 이동.",
+
 			 // Actor 관련
 			 [Key.Actor_Phantom_Name] = "환영병",
 			 [Key.Actor_Hagen_Name] = "하겐",
@@ -413,7 +416,7 @@ namespace GfEngine
 			 // Skill 관련
 			 // Skill 이름
 			 [Key.Skill_Frontline_Name] = "전선 구축",
-			 
+
 		 };
 		
 		// 현재 언어 설정 (나중에 옵션에서 바꿀 수 있도록)

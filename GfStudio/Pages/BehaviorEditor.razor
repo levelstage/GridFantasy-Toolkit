@@ -66,7 +66,7 @@
             <MudItem xs="12" sm="6">
                 <MudStack Spacing="4">
                     
-                    @if (_selectedBehavior is AreaAttackBehaviorDto aab)
+                    @if (_selectedBehavior is AreaEffectBehaviorDto aeb)
                     {
                         <MudPaper Outlined="true" Class="pa-3" Style="height:100%">
                         <MudStack Spacing="3">
@@ -74,7 +74,7 @@
 
                             <MudGrid Spacing="2">
                                 <MudItem xs="6">
-                                    <MudSelect T="BasicPatternType" Label="Area" Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="aab.Area">
+                                    <MudSelect T="BasicPatternType" Label="Area" Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="aeb.Area">
                                         @foreach(BasicPatternType iter in _patternTypeOptions)
                                         {
                                             <MudSelectItem T="BasicPatternType" Value="iter">@iter</MudSelectItem>
@@ -96,8 +96,8 @@
                             
                             <div class="d-flex align-center">
                                 <MudTextField T="string" Label="Applied BuffSet" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                            ReadOnly="true" Value="@AreaAttack_GetApplyingBuffName(aab.ApplyingBuffSetCode)" />
-                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" OnClick="AreaAttack_PickBuffSet"/>
+                                            ReadOnly="true" Value="@AreaEffect_GetApplyingBuffName(aeb.ApplyingBuffSetCode)" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" OnClick="AreaEffect_PickBuffSet"/>
                             </div>
 
                             <MudPaper Outlined="true" Style="display: flex; flex-direction: column;">
@@ -107,7 +107,7 @@
                                     <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
                                 </MudToolBar>
 
-                                <MudTable T="(StatType, float)" Items="aab.Coefficients" Dense="true" Hover="true" Breakpoint="Breakpoint.None">
+                                <MudTable T="(StatType, float)" Items="aeb.Coefficients" Dense="true" Hover="true" Breakpoint="Breakpoint.None">
                                     <HeaderContent>
                                         <MudTh>Target Stat</MudTh>
                                         <MudTh>Scale Factor</MudTh>

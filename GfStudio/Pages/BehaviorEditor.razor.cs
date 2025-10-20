@@ -11,7 +11,7 @@ namespace GfStudio.Pages
     {
         private readonly string[] _behaviorTypes = 
         {
-            "AreaAttack", "SelfEffect"
+            "AreaEffect", "SelfEffect"
         };
         private List<BehaviorDto> _behaviors { get; set; } = GameDataDto.Database.Behaviors;
         private BehaviorDto _selectedBehavior { get; set; }
@@ -25,7 +25,7 @@ namespace GfStudio.Pages
         {
             _selectedBehavior = selected;
         }
-        private async Task AreaAttack_PickBuffSet()
+        private async Task AreaEffect_PickBuffSet()
         {
             var parameters = new DialogParameters<BuffSetPickerDialog>
             {
@@ -33,9 +33,9 @@ namespace GfStudio.Pages
             };
             var dialog = await DialogService.ShowAsync<BuffSetPickerDialog>("Select Buffset", parameters);
             var result = await dialog.Result;
-            if (result != null && !result.Canceled && _selectedBehavior is AreaAttackBehaviorDto)
+            if (result != null && !result.Canceled && _selectedBehavior is AreaEffectBehaviorDto)
             {
-                (_selectedBehavior as AreaAttackBehaviorDto).ApplyingBuffSetCode = ((BuffSetDto)result.Data).Code;
+                (_selectedBehavior as AreaEffectBehaviorDto).ApplyingBuffSetCode = ((BuffSetDto)result.Data).Code;
                 StateHasChanged();
             }
         }
@@ -74,11 +74,11 @@ namespace GfStudio.Pages
         private void OnBehaviorTypeChange(string value)
         {
             if (value == _selectedBehavior.Type) return;
-            if (value == "AreaAttack")
+            if (value == "AreaEffect")
             {
-                AreaAttackBehaviorDto aab = new AreaAttackBehaviorDto(_selectedBehavior);
-                GameDataDto.Database.Behaviors[aab.Code] = aab;
-                _selectedBehavior = aab;
+                AreaEffectBehaviorDto aeb = new AreaEffectBehaviorDto(_selectedBehavior);
+                GameDataDto.Database.Behaviors[aeb.Code] = aeb;
+                _selectedBehavior = aeb;
             }
             else if (value == "SelfEffect")
             {
@@ -89,7 +89,7 @@ namespace GfStudio.Pages
             StateHasChanged();
         }
         
-        private string AreaAttack_GetApplyingBuffName(int code)
+        private string AreaEffect_GetApplyingBuffName(int code)
         {
             if (code < 0) return "None";
             return GameDataDto.Database.BuffSets[code].Name;

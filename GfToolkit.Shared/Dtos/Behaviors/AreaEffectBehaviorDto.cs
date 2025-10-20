@@ -1,6 +1,6 @@
 namespace GfToolkit.Shared.Dtos.Behaviors
 {
-    public class AreaAttackBehaviorDto : BehaviorDto
+    public class AreaEffectBehaviorDto : BehaviorDto
     {
         public BasicPatternType Area;
         public int DamageConstant;
@@ -8,23 +8,23 @@ namespace GfToolkit.Shared.Dtos.Behaviors
         public DamageType DamageType;
         public int ApplyingBuffSetCode;
 
-        public AreaAttackBehaviorDto()
+        public AreaEffectBehaviorDto()
         {
             Area = BasicPatternType.King;
             DamageConstant = 0;
             Coefficients = new();
             DamageType = DamageType.Physical;
             ApplyingBuffSetCode = -1;
-            Type = "AreaAttack";
+            Type = "AreaEffect";
         }
-        public AreaAttackBehaviorDto(BehaviorDto parent) : base(parent)
+        public AreaEffectBehaviorDto(BehaviorDto parent) : base(parent)
         {
             Area = BasicPatternType.King;
             DamageConstant = 0;
             Coefficients = new();
             DamageType = DamageType.Physical;
             ApplyingBuffSetCode = -1;
-            Type = "AreaAttack";
+            Type = "AreaEffect";
         }
     }
 }

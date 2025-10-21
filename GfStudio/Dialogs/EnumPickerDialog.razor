@@ -1,0 +1,90 @@
+@using MudBlazor
+@typeparam TItem
+
+<MudDialog Style="min-width: 400px;">
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Title</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField T="string" AutoFocus="true" @bind-Value="_searchText" Placeholder="Search..." Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Class="mb-4" />
+        
+        <MudPaper Style="max-height: 400px; overflow-y: auto;">
+            @if (IsMultiSelect)
+            {
+                <MudList T="TItem" Clickable="true">
+                    @foreach (var item in _filteredItems)
+                    {
+                        <MudListItem Value="@("a")">
+                            <ChildContent>
+                                <MudCheckBox T="bool" Value="@_selectedItems.Contains(item)" ValueChanged="(bool isChecked) => ToggleSelection(item)" Label="@item.ToString()" />
+                            </ChildContent>
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+            else
+            {
+                <MudList T="TItem" Clickable="true">
+                    @foreach (var item in _filteredItems)
+                    {
+                        <MudListItem Value="@("a")" OnClick="@(() => OnSingleItemSelected(item))">
+                            @item.ToString()
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">취소</MudButton>
+        @if (IsMultiSelect)
+        {
+            <MudButton Color="Color.Primary" OnClick="Submit">확인</MudButton>
+        }
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    public IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public string Title { get; set; }
+    [Parameter] public IEnumerable<TItem> AllItems { get; set; }
+    [Parameter] public bool IsMultiSelect { get; set; }
+    [Parameter] public HashSet<TItem> PreselectedItems { get; set; } = new();
+
+    private HashSet<TItem> _selectedItems = new();
+    private string _searchText = "";
+    
+    private IEnumerable<TItem> _filteredItems => string.IsNullOrWhiteSpace(_searchText)
+        ? AllItems
+        : AllItems.Where(item => item.ToString().Contains(_searchText, StringComparison.OrdinalIgnoreCase));
+
+    protected override void OnInitialized()
+    {
+        // 부모로부터 받은 '미리 선택된 항목'들로 시작합니다.
+        _selectedItems = new HashSet<TItem>(PreselectedItems);
+    }
+
+    // --- 여러 개 선택 로직 ---
+    private void ToggleSelection(TItem item)
+    {
+        if (_selectedItems.Contains(item))
+            _selectedItems.Remove(item);
+        else
+            _selectedItems.Add(item);
+        StateHasChanged();
+    }
+
+    // '확인' 버튼을 누르면, 현재까지 선택된 항목들을 그대로 반환합니다.
+    private void Submit() => MudDialog.Close(DialogResult.Ok(_selectedItems));
+
+    // --- 하나만 선택 로직 ---
+    private void OnSingleItemSelected(TItem item)
+    {
+        var result = new HashSet<TItem> { item };
+        MudDialog.Close(DialogResult.Ok(result));
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}

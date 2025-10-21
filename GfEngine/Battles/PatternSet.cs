@@ -20,7 +20,7 @@ namespace GfEngine.Battles
 			Penetration = penetration;
 		}
 
-		public List<BehaviorTarget> TargetSearcher(Square startSquare, Square[,] map, List<TeamType> accessible)
+		public List<BehaviorTarget> TargetSearcher(Square startSquare, Square[,] map, HashSet<TeamType> accessible)
 		{
 			List<BehaviorTarget> possibleActions = new List<BehaviorTarget>();
 			int startX = startSquare.X;

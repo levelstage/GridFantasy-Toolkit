@@ -4,7 +4,7 @@
 @inject IDialogService DialogService
 <DatabaseLayout>
 <ListContent>
-        <DataListLayout Items="_behaviors" TItem="BehaviorDto" OnItemSelected="HandleBehaviorSelected">
+        <DataListLayout Items="_behaviors" TItem="BehaviorDto" OnItemSelected="HandleBehaviorSelected" OnBottomButtonClicked="OpenChangeMaxDialog">
             <ListItemTemplate>
                 <MudListItem Value = "context">
                     @($"{context.Code.ToString("D4")} {context.Name}")
@@ -42,21 +42,23 @@
                             <div>
                                 <MudText Inline="true">Scope: </MudText>
                                 <MudChip T="string" Color="Color.Primary">@_selectedBehavior.Scope</MudChip>
-                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="OpenScopePicker"/>
                             </div>
                             <div>
                                 <MudText Inline="true">Tags: </MudText>
-                                @foreach(BehaviorTag iter in _selectedBehavior.Tags){
-                                    <MudChip T="string" Color="Color.Secondary">@iter</MudChip>
+                                @if(_selectedBehavior.Tags != null){
+                                    @foreach(BehaviorTag iter in _selectedBehavior.Tags){
+                                        <MudChip T="string" Color="Color.Secondary" OnClose="() => RemoveBehaviorTag(iter)">@iter</MudChip>
+                                    }
                                 }
-                                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="OpenTagPicker"/>
                             </div>
                             <div>
                                 <MudText Inline="true">Valid Targets: </MudText>
                                 @foreach(TeamType iter in _selectedBehavior.Accessible){
-                                    <MudChip T="string" Color="Color.Info">@iter</MudChip>
+                                    <MudChip T="string" Color="Color.Info" OnClose="() => RemoveValidTarget(iter)">@iter</MudChip>
                                 }
-                                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="OpenTargetPicker"/>
                             </div>
                         </MudStack>
                     </MudPaper>

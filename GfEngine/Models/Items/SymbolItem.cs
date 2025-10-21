@@ -13,7 +13,7 @@ namespace GfEngine.Models.Items
             Code = parent.Code;
             Name = parent.Name;
             Description = parent.Description;
-            Itags = new List<ItemTag>(parent.Itags);
+            Itags = new HashSet<ItemTag>(parent.Itags);
         }
 		public override Item Clone()
 		{

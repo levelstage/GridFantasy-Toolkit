@@ -14,9 +14,9 @@ namespace GfEngine.Behaviors
             Name = GameData.Text.Get(GameData.Text.Key.Command_Attack);
             Scope = GameData.AttackPatterns[weapon.Type];
             ApCost = GameData.AttackApCosts[weapon.Type];
-            Accessible = new List<TeamType> { TeamType.Enemy, TeamType.Neutral };
+            Accessible = new HashSet<TeamType> { TeamType.Enemy, TeamType.Neutral };
             // 특수한 공격 판정을 가진 무기는 tag를 따로 부여한다.
-            Tags = new List<BehaviorTag>();
+            Tags = new HashSet<BehaviorTag>();
             if (GameData.SpecialAttacks.ContainsKey(weapon.Type))
             {
                 Tags.Add(GameData.SpecialAttacks[weapon.Type]);
@@ -64,9 +64,9 @@ namespace GfEngine.Behaviors
             return defender.TakeDamage(damage, dmgType); // 가한 피해 return. 
         }
 
-        static (Unit, int, Unit, int, List<BattleTag>) fight(Unit first, Unit last, BasicAttackBehavior B_f, BasicAttackBehavior B_l)
+        static (Unit, int, Unit, int, HashSet<BattleTag>) fight(Unit first, Unit last, BasicAttackBehavior B_f, BasicAttackBehavior B_l)
         {
-            List<BattleTag> tags = new List<BattleTag>(); // B의 여러 태그들을 확인하고 보고해야할 특이사항들을 tags에 담아서 return.
+            HashSet<BattleTag> tags = new HashSet<BattleTag>(); // B의 여러 태그들을 확인하고 보고해야할 특이사항들을 tags에 담아서 return.
             int damage_first = hit(first, last, B_f);
             if (last.LiveStat.CurrentHp == 0)
             {
@@ -77,14 +77,14 @@ namespace GfEngine.Behaviors
             return (first, damage_first, last, damage_last, tags); // 전투 결과를 먼저 공격한 유닛, 피해, 나중에 공격한 유닛, 피해 순으로 전달.
         }
 
-        string explainResult((Unit u1, int d1, Unit u2, int d2, List<BattleTag> tags) battleResult)
+        string explainResult((Unit u1, int d1, Unit u2, int d2, HashSet<BattleTag> tags) battleResult)
         {
             string explainedResult = "";
             Unit firstAttacker = battleResult.u1;
             int damageToSecond = battleResult.d1;
             Unit secondAttacker = battleResult.u2;
             int damageToFirst = battleResult.d2;
-            List<BattleTag> tags = battleResult.tags;
+            HashSet<BattleTag> tags = battleResult.tags;
 
             // 선공자의 공격 메시지 추가.
             explainedResult = ">> " + string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_FirstAttack), firstAttacker.Name, secondAttacker.Name, -damageToSecond);
@@ -122,11 +122,11 @@ namespace GfEngine.Behaviors
             if (counter == null)
             {
                 int damage = hit(attacker, defender, this);
-                List<BattleTag> tags = new List<BattleTag>();
+                HashSet<BattleTag> tags = new HashSet<BattleTag>();
                 tags.Add(BattleTag.noCounter);
                 return explainResult((attacker, damage, defender, 0, tags));
             }
-            (Unit, int, Unit, int, List<BattleTag>) result;
+            (Unit, int, Unit, int, HashSet<BattleTag>) result;
             // 누가 먼저 때릴지, Agility를 비교. 같으면 공격자 우선.
             if (attacker.LiveStat.Buffed().Agility >= defender.LiveStat.Buffed().Agility)
             {

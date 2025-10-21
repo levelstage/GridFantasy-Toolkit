@@ -8,12 +8,12 @@ namespace GfEngine.Models.Items
 		public int Power { get; set; }
 		public WeaponType Type { get; set; }
 		public BuffSet EquipBuff { get; set; }
-		public List<WeaponTag> WTags { get; set; }
+		public HashSet<WeaponTag> WTags { get; set; }
 		public Weapon()
 		{
 			Power = 10;
 			Type = WeaponType.Spear;
-			WTags = new List<WeaponTag>();
+			WTags = new HashSet<WeaponTag>();
 		}
 		public Weapon(Weapon parent)
 		{
@@ -22,7 +22,7 @@ namespace GfEngine.Models.Items
 			Name = parent.Name;
 			Power = parent.Power;
 			Type = parent.Type;
-			WTags = new List<WeaponTag>(parent.WTags);
+			WTags = new HashSet<WeaponTag>(parent.WTags);
 		}
 		public override Item Clone()
 		{

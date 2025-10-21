@@ -24,9 +24,9 @@
     [Parameter] public List<TItem> Items { get; set; } = new List<TItem>();
     [Parameter] public required RenderFragment<TItem> ListItemTemplate { get; set; }
     [Parameter] public EventCallback<TItem> OnItemSelected { get; set; }
+    [Parameter] public EventCallback OnBottomButtonClicked { get; set; }
     private async Task OnSelectionChanged(TItem item)
     {
         await OnItemSelected.InvokeAsync(item);
     }
-    [Parameter] public EventCallback OnBottomButtonClicked { get; set; }
 }

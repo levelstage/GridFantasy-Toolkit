@@ -6,8 +6,8 @@ namespace GfToolkit.Shared.Dtos.Behaviors
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public BasicPatternType Scope { get; set; }
-		public List<BehaviorTag> Tags { get; set; }
-		public List<TeamType> Accessible { get; set; }
+		public HashSet<BehaviorTag> Tags { get; set; }
+		public HashSet<TeamType> Accessible { get; set; }
 		public int ApCost { get; set; }
 		public string Type { get; set; }
 
@@ -17,8 +17,8 @@ namespace GfToolkit.Shared.Dtos.Behaviors
 			Name = "";
 			Description = "";
 			Scope = BasicPatternType.King;
-			Tags = new();
-			Accessible = new List<TeamType> { TeamType.Enemy, TeamType.Neutral };
+			Tags = new HashSet<BehaviorTag>();
+			Accessible = new HashSet<TeamType> { TeamType.Enemy, TeamType.Neutral };
 			ApCost = 0;
 		}
 		public BehaviorDto(BehaviorDto parent)

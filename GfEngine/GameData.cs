@@ -196,7 +196,7 @@ namespace GfEngine
             Name = Text.Get(Text.Key.Skill_Frontline_Name),
             Duration = -1, // 영구 지속 (스킬을 잃지 않는 한)
             Effects = new List<Buff>{ new Aura{
-            AuraTargets = new List<TeamType> { TeamType.Same, TeamType.Ally },
+            AuraTargets = new HashSet<TeamType> { TeamType.Same, TeamType.Ally },
             AuraEffect = 0, // 오라 효과: '방어 태세' 버프를 부여
 			UseAttackPattern = true
 			}

@@ -73,7 +73,7 @@
                 _viewModel.Magnitude = aura.Magnitude;
                 _viewModel.AuraScope = aura.AuraScope;
                 _viewModel.AuraBuffCode = aura.AuraBuffCode;
-                _viewModel.AuraTargets = new List<TeamType>(aura.AuraTargets);
+                _viewModel.AuraTargets = new HashSet<TeamType>(aura.AuraTargets);
                 OnUseMovePatternSwitchChagned(aura.UseMovePattern);
                 OnUseAttackPatternSwitchChagned(aura.UseAttackPattern);
             }
@@ -100,7 +100,7 @@
         public float Magnitude { get; set; }
         public BasicPatternType AuraScope { get; set; }
         public int AuraBuffCode { get; set; }
-        public IEnumerable<TeamType> AuraTargets { get; set; } = new List<TeamType>();
+        public IEnumerable<TeamType> AuraTargets { get; set; } = new HashSet<TeamType>();
         public bool UseMovePattern { get; set; }
         public bool UseAttackPattern { get; set; }
         public float ScaleFactor { get; set; }
@@ -159,7 +159,7 @@
                 Magnitude = _viewModel.Magnitude,
                 AuraScope = _viewModel.AuraScope,
                 AuraBuffCode = _viewModel.AuraBuffCode,
-                AuraTargets = new List<TeamType>(_viewModel.AuraTargets),
+                AuraTargets = new HashSet<TeamType>(_viewModel.AuraTargets),
                 UseMovePattern = _viewModel.UseMovePattern,
                 UseAttackPattern = _viewModel.UseAttackPattern
             },

@@ -101,3 +101,11 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+.mud-list-item,
+.mud-chip,
+.mud-nav-link,
+.mud-tabs-tab {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none;     /* IE 10+ */
+    user-select: none;         /* Standard syntax */
+}

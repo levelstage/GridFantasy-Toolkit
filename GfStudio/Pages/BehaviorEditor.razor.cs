@@ -39,6 +39,62 @@ namespace GfStudio.Pages
                 StateHasChanged();
             }
         }
+        private async Task OpenScopePicker()
+        {
+            var parameters = new DialogParameters<EnumPickerDialog<BasicPatternType>>
+            {
+                { x => x.Title, "Select Scope" },
+                { x => x.AllItems, Enum.GetValues<BasicPatternType>() }, // 모든 Scope 목록 전달
+                { x => x.IsMultiSelect, false }
+            };
+
+            var dialog = await DialogService.ShowAsync<EnumPickerDialog<BasicPatternType>>("Select Scope", parameters);
+            var result = await dialog.Result;
+
+            if (result != null && !result.Canceled)
+            {
+                var selectedSet = (HashSet<BasicPatternType>)result.Data;
+                _selectedBehavior.Scope = selectedSet.FirstOrDefault();
+            }
+        }
+        private async Task OpenTagPicker()
+        {
+
+            var parameters = new DialogParameters<EnumPickerDialog<BehaviorTag>>
+            {
+                { x => x.Title, "Select a Tag to Add" },
+                { x => x.AllItems, Enum.GetValues<BehaviorTag>() },
+                { x => x.IsMultiSelect, false }
+            };
+
+            var dialog = await DialogService.ShowAsync<EnumPickerDialog<BehaviorTag>>("Select a Tag to Add", parameters);
+            var result = await dialog.Result;
+
+            if (result != null && !result.Canceled)
+            {
+                var selectedSet = (HashSet<BehaviorTag>)result.Data;
+                _selectedBehavior.Tags.Add(selectedSet.FirstOrDefault());
+            }
+        }
+        private async Task OpenTargetPicker()
+        {
+
+            var parameters = new DialogParameters<EnumPickerDialog<TeamType>>
+            {
+                { x => x.Title, "Select a Type to Add" },
+                { x => x.AllItems, Enum.GetValues<TeamType>() },
+                { x => x.IsMultiSelect, false }
+            };
+
+            var dialog = await DialogService.ShowAsync<EnumPickerDialog<TeamType>>("Select a Type to Add", parameters);
+            var result = await dialog.Result;
+
+            if (result != null && !result.Canceled)
+            {
+                var selectedSet = (HashSet<TeamType>)result.Data;
+                _selectedBehavior.Accessible.Add(selectedSet.FirstOrDefault());
+            }
+        }
         private async Task OpenChangeMaxDialog()
         {
             var parameters = new DialogParameters<ChangeMaxDialog>
@@ -88,6 +144,22 @@ namespace GfStudio.Pages
             }
             StateHasChanged();
         }
+
+        private void RemoveBehaviorTag(BehaviorTag tagToRemove)
+        {
+            if (_selectedBehavior?.Tags != null)
+            {
+                _selectedBehavior.Tags.Remove(tagToRemove);
+            }
+        }
+        private void RemoveValidTarget(TeamType TargetToRemove)
+        {
+            if (_selectedBehavior?.Tags != null)
+            {
+                _selectedBehavior.Accessible.Remove(TargetToRemove);
+            }
+        }
+        
         
         private string AreaEffect_GetApplyingBuffName(int code)
         {

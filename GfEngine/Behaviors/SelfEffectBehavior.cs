@@ -14,7 +14,7 @@ namespace GfEngine.Behaviors
             Name = "Self Effect";
             Description = "Apply a buff/debuff to self.";
             Scope = new PatternSet(new List<Pattern> { new Pattern { X = 0, Y = 0 } }); // 자기 자신 위치가 범위.
-            Accessible = new List<TeamType> { TeamType.Same }; // 자기 자신.
+            Accessible = new HashSet<TeamType> { TeamType.Same }; // 자기 자신.
             ApCost = 1; // 기본 행동력 소모량
             Effect = new BuffSet();
         }

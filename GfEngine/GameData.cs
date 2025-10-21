@@ -330,12 +330,15 @@ namespace GfEngine
 				UI_ChooseAction,
 				UI_InvalidCoordinate,
 				UI_PressEnterToContinue,
+				// 기본 공격 관련 UI
 				UI_Battle_FirstAttack,
 				UI_Battle_DefenderDied,
 				UI_Battle_DefenderCantCounter,
 				UI_Battle_ExecuteCounterAttack,
+				UI_Battle_CounterWasFaster,
 				UI_Battle_FinalStateIndicator,
 				UI_Battle_AttackerFinalState,
+				// 기본 공격 외 Behavior 관련 UI
 				UI_Behavior_CharacterMoved,
 
 				// 캐릭터 이름
@@ -385,7 +388,8 @@ namespace GfEngine
 			 [Key.UI_Battle_FirstAttack] = "{0}, {1}에게 공격! [{2}]의 피해!",
 			 [Key.UI_Battle_DefenderDied] = "{0}, 쓰러져 공격할 수 없습니다!",
 			 [Key.UI_Battle_DefenderCantCounter] = "{0}, 반격할 수 없습니다!",
-			 [Key.UI_Battle_ExecuteCounterAttack] = "{0}, {1}에게 공격! [{2}]의 피해!",
+			 [Key.UI_Battle_CounterWasFaster] = "{0}, 공격을 간파하고 선제 공격! [{1}]의 피해!",
+			 [Key.UI_Battle_ExecuteCounterAttack] = "{0}, 반격! [{1}]의 피해!",
 			 [Key.UI_Battle_FinalStateIndicator] = "전투 결과",
 			 [Key.UI_Battle_AttackerFinalState] = "{0}: HP {1} / {2}",
 			 // 각종 Behavior 관련 UI 메시지

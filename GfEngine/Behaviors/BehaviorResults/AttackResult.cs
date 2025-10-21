@@ -8,6 +8,10 @@ namespace GfEngine.Behaviors.BehaviorResults
     {
         public Unit Victim;
         public int Damage;
-        public List<BattleTag> Tags;
+        public HashSet<BattleTag> Tags;
+        public override string ToString()
+        {
+            return string.Format(GameData.Text.Get(GameData.Text.Key.UI_Battle_FirstAttack), Agent.Name, Victim.Name, Damage);
+        }
     }    
 }

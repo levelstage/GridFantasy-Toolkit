@@ -11,7 +11,7 @@ namespace GfEngine.Behaviors
             foreach(Behavior iter in Behaviors)
             {
                 result = result + "$" + iter.Execute(origin, target, map);
-                // 만약 unit이 이동했다면, origin
+                
             }
             return result;
         }

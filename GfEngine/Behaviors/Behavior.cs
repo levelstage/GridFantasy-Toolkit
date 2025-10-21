@@ -2,6 +2,7 @@ using GfEngine.Core;
 using GfEngine.Battles;
 using System.Collections.Generic;
 using GfToolkit.Shared;
+using GfEngine.Behaviors.BehaviorResults;
 
 namespace GfEngine.Behaviors
 {
@@ -23,6 +24,6 @@ namespace GfEngine.Behaviors
 			ApCost = 1; // 기본 행동력 소모량
 		}
 		
-		public abstract string Execute(Square origin, Square target, Square[,] map);
+		public abstract BehaviorResult Execute(Square origin, Square target, Square[,] map);
 	}
 }

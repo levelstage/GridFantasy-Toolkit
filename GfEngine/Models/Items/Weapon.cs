@@ -5,7 +5,7 @@ namespace GfEngine.Models.Items
 {
 	public class Weapon : Item
 	{
-		public int Power { get; set; }
+		public float Power { get; set; } // 공격시 공격력에 곱해질 계수
 		public WeaponType Type { get; set; }
 		public BuffSet EquipBuff { get; set; }
 		public HashSet<WeaponTag> WTags { get; set; }

@@ -23,7 +23,10 @@ namespace GfToolkit.Shared
 
 	public enum DamageType // 피해 유형. 속성 피해 등을 추가할수도 있다.
 	{
-		Physical, Magical, True
+		Physical, // 대부분의 무기의 물리 피해.
+		Magical, // 마법 피해.
+		True, // 고정 피해.
+		Heal // 회복 피해. 받는 회복량 증가 등에 영향 받음.
 	}
 
 	public enum BuffEffect // 각 버프의 실질적 효과를 식별하기 위한 타입. 같은 타입의 버프들은 중첩된다.

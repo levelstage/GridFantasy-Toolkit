@@ -11,7 +11,7 @@ namespace GfStudio.Pages
     {
         private readonly string[] _behaviorTypes = 
         {
-            "AreaEffect", "SelfEffect"
+            "AreaInvocation", "SelfInvocation"
         };
         private List<BehaviorDto> _behaviors { get; set; } = GameDataDto.Database.Behaviors;
         private BehaviorDto _selectedBehavior { get; set; }
@@ -25,7 +25,7 @@ namespace GfStudio.Pages
         {
             _selectedBehavior = selected;
         }
-        private async Task AreaEffect_PickBuffSet()
+        private async Task AreaInvocation_PickBuffSet()
         {
             var parameters = new DialogParameters<BuffSetPickerDialog>
             {
@@ -33,9 +33,9 @@ namespace GfStudio.Pages
             };
             var dialog = await DialogService.ShowAsync<BuffSetPickerDialog>("Select Buffset", parameters);
             var result = await dialog.Result;
-            if (result != null && !result.Canceled && _selectedBehavior is AreaEffectBehaviorDto)
+            if (result != null && !result.Canceled && _selectedBehavior is AreaInvocationBehaviorDto)
             {
-                (_selectedBehavior as AreaEffectBehaviorDto).ApplyingBuffSetCode = ((BuffSetDto)result.Data).Code;
+                (_selectedBehavior as AreaInvocationBehaviorDto).ApplyingBuffSetCode = ((BuffSetDto)result.Data).Code;
                 StateHasChanged();
             }
         }
@@ -109,12 +109,12 @@ namespace GfStudio.Pages
                 var newMax = (int)result.Data;
                 var currentCount = _behaviors.Count;
 
-                // 새로운 최대치가 현재 개수보다 많으면, 빈 항목을 추가합니다.(가장 단순한 SelfEffectBehavior로.)
+                // 새로운 최대치가 현재 개수보다 많으면, 빈 항목을 추가합니다.(가장 단순한 SelfInvocationBehavior로.)
                 if (newMax > currentCount)
                 {
                     for (int i = currentCount; i < newMax; i++)
                     {
-                        _behaviors.Add(new SelfEffectBehaviorDto { Code = i, Name = "" });
+                        _behaviors.Add(new SelfInvocationBehaviorDto { Code = i, Name = "" });
                     }
                 }
                 // 새로운 최대치가 현재 개수보다 적으면, 뒤에서부터 항목을 삭제합니다.
@@ -130,15 +130,15 @@ namespace GfStudio.Pages
         private void OnBehaviorTypeChange(string value)
         {
             if (value == _selectedBehavior.Type) return;
-            if (value == "AreaEffect")
+            if (value == "AreaInvocation")
             {
-                AreaEffectBehaviorDto aeb = new AreaEffectBehaviorDto(_selectedBehavior);
-                GameDataDto.Database.Behaviors[aeb.Code] = aeb;
-                _selectedBehavior = aeb;
+                AreaInvocationBehaviorDto aib = new AreaInvocationBehaviorDto(_selectedBehavior);
+                GameDataDto.Database.Behaviors[aib.Code] = aib;
+                _selectedBehavior = aib;
             }
-            else if (value == "SelfEffect")
+            else if (value == "SelfInvocation")
             {
-                SelfEffectBehaviorDto seb = new SelfEffectBehaviorDto(_selectedBehavior);
+                SelfInvocationBehaviorDto seb = new SelfInvocationBehaviorDto(_selectedBehavior);
                 GameDataDto.Database.Behaviors[seb.Code] = seb;
                 _selectedBehavior = seb;
             }
@@ -161,7 +161,7 @@ namespace GfStudio.Pages
         }
         
         
-        private string AreaEffect_GetApplyingBuffName(int code)
+        private string AreaInvocation_GetApplyingBuffName(int code)
         {
             if (code < 0) return "None";
             return GameDataDto.Database.BuffSets[code].Name;

@@ -1,11 +1,11 @@
-using GfEngine.Behaviors;
+using GfEngine.Battles.Behaviors;
 using GfEngine.Models.Actors;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
 using GfEngine.Models.Buffs;
 using System.Collections.Generic;
 using GfToolkit.Shared;
-namespace GfEngine.Battles
+namespace GfEngine.Battles.Units
 {
     public class InstantUnit : Unit
     {

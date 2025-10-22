@@ -194,7 +194,7 @@ public class Program
     else
     {
         Unit unit = square.Occupant;
-        Status finalStat = unit.LiveStat.Buffed();
+        Status finalStat = unit.GetFinalStatus();
         Console.WriteLine("\n[유닛 정보]");
 	    Console.WriteLine($"이름: {unit.Name}");
         Console.WriteLine($"소속: {unit.Team}");

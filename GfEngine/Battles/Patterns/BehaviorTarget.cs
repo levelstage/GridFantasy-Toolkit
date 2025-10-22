@@ -1,5 +1,5 @@
 using GfToolkit.Shared;
-namespace GfEngine.Battles
+namespace GfEngine.Battles.Patterns
 {
 	public class BehaviorTarget
 	{

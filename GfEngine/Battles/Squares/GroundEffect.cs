@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using GfEngine.Models.Buffs;
 using GfToolkit.Shared;
 
-namespace GfEngine.Battles
+namespace GfEngine.Battles.Squares
 {
     public class GroundEffect
     {

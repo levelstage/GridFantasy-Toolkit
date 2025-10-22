@@ -68,7 +68,7 @@
             <MudItem xs="12" sm="6">
                 <MudStack Spacing="4">
                     
-                    @if (_selectedBehavior is AreaEffectBehaviorDto aeb)
+                    @if (_selectedBehavior is AreaInvocationBehaviorDto aib)
                     {
                         <MudPaper Outlined="true" Class="pa-3" Style="height:100%">
                         <MudStack Spacing="3">
@@ -76,7 +76,7 @@
 
                             <MudGrid Spacing="2">
                                 <MudItem xs="6">
-                                    <MudSelect T="BasicPatternType" Label="Area" Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="aeb.Area">
+                                    <MudSelect T="BasicPatternType" Label="Area" Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="aib.Area">
                                         @foreach(BasicPatternType iter in _patternTypeOptions)
                                         {
                                             <MudSelectItem T="BasicPatternType" Value="iter">@iter</MudSelectItem>
@@ -98,8 +98,8 @@
                             
                             <div class="d-flex align-center">
                                 <MudTextField T="string" Label="Applied BuffSet" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                            ReadOnly="true" Value="@AreaEffect_GetApplyingBuffName(aeb.ApplyingBuffSetCode)" />
-                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" OnClick="AreaEffect_PickBuffSet"/>
+                                            ReadOnly="true" Value="@AreaInvocation_GetApplyingBuffName(aib.ApplyingBuffSetCode)" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" OnClick="AreaInvocation_PickBuffSet"/>
                             </div>
 
                             <MudPaper Outlined="true" Style="display: flex; flex-direction: column;">
@@ -109,7 +109,7 @@
                                     <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" />
                                 </MudToolBar>
 
-                                <MudTable T="(StatType, float)" Items="aeb.Coefficients" Dense="true" Hover="true" Breakpoint="Breakpoint.None">
+                                <MudTable T="(StatType, float)" Items="aib.Coefficients" Dense="true" Hover="true" Breakpoint="Breakpoint.None">
                                     <HeaderContent>
                                         <MudTh>Target Stat</MudTh>
                                         <MudTh>Scale Factor</MudTh>
@@ -129,7 +129,7 @@
                         </MudStack>
                     </MudPaper>
                     }
-                    else if (_selectedBehavior is SelfEffectBehaviorDto seb)
+                    else if (_selectedBehavior is SelfInvocationBehaviorDto seb)
                     {
                         <MudPaper Outlined="true" Class="pa-3" Style="height:100%">
                             <MudText Typo="Typo.h6">Self Effect Properties</MudText>

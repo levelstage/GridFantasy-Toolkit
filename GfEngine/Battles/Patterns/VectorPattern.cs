@@ -1,4 +1,4 @@
-namespace GfEngine.Battles
+namespace GfEngine.Battles.Patterns
 {
     public class VectorPattern : Pattern
 	{

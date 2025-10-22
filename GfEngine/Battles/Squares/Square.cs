@@ -1,7 +1,8 @@
 using GfToolkit.Shared;
+using GfEngine.Battles.Units;
 using System.Collections.Generic;
 
-namespace GfEngine.Battles
+namespace GfEngine.Battles.Squares
 {
     public class Square
     {

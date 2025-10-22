@@ -1,8 +1,9 @@
-using GfEngine.Battles;
+using GfEngine.Battles.Squares;
 using System.Collections.Generic;
 using GfToolkit.Shared;
+using GfEngine.Battles.Commands.Core;
 
-namespace GfEngine.Behaviors
+namespace GfEngine.Battles.Behaviors
 {
 	public class BasicMoveBehavior : Behavior
 	{
@@ -20,8 +21,20 @@ namespace GfEngine.Behaviors
 			}
 
 		}
-		public override string Execute(Square origin, Square target, Square[,] map)
+		private static string GetSquareName(int x, int y, int ySize)
+        {
+			string res = "";
+			//(0, 0) => a(ysize)
+			res = ((char)('a' + x)).ToString() + ((char)('0' + ySize - y)).ToString();
+			return res;
+        }
+		public override MoveCommand Execute(Square origin, Square target, Square[,] map)
 		{
+			MoveCommand res = new MoveCommand() {
+				Agent = origin.Occupant,
+				TargetSquare = target,
+				MovedSquareDescription = GetSquareName(target.X, target.Y, map.GetLength(0))
+			};
 			//폰에 대한 예외처리. 폰의 이동방식을 전진한 폰의 이동방식으로 바꿔준다.
 			if (Tags.Contains(BehaviorTag.PawnFirstDown))
 			{
@@ -36,7 +49,7 @@ namespace GfEngine.Behaviors
 			// 여기가 메인 로직. 말 그대로 이동을 처리함.
 			target.PlaceUnit(origin.Occupant);
 			origin.ClearUnit();
-			return "";
+			return res;
 		}
 	}
 

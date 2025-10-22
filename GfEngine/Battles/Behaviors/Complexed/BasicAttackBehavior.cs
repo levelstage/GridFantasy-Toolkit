@@ -1,11 +1,14 @@
-using GfEngine.Core;
 using GfEngine.Models.Items;
-using GfEngine.Battles;
+using GfEngine.Battles.Patterns;
+using GfEngine.Battles.Units;
+using GfEngine.Battles.Squares;
+using GfEngine.Battles.Commands;
+using GfEngine.Battles.Commands.Advanced;
+using GfEngine.Battles.Commands.Core;
 using System.Collections.Generic;
 using System;
 using GfToolkit.Shared;
-using GfEngine.Behaviors.BehaviorResults;
-namespace GfEngine.Behaviors
+namespace GfEngine.Battles.Behaviors.Complexed
 {
     public class BasicAttackBehavior : Behavior
     {
@@ -56,76 +59,66 @@ namespace GfEngine.Behaviors
 
         private static int Hit(Unit attacker, Unit defender, BasicAttackBehavior B) // attaker가 deffender를 때리는 판정을 하는 함수.
         {
-            int damage = B.Method.Power;
+            int damage = 0;
             (AttackType atkType, DamageType dmgType) = GameData.AttackDamageTypes[B.Method.Type];
-            // 원래라면 B에 있는 여러 태그들을 체크한다. 지금은 없으므로 주석만 달아놓자.
-            if (atkType == AttackType.Physical) damage += attacker.LiveStat.Buffed().Attack;
-            else damage += attacker.LiveStat.Buffed().MagicAttack;
-            return -defender.TakeDamage(damage, dmgType); // 가한 피해 = -체력 변동
+            if (atkType == AttackType.Physical) damage += attacker.GetFinalStatus().Attack;
+            else damage += attacker.GetFinalStatus().MagicAttack;
+            damage = defender.CalculateDamage((int)(damage * B.Method.Power), dmgType);
+            // 오버데미지 방지
+            if (damage > defender.CurrentHp()) return defender.CurrentHp(); 
+            return damage;
         }
 
-        public override BehaviorResult Execute(Square origin, Square target, Square[,] map)
+        public override Command Execute(Square origin, Square target, Square[,] map)
         {
             Unit attacker = origin.Occupant;
             Unit defender = target.Occupant;
+            BasicAttackCommand res = new BasicAttackCommand()
+            {
+                Agent = attacker,
+                TargetSquare = target,
+                TargetUnit = defender,
+                Incidents = new List<Command>()
+            };
+            if (attacker == null || defender == null) return res;            
             BasicAttackBehavior counter = GetCounterAttack(origin, target, this.ApCost);
-            BasicAttackResult res = new BasicAttackResult() { Agent = attacker, Tags = new HashSet<BattleTag>(), TargetSquare = target, Victim = defender};
             if (counter == null)
             {
+                // 카운터가 없을 시 그냥 때림.
                 res.Damage = Hit(attacker, defender, this);
-                res.Tags.Add(BattleTag.noCounter);
-                res.HadInitiative = true;
-                res.CounterAttackResult = null;
+                res.Incidents.Add(new HitCommand(res));
+                // "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
+                res.HadInitiative = true; // 일단 선공권을 가진 것으로 간주.
+                res.CounterAttackCommand = null;
                 return res;
             }
-            (Unit, int, Unit, int, HashSet<BattleTag>) result;
             // 누가 먼저 때릴지, Agility를 비교. 같으면 공격자 우선.
-            if (attacker.LiveStat.Buffed().Agility >= defender.LiveStat.Buffed().Agility)
+            if (attacker.GetFinalStatus().Agility >= defender.GetFinalStatus().Agility)
             {
                 // 공격자의 선공
                 res.Damage = Hit(attacker, defender, this);
+                res.Incidents.Add(new HitCommand(res));
+                // "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
                 res.HadInitiative = true;
-                if (defender.LiveStat.CurrentHp == 0)
-                {
-                    res.CounterAttackResult = null;
-                    res.Tags.Add(BattleTag.noCounter);
-                    res.Tags.Add(BattleTag.killedCounter);
-                }
-                else
-                {
-                    AttackResult counterAttackResult = new AttackResult() { Agent = defender, Tags = new HashSet<BattleTag>(), Victim = attacker, TargetSquare = origin};
-                    counterAttackResult.Damage = Hit(defender, attacker, counter);
-                    res.CounterAttackResult = counterAttackResult;
-                }
+                HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = origin};
+                counterAttackCommand.Damage = Hit(defender, attacker, counter);
+                res.CounterAttackCommand = counterAttackCommand;
+                res.Incidents.Add(counterAttackCommand);
+                // 마찬가지로 "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
             }
             else
             {
                 // 수비자의 선공
-                AttackResult counterAttackResult = new AttackResult() { Agent = defender, Tags = new HashSet<BattleTag>(), Victim = attacker, TargetSquare = origin};
-                counterAttackResult.Damage = Hit(defender, attacker, counter);
+                HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = origin};
+                counterAttackCommand.Damage = Hit(defender, attacker, counter);
+                res.CounterAttackCommand = counterAttackCommand;
+                res.Incidents.Add(new HitCommand(res));
+                // "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
                 res.HadInitiative = false;
-                if (attacker.LiveStat.CurrentHp == 0)
-                {
-                    res.Damage = 0;
-                    counterAttackResult.Tags.Add(BattleTag.noCounter);
-                    counterAttackResult.Tags.Add(BattleTag.killedCounter);
-                    res.CounterAttackResult = counterAttackResult;
-                }
-                else
-                {
-                    res.Damage = Hit(attacker, defender, this);
-                    res.CounterAttackResult = counterAttackResult;
-                }
+                res.Damage = Hit(attacker, defender, this);
+                res.Incidents.Add(new HitCommand(res));
+                // 마찬가지로 "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
             }
-            if (attacker.LiveStat.CurrentHp == 0)
-            {
-                origin.ClearUnit();
-            }
-            if (defender.LiveStat.CurrentHp == 0)
-            {
-                origin.ClearUnit();
-            }
-
             return res;
         }
     }

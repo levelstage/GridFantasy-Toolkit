@@ -1,6 +1,8 @@
 using GfEngine.Models.Actors;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
+using GfEngine.Battles.Squares;
+using GfEngine.Battles.Units;
 using System.Collections.Generic;
 using GfToolkit.Shared;
 namespace GfEngine.Battles

@@ -1,10 +1,10 @@
-using GfEngine.Core;
-using GfEngine.Battles;
+using GfEngine.Battles.Patterns;
+using GfEngine.Battles.Squares;
 using System.Collections.Generic;
 using GfToolkit.Shared;
-using GfEngine.Behaviors.BehaviorResults;
+using GfEngine.Battles.Commands;
 
-namespace GfEngine.Behaviors
+namespace GfEngine.Battles.Behaviors
 {
 	public abstract class Behavior
 	{
@@ -24,6 +24,6 @@ namespace GfEngine.Behaviors
 			ApCost = 1; // 기본 행동력 소모량
 		}
 		
-		public abstract BehaviorResult Execute(Square origin, Square target, Square[,] map);
+		public abstract Command Execute(Square origin, Square target, Square[,] map);
 	}
 }

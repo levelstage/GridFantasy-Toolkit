@@ -3,7 +3,7 @@ using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
 using GfToolkit.Shared;
 
-namespace GfEngine.Battles
+namespace GfEngine.Battles.Units
 {
     public class ActorUnit : Unit
     {

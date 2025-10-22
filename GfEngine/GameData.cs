@@ -340,6 +340,8 @@ namespace GfEngine
 				UI_Battle_AttackerFinalState,
 				// 기본 공격 외 Behavior 관련 UI
 				UI_Behavior_CharacterMoved,
+				UI_Behavior_GiveEffect,
+				UI_Behavior_GiveEffectWithDamage,
 
 				// 캐릭터 이름
 				Actor_Phantom_Name,
@@ -392,6 +394,8 @@ namespace GfEngine
 			 [Key.UI_Battle_ExecuteCounterAttack] = "{0}, 반격! [{1}]의 피해!",
 			 [Key.UI_Battle_FinalStateIndicator] = "전투 결과",
 			 [Key.UI_Battle_AttackerFinalState] = "{0}: HP {1} / {2}",
+			 [Key.UI_Behavior_GiveEffect] = "{0}, {1}에게 {2} 상태 부여!",
+			 [Key.UI_Behavior_GiveEffectWithDamage] = "",
 			 // 각종 Behavior 관련 UI 메시지
 			 [Key.UI_Behavior_CharacterMoved] = "{0}, {1}로 이동.",
 

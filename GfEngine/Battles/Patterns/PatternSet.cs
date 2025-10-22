@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using GfToolkit.Shared;
+using GfEngine.Battles.Squares;
+using GfEngine.Battles.Units;
 
-namespace GfEngine.Battles
+namespace GfEngine.Battles.Patterns
 {
 	public class PatternSet
 	{

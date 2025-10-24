@@ -1,12 +1,10 @@
-using GfEngine.Behaviors;
+using GfEngine.Battles.Behaviors;
 using GfEngine.Models.Buffs;
 using System.Collections.Generic;
 namespace GfEngine.Models.Actors
 {
-	public class Skill
+	public class Skill : GameObject
 	{
-		public int Code { get; set; }
-		public string Name { get; set; }
 		public string Description { get; set; }
 		public bool IsPassive { get; set; }
 		public BuffSet SkillBuff { get; set; }   // 스킬을 가지고 있는 것 만으로 받는 버프. (액티브이면서 패시브 스킬이 동시에 딸린 경우까지 고려.)

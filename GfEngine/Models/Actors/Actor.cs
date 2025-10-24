@@ -5,14 +5,12 @@ using System.Collections.Generic;
 
 namespace GfEngine.Models.Actors
 {
-	public class Actor
+	public class Actor : GameObject
 	{
-		public int Code { get; set; }
 		public Status Stat;
 		public GrowthRates BaseGrowthRates;
 		public MoveType MoveClass { get; set; }
 		public WeaponType WeaponClass { get; set; }
-		public string Name { get; set; }
 		public Skill UniqueSkill { get; set; }
 		public Weapon Equipment { get; set; }
 		public List<Item> Inventory { get; set; }

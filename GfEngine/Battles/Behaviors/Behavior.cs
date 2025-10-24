@@ -6,10 +6,8 @@ using GfEngine.Battles.Commands;
 
 namespace GfEngine.Battles.Behaviors
 {
-	public abstract class Behavior
+	public abstract class Behavior : GameObject
 	{
-		public int Code { get; set; }
-		public string Name { get; set; }
 		public string Description { get; set; }
 		public PatternSet Scope { get; set; }
 		public HashSet<BehaviorTag> Tags { get; set; }

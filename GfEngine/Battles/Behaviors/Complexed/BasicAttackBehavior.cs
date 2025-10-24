@@ -57,15 +57,16 @@ namespace GfEngine.Battles.Behaviors.Complexed
             return null;
         }
 
-        private static int Hit(Unit attacker, Unit defender, BasicAttackBehavior B) // attaker가 deffender를 때리는 판정을 하는 함수.
+        private static int Hit(Unit attacker, Unit defender, BasicAttackBehavior B)
         {
+            // 공격/반격의 피해를 계산하는 함수
             int damage = 0;
             (AttackType atkType, DamageType dmgType) = GameData.AttackDamageTypes[B.Method.Type];
             if (atkType == AttackType.Physical) damage += attacker.GetFinalStatus().Attack;
             else damage += attacker.GetFinalStatus().MagicAttack;
             damage = defender.CalculateDamage((int)(damage * B.Method.Power), dmgType);
             // 오버데미지 방지
-            if (damage > defender.CurrentHp()) return defender.CurrentHp(); 
+            if (damage > defender.CurrentHp()) return defender.CurrentHp();
             return damage;
         }
 
@@ -73,20 +74,26 @@ namespace GfEngine.Battles.Behaviors.Complexed
         {
             Unit attacker = origin.Occupant;
             Unit defender = target.Occupant;
+            HitCommand attack = new HitCommand()
+            {
+                Agent = attacker,
+                TargetSquare = target,
+                TargetUnit = defender
+            };
             BasicAttackCommand res = new BasicAttackCommand()
             {
                 Agent = attacker,
                 TargetSquare = target,
-                TargetUnit = defender,
-                Incidents = new List<Command>()
+                Commands = new List<Command>(),
+                AttackCommand = attack
             };
             if (attacker == null || defender == null) return res;            
             BasicAttackBehavior counter = GetCounterAttack(origin, target, this.ApCost);
             if (counter == null)
             {
                 // 카운터가 없을 시 그냥 때림.
-                res.Damage = Hit(attacker, defender, this);
-                res.Incidents.Add(new HitCommand(res));
+                attack.Damage = Hit(attacker, defender, this);
+                res.Commands.Add(attack);
                 // "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
                 res.HadInitiative = true; // 일단 선공권을 가진 것으로 간주.
                 res.CounterAttackCommand = null;
@@ -96,14 +103,14 @@ namespace GfEngine.Battles.Behaviors.Complexed
             if (attacker.GetFinalStatus().Agility >= defender.GetFinalStatus().Agility)
             {
                 // 공격자의 선공
-                res.Damage = Hit(attacker, defender, this);
-                res.Incidents.Add(new HitCommand(res));
+                attack.Damage = Hit(attacker, defender, this);
+                res.Commands.Add(attack);
                 // "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
                 res.HadInitiative = true;
                 HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = origin};
                 counterAttackCommand.Damage = Hit(defender, attacker, counter);
                 res.CounterAttackCommand = counterAttackCommand;
-                res.Incidents.Add(counterAttackCommand);
+                res.Commands.Add(counterAttackCommand);
                 // 마찬가지로 "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
             }
             else
@@ -112,11 +119,11 @@ namespace GfEngine.Battles.Behaviors.Complexed
                 HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = origin};
                 counterAttackCommand.Damage = Hit(defender, attacker, counter);
                 res.CounterAttackCommand = counterAttackCommand;
-                res.Incidents.Add(new HitCommand(res));
+                res.Commands.Add(counterAttackCommand);
                 // "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
                 res.HadInitiative = false;
-                res.Damage = Hit(attacker, defender, this);
-                res.Incidents.Add(new HitCommand(res));
+                attack.Damage = Hit(attacker, defender, this);
+                res.Commands.Add(attack);
                 // 마찬가지로 "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
             }
             return res;

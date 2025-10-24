@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using GfEngine.Behaviors;
-using GfEngine.Battles;
-using GfEngine.Core;
+using GfEngine.Battles.Patterns;
 using GfEngine.Models.Actors;
 using GfEngine.Models.Buffs;
 using GfEngine.Models.Items;

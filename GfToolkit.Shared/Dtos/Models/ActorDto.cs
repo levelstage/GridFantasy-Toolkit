@@ -1,13 +1,11 @@
 namespace GfToolkit.Shared.Dtos.Models
 {
-    public class ActorDto
+    public class ActorDto : GameDto
     {
-        public int Code { get; set; }
 		public int[] Stat = new int[6];
 		public int[] BaseGrowthRates = new int[6];
 		public MoveType MoveClass { get; set; }
 		public WeaponType WeaponClass { get; set; }
-		public string Name { get; set; }
 		public int UniqueSkillCode { get; set; }
 		public int EquipmentCode { get; set; }
 		public List<int> InventoryByCode { get; set; }

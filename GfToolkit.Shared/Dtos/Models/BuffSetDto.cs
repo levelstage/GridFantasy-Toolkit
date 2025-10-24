@@ -1,10 +1,8 @@
 namespace GfToolkit.Shared.Dtos.Models
 {
-    public class BuffSetDto
+    public class BuffSetDto : GameDto
     {
-        public int Code { get; set; }
         public int IconCode { get; set; }
-        public string Name { get; set; }
         public string Description { get; set; }
         public int Duration { get; set; } // 지속 턴 수
         

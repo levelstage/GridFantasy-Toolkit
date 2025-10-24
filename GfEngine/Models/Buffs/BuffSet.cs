@@ -1,11 +1,9 @@
-using GfEngine.Battles;
+using GfEngine.Battles.Units;
 using System.Collections.Generic;
 namespace GfEngine.Models.Buffs
 {
-	public class BuffSet // 진정한 객체로서의 버프. 여러 Buff들의 묶음임.
+	public class BuffSet : GameObject // 진정한 객체로서의 버프. 여러 Buff들의 묶음임.
 	{
-		public int Code { get; set; }
-		public string Name { get; set; }
 		public string Description { get; set; }
 		public int Duration { get; set; } // 이 '효과 묶음'의 지속시간
 		// 부차적인 속성

@@ -18,7 +18,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
         public int DamageConstant;
         public List<(StatType, float)> Coefficients;
         public DamageType DamageType;
-        public BuffSet ApplyingBuffSet;
+        public Buff ApplyingBuff;
 
         // 생성자에서 피해량, 피해 타입, 공격 범위(PatternSet) 등 '데이터'를 받는다.
         public AreaInvocationBehavior() : base()
@@ -62,12 +62,12 @@ namespace GfEngine.Battles.Behaviors.Complexed
                                 TargetUnit = target.Occupant
                             });
                         }
-                        if (ApplyingBuffSet != null)
+                        if (ApplyingBuff != null)
                         {
                             command.Commands.Add(new InvocationCommand()
                             {
                                 Agent = command.Agent,
-                                ApplyingBuffSet = ApplyingBuffSet,
+                                ApplyingBuff = ApplyingBuff,
                                 TargetSquare = target,
                                 TargetUnit = target.Occupant
                             });

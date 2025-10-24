@@ -17,7 +17,7 @@
             <MudNavLink Href="/skills">Skills</MudNavLink>
             <MudNavLink Href="/items">Items</MudNavLink>
             <MudNavLink Href="/weapons">Weapons</MudNavLink>
-            <MudNavLink Href="/buffsets">Buffsets</MudNavLink>
+            <MudNavLink Href="/buffs">Buffs</MudNavLink>
             <MudNavLink Href="/traits">Traits</MudNavLink>
             <MudButton OnClick="SaveProjectAsync">Save Project</MudButton>
         </MudNavMenu>
@@ -38,7 +38,7 @@
             // 1. 현재 앱의 모든 데이터를 GameDataDto 객체에 담습니다.
             //    (실제로는 각 에디터의 데이터를 취합해야 합니다)
             //    _gameData.Actors = ...
-            //    _gameData.BuffSets = ...
+            //    _gameData.Buffs = ...
 
             // 2. JsonSerializer를 사용해 객체를 JSON 문자열로 변환합니다.
             var json = JsonSerializer.Serialize(GameDataDto.Database, new JsonSerializerOptions { WriteIndented = true });

@@ -7,7 +7,7 @@ namespace GfEngine.Models.Items
 	{
 		public string Description { get; set; }
 		public HashSet<ItemTag> Itags { get; set; }
-		public BuffSet ItemBuff { get; set; }
+		public Buff ItemBuff { get; set; }
 
 		public Item()
 		{

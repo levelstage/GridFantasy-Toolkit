@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using GfToolkit.Shared;
-using GfEngine.Core;
 using GfEngine.Battles;
-using GfEngine.Behaviors;
+using GfEngine.Battles.Behaviors;
+using GfEngine.Battles.Squares;
+using GfEngine.Battles.Patterns;
+using GfEngine.Battles.Units;
 using GfEngine.Models.Statuses;
 using GfEngine;
 public class Program
@@ -137,7 +139,7 @@ public class Program
                 {
                     // Execute the action!
                     Square targetSquare = map[y, x];
-                    string resultMessage = selectedBehavior.Execute(selectedSquare, targetSquare, map);
+                    string resultMessage = selectedBehavior.Execute(selectedSquare, targetSquare, map).ToString();
                     
                     if (!string.IsNullOrEmpty(resultMessage))
                     {

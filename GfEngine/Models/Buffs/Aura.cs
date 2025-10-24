@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using GfToolkit.Shared;
 namespace GfEngine.Models.Buffs
 {
-	public class Aura : Buff
+	public class Aura : Modifier
 	{
-		// 오라형 버프
+		// 오라형 버프 효과
 		public PatternSet AuraScope { get; set; } // 오라의 범위 (PatternSet 사용)
 		public int AuraEffect { get; set; } // 오라 범위 내의 대상에게 부여할 버프셋
 		public HashSet<TeamType> AuraTargets { get; set; } // 오라의 대상 (아군, 적군 등)

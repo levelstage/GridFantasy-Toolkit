@@ -15,7 +15,7 @@ namespace GfEngine.Models.Actors
         public TraitRarity Rarity { get; set; }
 
         // 이 특성을 선택했을 때 얻게 되는 실제 효과 (버프)
-        public BuffSet TraitBuff { get; set; }
+        public Buff TraitBuff { get; set; }
 
         public Trait()
         {

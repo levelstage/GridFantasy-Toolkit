@@ -3,7 +3,7 @@ namespace GfEngine
 {
     // 이름과 코드가 존재하는 게임상의 모든 객체의 조상.
     // GfStudio에서 항목으로 존재하는 객체면 다 이 객체를 상속받는다.
-    // GameObject가 아닌 것 예: PatternSet, Pattern, Buff
+    // GameObject가 아닌 것 예: PatternSet, Pattern, Modifier
     public abstract class GameObject : IEquatable<GameObject>
     {
         public int Code { get; set; }

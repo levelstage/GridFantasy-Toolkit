@@ -1,6 +1,6 @@
 namespace GfToolkit.Shared.Dtos.Models
 {
-    public class AuraDto : BuffDto
+    public class AuraDto : ModifierDto
     {
         public BasicPatternType AuraScope { get; set; } // 오라의 범위
         public int AuraBuffCode { get; set; } // 오라 범위 내의 대상에게 부여할 버프셋

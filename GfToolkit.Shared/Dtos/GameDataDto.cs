@@ -10,7 +10,7 @@ namespace GfToolkit.Shared.Dtos
         // public List<SkillDto> Skills { get; set; } = new();
         // public List<ItemDto> Items { get; set; } = new();
         // public List<WeaponDto> Weapons { get; set; } = new();
-        public List<BuffSetDto> BuffSets { get; set; } = new();
+        public List<ModifierDto> Buffs { get; set; } = new();
         // public static List<TraitDto> Traits { get; set; } = new();
     }
 }

@@ -1,6 +1,6 @@
 namespace GfToolkit.Shared.Dtos.Models
 {
-    public class BuffSetDto : GameDto
+    public class BuffDto : GameDto
     {
         public int IconCode { get; set; }
         public string Description { get; set; }
@@ -13,8 +13,8 @@ namespace GfToolkit.Shared.Dtos.Models
         public bool IsVisible { get; set; }
 
         // 이 묶음에 포함된 개별 버프 효과들의 리스트
-        public List<BuffDto> Effects { get; set; }
-        public BuffSetDto()
+        public List<ModifierDto> Effects { get; set; }
+        public BuffDto()
         {
             Code = -1;
             Name = "";
@@ -22,7 +22,7 @@ namespace GfToolkit.Shared.Dtos.Models
             Description = "";
             Duration = -1;
             IsBuff = IsDebuff = IsRemovable = IsVisible = false;
-            Effects = new List<BuffDto>();
+            Effects = new List<ModifierDto>();
         }
     }
 }

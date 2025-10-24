@@ -97,9 +97,9 @@
                             </MudGrid>
                             
                             <div class="d-flex align-center">
-                                <MudTextField T="string" Label="Applied BuffSet" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                            ReadOnly="true" Value="@AreaInvocation_GetApplyingBuffName(aib.ApplyingBuffSetCode)" />
-                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" OnClick="AreaInvocation_PickBuffSet"/>
+                                <MudTextField T="string" Label="Applied Buff" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                            ReadOnly="true" Value="@AreaInvocation_GetApplyingBuffName(aib.ApplyingBuffCode)" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Search" Class="ml-2" OnClick="AreaInvocation_PickBuff"/>
                             </div>
 
                             <MudPaper Outlined="true" Style="display: flex; flex-direction: column;">

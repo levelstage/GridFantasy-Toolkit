@@ -58,7 +58,7 @@ namespace GfToolkit.Shared
 
 	public enum StatType // Status의 각 속성들을 식별하기 위한 타입.
 	{
-		MaxHp, Defense, MagicDefense, Attack, MagicAttack, Agility
+		MaxHp, Defense, MagicDefense, Attack, MagicAttack, Agility, CurrentHp
 	}
 
 	public enum TraitType
@@ -69,6 +69,17 @@ namespace GfToolkit.Shared
 		Damage,     // 공격 관련
 		Utility     // 유틸리티 관련
 	}
+
+	// 시스템 구현을 위해 필요한 enum
+	public enum ComparisonOperator // 비교형 Condition을 위한 연산자 열거
+    {
+        GreaterThan,       // >
+        GreaterThanOrEqual, // >=
+        LessThan,           // <
+        LessThanOrEqual,    // <=
+        Equal,              // ==
+        NotEqual            // !=
+    }
 
 	// Tag들
 	public enum BehaviorTag // 해당 Behavior의 특성을 세세하게 설명하는 태그.

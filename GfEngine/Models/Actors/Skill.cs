@@ -7,7 +7,7 @@ namespace GfEngine.Models.Actors
 	{
 		public string Description { get; set; }
 		public bool IsPassive { get; set; }
-		public BuffSet SkillBuff { get; set; }   // 스킬을 가지고 있는 것 만으로 받는 버프. (액티브이면서 패시브 스킬이 동시에 딸린 경우까지 고려.)
+		public Buff SkillBuff { get; set; }   // 스킬을 가지고 있는 것 만으로 받는 버프. (액티브이면서 패시브 스킬이 동시에 딸린 경우까지 고려.)
 		public Behavior SkillBehavior;
 		public Skill()
 		{

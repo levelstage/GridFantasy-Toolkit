@@ -8,7 +8,7 @@
         </MudRadioGroup>
 
         <MudDivider Class="my-4" />
-        <MudSelect T="BuffEffect" Label="Buff Effect Type" Variant="Variant.Outlined" @bind-Value="_viewModel.Type" For="@(() => _viewModel.Type)" Disabled="@_buffEffectTypeDisabled">
+        <MudSelect T="BuffEffect" Label="Modifier Effect Type" Variant="Variant.Outlined" @bind-Value="_viewModel.Type" For="@(() => _viewModel.Type)" Disabled="@_buffEffectTypeDisabled">
         @foreach(BuffEffect iter in _buffEffectOptions){
             if(iter == BuffEffect.Aura) continue;
             <MudSelectItem T="BuffEffect" value=@iter>@iter.ToString()</MudSelectItem>
@@ -27,9 +27,9 @@
                 <MudSwitch T="bool" Label="Use Move Pattern" Color="Color.Primary" Value="_viewModel.UseMovePattern" ValueChanged="OnUseMovePatternSwitchChagned" Disabled = "@_useMovePatternSwitchDisabled"/>
                 <MudSwitch T="bool" Label="Use Attack Pattern" Color="Color.Primary" Value="_viewModel.UseAttackPattern" ValueChanged="OnUseAttackPatternSwitchChagned" Disabled = "@_useAttackPatternSwitchDisabled"/>
                 <div class="d-flex align-center">
-                <MudTextField T="string" Label="Aura Buff" Variant="Variant.Outlined" 
+                <MudTextField T="string" Label="Aura Modifier" Variant="Variant.Outlined" 
                             ReadOnly="true" Value="@GetSelectedAuraBuffName()" />
-                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="OpenBuffSetPicker" Class="ml-2" />
+                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="OpenBuffPicker" Class="ml-2" />
                 </div>
                 <MudSelect T="TeamType" Label="Aura Targets" Variant="Variant.Outlined" MultiSelection="true" @bind-SelectedValues="_viewModel.AuraTargets" >
                     @foreach(TeamType iter in _teamTypeOptions){
@@ -60,8 +60,8 @@
 @code {
     [CascadingParameter]
     public IMudDialogInstance MudDialog { get; set; }
-    [Parameter] public List<BuffSetDto> AllBuffSets { get; set; } = new();
-    [Parameter] public BuffDto EffectToEdit { get; set; }
+    [Parameter] public List<ModifierDto> AllBuffs { get; set; } = new();
+    [Parameter] public ModifierDto EffectToEdit { get; set; }
 
     protected override void OnInitialized()
     {
@@ -77,7 +77,7 @@
                 OnUseMovePatternSwitchChagned(aura.UseMovePattern);
                 OnUseAttackPatternSwitchChagned(aura.UseAttackPattern);
             }
-            else if (EffectToEdit is ScalingBuffDto scaling)
+            else if (EffectToEdit is ScalingModifierDto scaling)
             {
                 _selectedEffectType = "Scaling";
                 _viewModel.Type = scaling.Type;
@@ -86,7 +86,7 @@
                 _viewModel.TargetStat = scaling.TargetStat;
                 _viewModel.SelfSourced = scaling.SelfSourced;
             }
-            else // 기본 BuffDto일 경우
+            else // 기본 ModifierDto일 경우
             {
                 _viewModel.Type = EffectToEdit.Type;
                 _viewModel.Magnitude = EffectToEdit.Magnitude;
@@ -120,24 +120,24 @@
     private bool _useMovePatternSwitchDisabled = false;
     private bool _useAttackPatternSwitchDisabled = false;
 
-    private async Task OpenBuffSetPicker()
+    private async Task OpenBuffPicker()
     {
         // 1. 새 팝업에 전달할 파라미터를 만듭니다.
-        var parameters = new DialogParameters<BuffSetPickerDialog>
+        var parameters = new DialogParameters<BuffPickerDialog>
         {
-            { x => x.AllBuffSets, this.AllBuffSets }
+            { x => x.AllBuffs, this.AllBuffs }
         };
 
-        // 2. BuffSetPickerDialog를 띄웁니다.
-        var dialog = await DialogService.ShowAsync<BuffSetPickerDialog>("Select BuffSet", parameters);
+        // 2. BuffPickerDialog를 띄웁니다.
+        var dialog = await DialogService.ShowAsync<BuffPickerDialog>("Select Buff", parameters);
         var result = await dialog.Result;
 
         // 3. 사용자가 버프셋을 선택했다면
         if (result != null && !result.Canceled)
         {
-            var selectedBuffSet = result.Data as BuffSetDto;
+            var selectedBuff = result.Data as ModifierDto;
             // 4. 선택된 버프셋의 Code를 우리 ViewModel에 저장합니다.
-            _viewModel.AuraBuffCode = selectedBuffSet.Code;
+            _viewModel.AuraBuffCode = selectedBuff.Code;
             StateHasChanged();
         }
     }
@@ -145,13 +145,13 @@
     // 선택된 버프의 이름을 화면에 표시하기 위한 도우미 메서드
     private string GetSelectedAuraBuffName()
     {
-        var buffSet = AllBuffSets.FirstOrDefault(b => b.Code == _viewModel.AuraBuffCode);
-        return buffSet != null ? $"{buffSet.Code:D4} {buffSet.Name}" : "Not Found";
+        var buff = AllBuffs.FirstOrDefault(b => b.Code == _viewModel.AuraBuffCode);
+        return buff != null ? $"{buff.Code:D4} {buff.Name}" : "Not Found";
     }
     
     private void Submit()
     {
-        BuffDto resultDto = _selectedEffectType switch
+        ModifierDto resultDto = _selectedEffectType switch
         {
             "Aura" => new AuraDto
             {
@@ -163,7 +163,7 @@
                 UseMovePattern = _viewModel.UseMovePattern,
                 UseAttackPattern = _viewModel.UseAttackPattern
             },
-            "Scaling" => new ScalingBuffDto
+            "Scaling" => new ScalingModifierDto
             {
                 Type = _viewModel.Type,
                 Magnitude = _viewModel.Magnitude,
@@ -171,7 +171,7 @@
                 TargetStat = _viewModel.TargetStat,
                 SelfSourced = _viewModel.SelfSourced
             },
-            _ => new BuffDto
+            _ => new ModifierDto
             {
                 Type = _viewModel.Type,
                 Magnitude = _viewModel.Magnitude

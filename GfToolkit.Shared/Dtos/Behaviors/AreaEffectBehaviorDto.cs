@@ -6,7 +6,7 @@ namespace GfToolkit.Shared.Dtos.Behaviors
         public int DamageConstant;
         public List<(StatType, float)> Coefficients;
         public DamageType DamageType;
-        public int ApplyingBuffSetCode;
+        public int ApplyingBuffCode;
 
         public AreaInvocationBehaviorDto()
         {
@@ -14,7 +14,7 @@ namespace GfToolkit.Shared.Dtos.Behaviors
             DamageConstant = 0;
             Coefficients = new();
             DamageType = DamageType.Physical;
-            ApplyingBuffSetCode = -1;
+            ApplyingBuffCode = -1;
             Type = "AreaInvocation";
         }
         public AreaInvocationBehaviorDto(BehaviorDto parent) : base(parent)
@@ -23,7 +23,7 @@ namespace GfToolkit.Shared.Dtos.Behaviors
             DamageConstant = 0;
             Coefficients = new();
             DamageType = DamageType.Physical;
-            ApplyingBuffSetCode = -1;
+            ApplyingBuffCode = -1;
             Type = "AreaInvocation";
         }
     }

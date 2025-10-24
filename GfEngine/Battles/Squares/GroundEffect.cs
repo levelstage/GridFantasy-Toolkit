@@ -13,7 +13,7 @@ namespace GfEngine.Battles.Squares
         public HashSet<TeamType> TargetRelationships { get; set; }
         
         // 대상에게 실제로 적용될 버프/디버프 효과
-        public BuffSet Effect { get; set; }
+        public Buff Effect { get; set; }
         
         // 이 효과가 몇 턴 동안 지속되는가?
         public int Duration { get; set; }

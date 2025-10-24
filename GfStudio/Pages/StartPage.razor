@@ -56,7 +56,7 @@
     private void CreateNewProject()
     {
         GameDataDto.Database = new GameDataDto();
-        GameDataDto.Database.BuffSets.Add(new BuffSetDto { Code = 0, Name = "New BuffSet" });
+        GameDataDto.Database.Buffs.Add(new ModifierDto { Code = 0, Name = "New Buff" });
         GameDataDto.Database.Actors.Add(new ActorDto { Code = 0, Name = "New Actor" });
         GameDataDto.Database.Behaviors.Add(new AreaInvocationBehaviorDto { Code = 0, Name = "New Behavior" });
         NavManager.NavigateTo("/actors");

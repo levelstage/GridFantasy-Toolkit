@@ -25,17 +25,17 @@ namespace GfStudio.Pages
         {
             _selectedBehavior = selected;
         }
-        private async Task AreaInvocation_PickBuffSet()
+        private async Task AreaInvocation_PickBuff()
         {
-            var parameters = new DialogParameters<BuffSetPickerDialog>
+            var parameters = new DialogParameters<BuffPickerDialog>
             {
-                { x => x.AllBuffSets, GameDataDto.Database.BuffSets}, // Database의 모든 BuffSet 전달.
+                { x => x.AllBuffs, GameDataDto.Database.Buffs}, // Database의 모든 Buff 전달.
             };
-            var dialog = await DialogService.ShowAsync<BuffSetPickerDialog>("Select Buffset", parameters);
+            var dialog = await DialogService.ShowAsync<BuffPickerDialog>("Select Buff", parameters);
             var result = await dialog.Result;
             if (result != null && !result.Canceled && _selectedBehavior is AreaInvocationBehaviorDto)
             {
-                (_selectedBehavior as AreaInvocationBehaviorDto).ApplyingBuffSetCode = ((BuffSetDto)result.Data).Code;
+                (_selectedBehavior as AreaInvocationBehaviorDto).ApplyingBuffCode = ((ModifierDto)result.Data).Code;
                 StateHasChanged();
             }
         }
@@ -164,7 +164,7 @@ namespace GfStudio.Pages
         private string AreaInvocation_GetApplyingBuffName(int code)
         {
             if (code < 0) return "None";
-            return GameDataDto.Database.BuffSets[code].Name;
+            return GameDataDto.Database.Buffs[code].Name;
         }
 
     }

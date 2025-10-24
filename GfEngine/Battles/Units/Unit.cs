@@ -48,9 +48,17 @@ namespace GfEngine.Battles.Units
 			return LiveStat.Buffed();
 		}
 		public Status GetOriginStatus()
-		{
+        {
 			return LiveStat.Stat;
-		}
+        }
+		public int ParseStat(StatType statType, bool isOrigin=false)
+		{
+			if (statType == StatType.CurrentHp) return CurrentHp();
+			Status sourceStat;
+			if (isOrigin) sourceStat = GetOriginStatus();
+			else sourceStat = GetFinalStatus();
+			return BattleManager.GetModifiedStat(sourceStat, statType, 1f);
+        }
 		// 이 유닛이 어떤 공격을 맞았을 때의 피해를 계산하는 함수
 		// 치유량도 계산한다
 		public int CalculateDamage(int damage, DamageType damageType)

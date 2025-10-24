@@ -160,22 +160,22 @@ namespace GfEngine
                 [WeaponType.MagicMissile] = BasicPatternSets[BasicPatternType.Queen] // 화염구. 퀸처럼 전방향 공격
     };
 	
-	public static readonly Dictionary<int, BuffSet> AllBuffSets = new Dictionary<int, BuffSet>
+	public static readonly Dictionary<int, Buff> AllBuffs = new Dictionary<int, Buff>
     {
 		// '전선 구축' 오라가 실제로 주변에 뿌리는 효과 버프
-        [0] = new BuffSet
+        [0] = new Buff
 		{
 			Code = 0,
-            Name = Text.Get(Text.Key.BuffSet_FrontlineBuff_Name),
-			Description  = Text.Get(Text.Key.BuffSet_FrontlineBuff_Desc),
-			Effects = new List<Buff>{
-				new ScalingBuff{
+            Name = Text.Get(Text.Key.Buff_FrontlineBuff_Name),
+			Description  = Text.Get(Text.Key.Buff_FrontlineBuff_Desc),
+			Effects = new List<Modifier>{
+				new ScalingModifier{
 					Effect = BuffEffect.DefenseBoost,
 					ScaleFactor = 1.0f,
 					SourceUnit = null, // 나중에 이 버프를 부여한 유닛의 참조로 설정됨.
 					TargetStat = StatType.Defense
 				},
-				new ScalingBuff{
+				new ScalingModifier{
 					Effect = BuffEffect.MagicDefenseBoost,
 					ScaleFactor = 1.0f,
 					SourceUnit = null, // 나중에 이 버프를 부여한 유닛의 참조로 설정됨.
@@ -188,12 +188,12 @@ namespace GfEngine
         },
 		
         // '전선 구축' 스킬이 부여하는 오라 버프(상향 폰)
-        [1] = new BuffSet
+        [1] = new Buff
 		{
 			Code = 1,
             Name = Text.Get(Text.Key.Skill_Frontline_Name),
             Duration = -1, // 영구 지속 (스킬을 잃지 않는 한)
-            Effects = new List<Buff>{ new Aura{
+            Effects = new List<Modifier>{ new Aura{
             AuraTargets = new HashSet<TeamType> { TeamType.Same, TeamType.Ally },
             AuraEffect = 0, // 오라 효과: '방어 태세' 버프를 부여
 			UseAttackPattern = true
@@ -241,7 +241,7 @@ namespace GfEngine
 			Name = Text.Get(Text.Key.Skill_Frontline_Name),
 			IsPassive = true,
 			// 이 스킬을 가지고 있으면, 'FrontlineAura' 버프를 자신에게 부여.
-			SkillBuff = AllBuffSets[1]
+			SkillBuff = AllBuffs[1]
 		}
 	};
 
@@ -364,10 +364,10 @@ namespace GfEngine
 				Skill_Frontline_Name,
 
 				// 버프 이름
-				BuffSet_FrontlineBuff_Name,
+				Buff_FrontlineBuff_Name,
 
 				// 버프 설명
-				BuffSet_FrontlineBuff_Desc,
+				Buff_FrontlineBuff_Desc,
 
 
 			}
@@ -414,11 +414,11 @@ namespace GfEngine
 			 [Key.Weapon_IronShield_Desc] = "제국의 병사들이 애용하는, 믿음의 철 방패.",
 			 [Key.Weapon_LongSword_Desc] = "기본에 충실한, 잘 만들어진 검.",
 			 [Key.Weapon_IronSpear_Desc] = "손잡이도 쇠로 만들어져, 다소 무겁지만 부러질 일은 없다.",
-			 // BuffSet 관련
-			 // BuffSet 이름
-			 [Key.BuffSet_FrontlineBuff_Name] = "전선 지원",
-			 // BuffSet 설명
-			 [Key.BuffSet_FrontlineBuff_Desc] = "아군의 전선 구축으로 방어력이 증가했습니다.",
+			 // Buff 관련
+			 // Buff 이름
+			 [Key.Buff_FrontlineBuff_Name] = "전선 지원",
+			 // Buff 설명
+			 [Key.Buff_FrontlineBuff_Desc] = "아군의 전선 구축으로 방어력이 증가했습니다.",
 			 // Skill 관련
 			 // Skill 이름
 			 [Key.Skill_Frontline_Name] = "전선 구축",

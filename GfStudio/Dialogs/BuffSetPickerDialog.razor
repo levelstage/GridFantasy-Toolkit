@@ -1,18 +1,18 @@
 @using MudBlazor
 @using GfToolkit.Shared.Dtos.Models
-<!-- 전체 Buffset 목록을 위한 Picker. Return은 BuffsetDto 형태임>
+<!-- 전체 Buff 목록을 위한 Picker. Return은 BuffDto 형태임>
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6">Select a BuffSet</MudText>
+        <MudText Typo="Typo.h6">Select a Buff</MudText>
     </TitleContent>
     <DialogContent>
         @* 검색 기능을 위한 텍스트 필드 *@
         <MudTextField T="string" Label="Search..." Variant="Variant.Outlined" Margin="Margin.Dense" />
-        <MudList T="BuffSetDto" Clickable="true" SelectedValueChanged="OnBuffSetSelected">
+        <MudList T="ModifierDto" Clickable="true" SelectedValueChanged="OnBuffSelected">
             @* 이 팝업은 부모로부터 전체 버프셋 목록을 받아와야 합니다. *@
-            @foreach (var buffSet in AllBuffSets)
+            @foreach (var buff in AllBuffs)
             {
-                <MudListItem Value="buffSet">@($"{buffSet.Code:D4} {buffSet.Name}")</MudListItem>
+                <MudListItem Value="buff">@($"{buff.Code:D4} {buff.Name}")</MudListItem>
             }
         </MudList>
     </DialogContent>
@@ -24,12 +24,12 @@
 
     // 부모인 EffectEditorDialog로부터 전체 버프셋 목록을 전달받습니다.
     [Parameter]
-    public List<BuffSetDto> AllBuffSets { get; set; } = new();
+    public List<ModifierDto> AllBuffs { get; set; } = new();
 
     // 사용자가 리스트에서 항목을 선택했을 때
-    private void OnBuffSetSelected(BuffSetDto selectedBuffSet)
+    private void OnBuffSelected(ModifierDto selectedBuff)
     {
-        // 선택된 BuffSetDto 객체 자체를 결과로 반환하며 팝업을 닫습니다.
-        MudDialog.Close(DialogResult.Ok(selectedBuffSet));
+        // 선택된 ModifierDto 객체 자체를 결과로 반환하며 팝업을 닫습니다.
+        MudDialog.Close(DialogResult.Ok(selectedBuff));
     }
 }

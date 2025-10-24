@@ -9,5 +9,10 @@ namespace GfEngine.Battles.Commands.Core
     {
         public Unit TargetUnit { get; set; } // 대상.
         public BuffSet ApplyingBuffSet { get; set; } // 적용할 버프셋.
-    }    
+
+        public override void Execute(BattleContext battleContext)
+        {
+
+        }
+    }
 }

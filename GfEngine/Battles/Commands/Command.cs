@@ -1,5 +1,6 @@
 using GfEngine.Battles.Units;
 using GfEngine.Battles.Squares;
+using GfEngine.Battles.Conditions;
 
 namespace GfEngine.Battles.Commands
 {
@@ -13,5 +14,6 @@ namespace GfEngine.Battles.Commands
             Agent = parent.Agent;
             TargetSquare = parent.TargetSquare;
         }
+        public abstract void Execute(BattleContext battleContext);
     }    
 }

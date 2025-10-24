@@ -5,7 +5,7 @@ using GfEngine.Battles.Units;
 
 namespace GfEngine.Battles.Patterns
 {
-	public class PatternSet
+	public class PatternSet : GameObject
 	{
 		public List<Pattern> Patterns;
 		public int Penetration;

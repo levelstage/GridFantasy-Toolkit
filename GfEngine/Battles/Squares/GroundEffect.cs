@@ -4,10 +4,8 @@ using GfToolkit.Shared;
 
 namespace GfEngine.Battles.Squares
 {
-    public class GroundEffect
-    {
-        public string Name { get; set; } // 효과의 이름 (예: "연막", "독안개")
-        
+    public class GroundEffect : GameObject
+    {   
         // 이 효과를 누가 만들었는가?
         public Teams SourceTeam { get; set; } 
         

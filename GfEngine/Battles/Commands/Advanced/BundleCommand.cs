@@ -17,5 +17,9 @@ namespace GfEngine.Battles.Commands.Advanced
             }
             return res;
         }
+        public override void Execute(BattleContext battleContext)
+        {
+            
+        }
     }    
 }

@@ -30,51 +30,50 @@ namespace GfEngine.Battles.Units
 			InitializeBehaviors();
 		}
 
-		public void TurnStart()
-		{
-
-		}
-
-		public void TurnOver()
-		{
-
-		}
-
 		public abstract MoveType GetMoveClass();
 		public abstract Weapon GetEquipment();
-
 		public Status GetFinalStatus()
 		{
 			return LiveStat.Buffed();
 		}
 		public Status GetOriginStatus()
-        {
+		{
 			return LiveStat.Stat;
+		}
+
+		public float GetEffectMagnitude(BuffEffect effect)
+		{
+			return LiveStat.GetEffectMagnitude(effect);
+		}
+		public bool HasBuff(int code)
+        {
+			return LiveStat.HasBuff(code);
         }
+
+		// 이 유닛의 특정 스탯을 파싱하는 함수
 		public int ParseStat(StatType statType, bool isOrigin=false)
 		{
 			if (statType == StatType.CurrentHp) return CurrentHp();
 			Status sourceStat;
 			if (isOrigin) sourceStat = GetOriginStatus();
 			else sourceStat = GetFinalStatus();
-			return BattleManager.GetModifiedStat(sourceStat, statType, 1f);
+			return BattleManager.Instance.GetParticularStat(sourceStat, statType);
         }
 		// 이 유닛이 어떤 공격을 맞았을 때의 피해를 계산하는 함수
 		// 치유량도 계산한다
 		public int CalculateDamage(int damage, DamageType damageType)
 		{
-			LiveStatus livestat = LiveStat;
 			int finalDamage = damage;
 			float residence = 1;
 			switch (damageType)
 			{
 				case DamageType.Physical:
 					finalDamage -= GetFinalStatus().Defense;
-					residence = 1 - BattleManager.NetBuffMagnitude(BuffEffect.PhysicalResidence, livestat.Buffs) / 100;
+					residence = 1 - GetEffectMagnitude(BuffEffect.PhysicalResidence) / 100;
 					break;
 				case DamageType.Magical:
 					finalDamage -= GetFinalStatus().MagicDefense;
-					residence = 1 - BattleManager.NetBuffMagnitude(BuffEffect.MagicalResidence, livestat.Buffs) / 100;
+					residence = 1 - GetEffectMagnitude(BuffEffect.MagicalResidence) / 100;
 					break;
 			}
 			finalDamage = (int)(finalDamage * residence);
@@ -91,7 +90,6 @@ namespace GfEngine.Battles.Units
         {
 			return LiveStat.CurrentHp;
         }
-
 		public override string ToString()
 		{
 			// 이동 타입의 첫 글자를 반환.

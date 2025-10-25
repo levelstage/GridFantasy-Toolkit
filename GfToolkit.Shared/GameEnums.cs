@@ -42,9 +42,9 @@ namespace GfToolkit.Shared
 		Aura
 	}
 
-	public enum TeamType // 출처와 대상의 관계. 이 대상이 어떤 behavior의 대상이 되는지를 확인하기 위한 타입.
+	public enum Relation // 출처와 대상의 관계. 이 대상이 어떤 behavior의 대상이 되는지를 확인하기 위한 타입.
 	{
-		Same, Ally, Neutral, Enemy, Air
+		Self, Ally, Neutral, Enemy, Air
 	}
 
 	public enum TerrainType // 지형의 종류를 구분하기 위한 타입.
@@ -70,6 +70,12 @@ namespace GfToolkit.Shared
 		Utility     // 유틸리티 관련
 	}
 
+	// 해당 아이템의 종류를 나타내는 Tag들.
+	public enum ItemTag
+	{
+		Weapon, Potion, Key
+	}
+
 	// 시스템 구현을 위해 필요한 enum
 	public enum ComparisonOperator // 비교형 Condition을 위한 연산자 열거
     {
@@ -80,27 +86,6 @@ namespace GfToolkit.Shared
         Equal,              // ==
         NotEqual            // !=
     }
-
-	// Tag들
-	public enum BehaviorTag // 해당 Behavior의 특성을 세세하게 설명하는 태그.
-	{
-		PawnFirstUp, PawnFirstDown
-	}
-
-	public enum BattleTag // 전투 결과에 대한 상세 설명에 필요한 태그. 크리티컬을 추가한다면 크리티컬 발생 여부나 뭐 이런거.
-	{
-		noCounter, killedCounter
-	}
-
-	public enum ItemTag
-	{
-
-	}
-
-	public enum WeaponTag
-	{
-
-	}
 
 	// 기타
 

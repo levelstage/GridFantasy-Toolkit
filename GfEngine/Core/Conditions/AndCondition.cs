@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace GfEngine.Battles.Conditions
+namespace GfEngine.Core.Conditions
 {
     public class AndCondition : ICondition
     {
         public List<ICondition> Conditions;
-        public bool IsMet(BattleContext battleContext)
+        public bool IsMet(IContext battleContext)
         {
             if (Conditions == null) return false;
             foreach (ICondition condition in Conditions)

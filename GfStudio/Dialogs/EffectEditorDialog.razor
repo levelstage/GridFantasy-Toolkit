@@ -31,9 +31,9 @@
                             ReadOnly="true" Value="@GetSelectedAuraBuffName()" />
                 <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="OpenBuffPicker" Class="ml-2" />
                 </div>
-                <MudSelect T="TeamType" Label="Aura Targets" Variant="Variant.Outlined" MultiSelection="true" @bind-SelectedValues="_viewModel.AuraTargets" >
-                    @foreach(TeamType iter in _teamTypeOptions){
-                        <MudSelectItem T="TeamType" value=@iter>@iter.ToString()</MudSelectItem>
+                <MudSelect T="Relation" Label="Aura Targets" Variant="Variant.Outlined" MultiSelection="true" @bind-SelectedValues="_viewModel.AuraTargets" >
+                    @foreach(Relation iter in _RelationOptions){
+                        <MudSelectItem T="Relation" value=@iter>@iter.ToString()</MudSelectItem>
                     }
                 </MudSelect>
         }
@@ -73,7 +73,7 @@
                 _viewModel.Magnitude = aura.Magnitude;
                 _viewModel.AuraScope = aura.AuraScope;
                 _viewModel.AuraBuffCode = aura.AuraBuffCode;
-                _viewModel.AuraTargets = new HashSet<TeamType>(aura.AuraTargets);
+                _viewModel.AuraTargets = new HashSet<Relation>(aura.AuraTargets);
                 OnUseMovePatternSwitchChagned(aura.UseMovePattern);
                 OnUseAttackPatternSwitchChagned(aura.UseAttackPattern);
             }
@@ -100,7 +100,7 @@
         public float Magnitude { get; set; }
         public BasicPatternType AuraScope { get; set; }
         public int AuraBuffCode { get; set; }
-        public IEnumerable<TeamType> AuraTargets { get; set; } = new HashSet<TeamType>();
+        public IEnumerable<Relation> AuraTargets { get; set; } = new HashSet<Relation>();
         public bool UseMovePattern { get; set; }
         public bool UseAttackPattern { get; set; }
         public float ScaleFactor { get; set; }
@@ -112,7 +112,7 @@
     private string _selectedEffectType = "Basic";
     private IEnumerable<BuffEffect> _buffEffectOptions = Enum.GetValues<BuffEffect>();
     private IEnumerable<BasicPatternType> _patternTypeOptions = Enum.GetValues<BasicPatternType>();
-    private IEnumerable<TeamType> _teamTypeOptions = Enum.GetValues<TeamType>();
+    private IEnumerable<Relation> _RelationOptions = Enum.GetValues<Relation>();
     private IEnumerable<StatType> _statTypeOptions = Enum.GetValues<StatType>();
     private bool _auraScopeSelectorDisabled = false;
     private bool _magnitudeDisabled = false;
@@ -159,7 +159,7 @@
                 Magnitude = _viewModel.Magnitude,
                 AuraScope = _viewModel.AuraScope,
                 AuraBuffCode = _viewModel.AuraBuffCode,
-                AuraTargets = new HashSet<TeamType>(_viewModel.AuraTargets),
+                AuraTargets = new HashSet<Relation>(_viewModel.AuraTargets),
                 UseMovePattern = _viewModel.UseMovePattern,
                 UseAttackPattern = _viewModel.UseAttackPattern
             },

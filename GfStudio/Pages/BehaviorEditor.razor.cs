@@ -79,19 +79,19 @@ namespace GfStudio.Pages
         private async Task OpenTargetPicker()
         {
 
-            var parameters = new DialogParameters<EnumPickerDialog<TeamType>>
+            var parameters = new DialogParameters<EnumPickerDialog<Relation>>
             {
                 { x => x.Title, "Select a Type to Add" },
-                { x => x.AllItems, Enum.GetValues<TeamType>() },
+                { x => x.AllItems, Enum.GetValues<Relation>() },
                 { x => x.IsMultiSelect, false }
             };
 
-            var dialog = await DialogService.ShowAsync<EnumPickerDialog<TeamType>>("Select a Type to Add", parameters);
+            var dialog = await DialogService.ShowAsync<EnumPickerDialog<Relation>>("Select a Type to Add", parameters);
             var result = await dialog.Result;
 
             if (result != null && !result.Canceled)
             {
-                var selectedSet = (HashSet<TeamType>)result.Data;
+                var selectedSet = (HashSet<Relation>)result.Data;
                 _selectedBehavior.Accessible.Add(selectedSet.FirstOrDefault());
             }
         }
@@ -152,7 +152,7 @@ namespace GfStudio.Pages
                 _selectedBehavior.Tags.Remove(tagToRemove);
             }
         }
-        private void RemoveValidTarget(TeamType TargetToRemove)
+        private void RemoveValidTarget(Relation TargetToRemove)
         {
             if (_selectedBehavior?.Tags != null)
             {

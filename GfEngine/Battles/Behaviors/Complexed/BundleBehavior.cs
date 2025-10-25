@@ -2,23 +2,27 @@ using GfEngine.Battles.Squares;
 using GfEngine.Battles.Commands;
 using System.Collections.Generic;
 using GfEngine.Battles.Commands.Advanced;
+using GfEngine.Core;
+using GfEngine.Battles.Units;
 namespace GfEngine.Battles.Behaviors.Complexed
 {
     public class BundleBehavior() : Behavior
     {
         public List<Behavior> Behaviors { get; set; }
-        public override Command Execute (Square origin, Square target, Square[,] map)
+        public override Command Execute (BattleContext context)
         {
-            BundleCommand command = new BundleCommand() {
-                TargetSquare = target,
+            Square ts = context.TargetSquare;
+            Unit o = context.OriginUnit;
+            if (o == null) return new NullCommand(); // 시전자가 null이면, 아무것도 안함.
+            BundleCommand command = new BundleCommand()
+            {
+                TargetSquare = ts,
                 Commands = new List<Command>()
             };
-            if (origin.Occupant == null) return command;
-            command.Agent = origin.Occupant;
-            foreach(Behavior iter in Behaviors)
+            command.Agent = o;
+            foreach (Behavior iter in Behaviors)
             {
-                command.Commands.Add(iter.Execute(origin, target, map));
-                
+                command.Commands.Add(iter.Execute(context));
             }
             return command;
         }

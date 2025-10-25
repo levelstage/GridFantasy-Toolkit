@@ -10,7 +10,7 @@ namespace GfEngine.Battles.Squares
         public Teams SourceTeam { get; set; } 
         
         // 이 효과가 적용될 대상은 누구인가? (적, 아군, 중립 등)
-        public HashSet<TeamType> TargetRelationships { get; set; }
+        public HashSet<Relation> TargetRelationships { get; set; }
         
         // 대상에게 실제로 적용될 버프/디버프 효과
         public Buff Effect { get; set; }
@@ -20,7 +20,7 @@ namespace GfEngine.Battles.Squares
 
         public GroundEffect()
         {
-            TargetRelationships = new HashSet<TeamType>();
+            TargetRelationships = new HashSet<Relation>();
         }
     }
 }

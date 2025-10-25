@@ -34,16 +34,6 @@ namespace GfEngine.Battles.Squares
             if (Occupant != null) Occupant.Update();
         }
 
-        public void TurnStart()
-        {
-            if (Occupant != null) Occupant.TurnStart();
-        }
-
-        public void TurnOver()
-        {
-            if (Occupant != null) Occupant.TurnOver();
-        }
-
         public override string ToString()
         {
             string open_text = "[";

@@ -1,81 +1,101 @@
 using GfEngine.Battles.Commands;
 using GfEngine.Battles.Commands.Advanced;
 using GfEngine.Battles.Commands.Core;
+using GfEngine.Battles.Parsing;
 using GfEngine.Battles.Patterns;
+using GfEngine.Battles.Rules;
 using GfEngine.Battles.Squares;
 using GfEngine.Logics;
-using GfEngine.Models.Buffs;
 using GfToolkit.Shared;
+using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
 
 namespace GfEngine.Battles.Behaviors.Complexed
 {
     // '범위 효과'라는 메커니즘을 책임지는 클래스
     public class AreaInvocationBehavior : Behavior
     {
-        public PatternSet Area;
-        public int DamageConstant;
-        public List<(StatType, float)> Coefficients;
-        public DamageType DamageType;
-        public Buff ApplyingBuff;
+        public RuledPatternSet Area; // 대상을 검색할 영역
+        // 해당 범위에서 검색된 대상들을 가지고 어떤 Command를 만들지.
+        // 이 List 안에 있는 Command들은 일부 프로퍼티가 비어있는 불완성품임.
+        // 여기에 적절한 프로퍼티를 채우고, BundleCommand화해서 Return하는게 이 Behavior의 역할이다.
+        public List<ConditionalCommandRule> Invocations { get; set; }
 
         // 생성자에서 피해량, 피해 타입, 공격 범위(PatternSet) 등 '데이터'를 받는다.
         public AreaInvocationBehavior() : base()
         {
             Name = ""; // 기본 이름
-            DamageConstant = 0; // 기본 피해량
-            Coefficients = new List<(StatType, float)>(); // 계수 없음.
-            DamageType = DamageType.Physical; // 기본 피해 타입
         }
 
-        public override Command Execute(Square origin, Square target, Square[,] map)
+        public override Command Execute(BattleContext context)
         {
-            BundleCommand command = new BundleCommand()
+            Square target = context.TargetSquare;
+            Square[,] map = context.WaveData.Map;
+
+            if (context.OriginUnit == null) return new NullCommand();
+            BundleCommand res = new BundleCommand()
             {
                 TargetSquare = target,
                 Commands = new List<Command>()
             };
-            if (origin.Occupant == null) return command;
-            command.Agent = origin.Occupant;
-            List<BehaviorTarget> affectedSquares = Area.TargetSearcher(target, map, Accessible);
+            // 2차 검사: 영역 내에서 2차 대상으로 지정이 가능한지?
+            res.Agent = context.OriginUnit;
+            List<BehaviorTarget> affectedSquares = Area.TargetSearcher(target, context.WaveData);
             foreach (BehaviorTarget bt in affectedSquares)
             {
-                if (bt.Type == TargetType.Accessible) // 공격 가능한 칸에 있는 유닛에게만 피해
+                if (bt.Type == TargetType.Accessible)
                 {
-                    Square sq = map[bt.Y, bt.X];
-                    if (sq.Occupant != null)
+                    Square subTarget = map[bt.Y, bt.X];
+                    if (subTarget.Occupant != null)
                     {
-                        int damage = DamageConstant;
-                        foreach ((StatType, float) iter in Coefficients)
+                        BattleContext subContext = new BattleContext(
+                            waveData: context.WaveData,
+                            originSquare: context.OriginSquare,
+                            targetSquare: subTarget
+                        );
+                        foreach(var iter in Invocations)
                         {
-                            damage += BattleManager.GetModifiedStat(origin.Occupant.GetFinalStatus(), iter.Item1, iter.Item2);
-                        }
-                        sq.Occupant.CalculateDamage(damage, DamageType);
-                        if (damage != 0)
-                        {
-                            command.Commands.Add(new HitCommand()
+                            // 해당 Behavior에서 처리할 수 있는 Command의 종류는 다음과 같음:
+                            // HitCommand (유닛의 체력 변동)
+                            // GrantBuffCommand (유닛에게 Buff/Debuff 부여)
+                            // 이론상 거의 모든 Command를 넣을 수 있지만 일단은 보류.
+
+                            // 3차 검사: 해당 Command를 대상에게 실행할 수 있는지?
+                            // 해당 검사를 통과한 커맨드들은 내용을 조립해준다.
+                            if (iter.Condition.IsMet(subContext))
                             {
-                                Agent = command.Agent,
-                                Damage = damage,
-                                TargetSquare = target,
-                                TargetUnit = target.Occupant
-                            });
-                        }
-                        if (ApplyingBuff != null)
-                        {
-                            command.Commands.Add(new InvocationCommand()
-                            {
-                                Agent = command.Agent,
-                                ApplyingBuff = ApplyingBuff,
-                                TargetSquare = target,
-                                TargetUnit = target.Occupant
-                            });
+                                Command subCommand = iter.CommandToExecute.Clone();
+                                if (subCommand is HitCommand hc)
+                                {
+                                    hc.TargetSquare = subTarget;
+                                    hc.TargetUnit = subTarget.Occupant;
+                                    IBattleFormulaParser parser = BattleManager.Instance.BattleFormulaParser;
+                                    // 방어력, 저항력 등을 계산하기 이전의 데미지
+                                    int primalDamage = (int)parser.Evaluate(hc.Fomula, subContext);
+                                    // 이 커맨드의 진정한 데미지.
+                                    hc.Damage = subTarget.Occupant.CalculateDamage(primalDamage, hc.Type);
+                                }
+                                else if (subCommand is GrantingBuffCommand gbc)
+                                {
+                                    gbc.TargetSquare = subTarget;
+                                    gbc.TargetUnit = subTarget.Occupant;
+                                }
+                                // 정해진 종류의 커맨드 이외에는 예외로 던져버린다.
+                                else
+                                {
+                                    throw new InvalidOperationException(
+                                        $"Behavior '{Name}' tried to generate an unknown Command type: {subCommand.GetType().Name}. " +
+                                        "Check ConditionalCommandRule data."
+                                    ); 
+                                }                                
+                                // 조립된 커맨드를 bundle에 포장한다.
+                                res.Commands.Add(subCommand);
+                            }
                         }
                     }
                 }
             }
-            return command;
+            return res;
         }
     }
 }

@@ -1,24 +1,25 @@
 using System.Collections.Generic;
 using GfEngine.Battles.Squares;
 using GfEngine.Battles.Units;
+using GfEngine.Core;
 
 namespace GfEngine.Battles
 {
-    public class BattleContext
+    public class BattleContext : IContext
     {
         // 필수존
+        public Wave WaveData { get; }
         public Square OriginSquare { get; }
         public Square TargetSquare { get; }
-        public Square[,] Map { get; }
         public Unit OriginUnit { get; }
         public Unit TargetUnit { get; }
 
-        public BattleContext(Square originSquare, Square targetSquare = null, Square[,] map = null,
+        public BattleContext(Wave waveData = null, Square originSquare = null, Square targetSquare = null,
             Unit explicitOriginUnit = null, Unit explicitTargetUnit = null)
         {
             OriginSquare = originSquare;
             TargetSquare = targetSquare;
-            Map = map;
+            WaveData = waveData;
             // 굳이 OriginUnit을 넣어주지 않아도 OriginSquare에 유닛이 있다면 그 유닛이 OriginUnit.
             if (originSquare != null && explicitOriginUnit == null && originSquare.Occupant != null)
                 OriginUnit = OriginSquare.Occupant;

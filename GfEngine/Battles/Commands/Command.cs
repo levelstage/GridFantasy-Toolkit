@@ -15,5 +15,6 @@ namespace GfEngine.Battles.Commands
             TargetSquare = parent.TargetSquare;
         }
         public abstract void Execute(BattleContext battleContext);
+        public abstract Command Clone();
     }    
 }

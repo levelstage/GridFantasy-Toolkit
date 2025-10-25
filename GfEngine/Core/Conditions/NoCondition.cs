@@ -1,8 +1,8 @@
-namespace GfEngine.Battles.Conditions
+namespace GfEngine.Core.Conditions
 {
     public class NoCondition : ICondition
     {
-        public bool IsMet(BattleContext battleContext)
+        public bool IsMet(IContext battleContext)
         {
             return true;
         }

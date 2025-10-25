@@ -10,7 +10,7 @@ using GfToolkit.Shared;
 namespace GfEngine
 {
     public static class GameData
-{	
+	{	
 	// 이동 ApCost 딕셔너리
 	public static readonly Dictionary<MoveType, int> MoveApCosts = new Dictionary<MoveType, int>{
 		[MoveType.Pawn_Up] = 8,
@@ -194,7 +194,7 @@ namespace GfEngine
             Name = Text.Get(Text.Key.Skill_Frontline_Name),
             Duration = -1, // 영구 지속 (스킬을 잃지 않는 한)
             Effects = new List<Modifier>{ new Aura{
-            AuraTargets = new HashSet<TeamType> { TeamType.Same, TeamType.Ally },
+            AuraTargets = new HashSet<Relation> { Relation.Self, Relation.Ally },
             AuraEffect = 0, // 오라 효과: '방어 태세' 버프를 부여
 			UseAttackPattern = true
 			}
@@ -438,40 +438,9 @@ namespace GfEngine
 			 return key.ToString(); // 혹시 데이터가 없으면 키 이름을 그대로 반환
 		 }
 	 }
-	
-	public static readonly Dictionary<MoveType, BehaviorTag> SpecialMoves = new Dictionary<MoveType, BehaviorTag>{
-		[MoveType.Pawn_Up] = BehaviorTag.PawnFirstUp,
-		[MoveType.Pawn_Down] = BehaviorTag.PawnFirstDown
-	};
-	public static readonly Dictionary<WeaponType, BehaviorTag> SpecialAttacks = new Dictionary<WeaponType, BehaviorTag>{
-		
-	};
-	public static TeamType GetTeamType(Teams observer, Teams target)
-	{
-		if (target == Teams.Neutrals) // 중립 진영은 모든 대상과 중립.
-		{
-			return TeamType.Neutral;
-		}
-
-		if (observer == target)
-		{
-			return TeamType.Same; // 같은 진영의 관계는 Same이다. 아군과는 구별한다.
-		}
-
-		// 여기에 더 복잡한 관계를 정의할 수 있음
-		// 예: 플레이어와 적은 서로에게 '적'
-		if ((observer == Teams.Players && target == Teams.Enemies) ||
-			(observer == Teams.Enemies && target == Teams.Players))
-		{
-			return TeamType.Enemy;
-		}
-
-		// 기본값은 중립
-		return TeamType.Neutral;
-	}
-	// 특성을 배우는 레벨과 스킬 강화 레벨
-	public static List<int> TraitLevels = new List<int> { 4, 7, 10, 13, 16, 20 };
-	public static HashSet<int> SkillUpgradeLevels = new HashSet<int> { 10, 20 };
+		// 특성을 배우는 레벨과 스킬 강화 레벨
+		public static List<int> TraitLevels = new List<int> { 4, 7, 10, 13, 16, 20 };
+		public static HashSet<int> SkillUpgradeLevels = new HashSet<int> { 10, 20 };
 
 		static GameData()
 		{
@@ -479,6 +448,6 @@ namespace GfEngine
 										.GroupBy(trait => trait.Type)
 										.ToDictionary(group => group.Key, group => new HashSet<Trait>(group));
 		}
-}
+	}
 }
 

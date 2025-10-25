@@ -8,12 +8,10 @@ namespace GfEngine.Models.Items
 		public float Power { get; set; } // 공격시 공격력에 곱해질 계수
 		public WeaponType Type { get; set; }
 		public Buff EquipBuff { get; set; }
-		public HashSet<WeaponTag> WTags { get; set; }
 		public Weapon()
 		{
 			Power = 10;
 			Type = WeaponType.Spear;
-			WTags = new HashSet<WeaponTag>();
 		}
 		public Weapon(Weapon parent)
 		{
@@ -22,7 +20,6 @@ namespace GfEngine.Models.Items
 			Name = parent.Name;
 			Power = parent.Power;
 			Type = parent.Type;
-			WTags = new HashSet<WeaponTag>(parent.WTags);
 		}
 		public override Item Clone()
 		{

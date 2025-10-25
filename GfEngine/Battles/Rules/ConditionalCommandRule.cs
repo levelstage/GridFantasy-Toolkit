@@ -1,4 +1,5 @@
 using GfEngine.Battles.Commands;
+using GfEngine.Core.Conditions;
 using GfEngine.Battles.Conditions;
 
 namespace GfEngine.Battles.Rules

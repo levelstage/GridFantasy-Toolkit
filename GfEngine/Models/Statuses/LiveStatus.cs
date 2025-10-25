@@ -5,9 +5,10 @@ namespace GfEngine.Models.Statuses
 {
 	public class LiveStatus
 	{
-		public Status Stat { get; set; }
+		public Status Stat { get; }
 		public int CurrentHp { get; set; }
 		public List<Buff> Buffs { get; set; }
+		public List<Modifier> EffectiveModifiers { get; set; }
 
 		// 생성자: '기본 스탯(Status)'을 바탕으로 '현재 상태'를 생성.
 		public LiveStatus(Status baseStat)
@@ -17,27 +18,37 @@ namespace GfEngine.Models.Statuses
 			CurrentHp = baseStat.MaxHp;
 			// 빈 버프 리스트 생성.
 			Buffs = new List<Buff>();
+			EffectiveModifiers = new List<Modifier>();
 		}
+
+		public float GetEffectMagnitude(BuffEffect effect)
+		{
+			float res = 0;
+			foreach (Modifier iter in EffectiveModifiers)
+			{
+				if (iter.Effect == effect) res += iter.Magnitude;
+			}
+			return res;
+		}
+		
+		public bool HasBuff(int code)
+        {
+			foreach (Buff buff in Buffs)
+			{
+				if (buff.Code == code) return true;
+			}
+			return false;
+        }
 
 		public Status Buffed()
 		{
 			Status buffed_status = new Status(Stat);
-			foreach (Buff bSet in Buffs)
-			{
-				foreach (Modifier iter in bSet.Effects)
-				{
-					switch (iter.Effect)
-					{
-						case BuffEffect.MaxHpBoost: buffed_status.MaxHp += (int)iter.Magnitude; break;
-						case BuffEffect.DefenseBoost: buffed_status.Defense += (int)iter.Magnitude; break;
-						case BuffEffect.MagicDefenseBoost: buffed_status.MagicDefense += (int)iter.Magnitude; break;
-						case BuffEffect.AttackBoost: buffed_status.Attack += (int)iter.Magnitude; break;
-						case BuffEffect.MagicAttackBoost: buffed_status.MagicAttack += (int)iter.Magnitude; break;
-						case BuffEffect.AgilityBoost: buffed_status.Agility += (int)iter.Magnitude; break;
-					}
-				}
-
-			}
+			buffed_status.MaxHp += (int)GetEffectMagnitude(BuffEffect.MaxHpBoost);
+			buffed_status.Defense += (int)GetEffectMagnitude(BuffEffect.DefenseBoost);
+			buffed_status.MagicDefense += (int)GetEffectMagnitude(BuffEffect.MagicDefenseBoost);
+			buffed_status.Attack += (int)GetEffectMagnitude(BuffEffect.AttackBoost);
+			buffed_status.MagicAttack += (int)GetEffectMagnitude(BuffEffect.MagicAttackBoost);
+			buffed_status.Agility += (int)GetEffectMagnitude(BuffEffect.AgilityBoost);
 			return buffed_status;
 		}
 

@@ -8,6 +8,9 @@ using GfEngine.Battles.Commands.Core;
 using System.Collections.Generic;
 using System;
 using GfToolkit.Shared;
+using GfEngine.Core.Conditions;
+using GfEngine.Battles.Conditions;
+using GfEngine.Logics;
 namespace GfEngine.Battles.Behaviors.Complexed
 {
     public class BasicAttackBehavior : Behavior
@@ -16,15 +19,19 @@ namespace GfEngine.Battles.Behaviors.Complexed
         public BasicAttackBehavior(Weapon weapon) // 공격 behavior 생성자
         {
             Name = GameData.Text.Get(GameData.Text.Key.Command_Attack);
-            Scope = GameData.AttackPatterns[weapon.Type];
+            Scope = new RuledPatternSet(
+                GameData.AttackPatterns[weapon.Type],
+                // 적 또는 중립 공격 가능
+                accessible: new OrCondition
+                (
+                    new List<ICondition>()
+                    {
+                        new BattleComparingCondition(BattleManager.Instance.BattleFormulaParser, "Relation()", "2", ComparisonOperator.Equal),
+                        new BattleComparingCondition(BattleManager.Instance.BattleFormulaParser, "Relation()", "3", ComparisonOperator.Equal)
+                    }
+                )
+            );
             ApCost = GameData.AttackApCosts[weapon.Type];
-            Accessible = new HashSet<TeamType> { TeamType.Enemy, TeamType.Neutral };
-            // 특수한 공격 판정을 가진 무기는 tag를 따로 부여한다.
-            Tags = new HashSet<BehaviorTag>();
-            if (GameData.SpecialAttacks.ContainsKey(weapon.Type))
-            {
-                Tags.Add(GameData.SpecialAttacks[weapon.Type]);
-            }
             Method = weapon;
         }
         static BasicAttackBehavior GetCounterAttack(Square origin, Square target, int attackCost) // 예상되는 반격을 return하는 함수
@@ -35,7 +42,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
             {
                 if (B is not BasicAttackBehavior) continue;
                 if (B.ApCost > attackCost) continue;
-                foreach (Pattern p in B.Scope.Patterns)
+                foreach (Pattern p in B.Scope.PatternSetToUse.Patterns)
 
                     if (p is VectorPattern)
                     {
@@ -70,25 +77,27 @@ namespace GfEngine.Battles.Behaviors.Complexed
             return damage;
         }
 
-        public override Command Execute(Square origin, Square target, Square[,] map)
+        public override Command Execute(BattleContext context)
         {
-            Unit attacker = origin.Occupant;
-            Unit defender = target.Occupant;
+            Square attackingSquare = context.OriginSquare;
+            Square defendingSquare = context.TargetSquare;
+            Unit attacker = context.OriginUnit;
+            Unit defender = context.TargetUnit;
             HitCommand attack = new HitCommand()
             {
                 Agent = attacker,
-                TargetSquare = target,
+                TargetSquare = defendingSquare,
                 TargetUnit = defender
             };
             BasicAttackCommand res = new BasicAttackCommand()
             {
                 Agent = attacker,
-                TargetSquare = target,
+                TargetSquare = defendingSquare,
                 Commands = new List<Command>(),
                 AttackCommand = attack
             };
-            if (attacker == null || defender == null) return res;            
-            BasicAttackBehavior counter = GetCounterAttack(origin, target, this.ApCost);
+            if (attacker == null || defender == null) return res;
+            BasicAttackBehavior counter = GetCounterAttack(attackingSquare, defendingSquare, ApCost);
             if (counter == null)
             {
                 // 카운터가 없을 시 그냥 때림.
@@ -107,7 +116,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
                 res.Commands.Add(attack);
                 // "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
                 res.HadInitiative = true;
-                HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = origin};
+                HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = attackingSquare };
                 counterAttackCommand.Damage = Hit(defender, attacker, counter);
                 res.CounterAttackCommand = counterAttackCommand;
                 res.Commands.Add(counterAttackCommand);
@@ -116,7 +125,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
             else
             {
                 // 수비자의 선공
-                HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = origin};
+                HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = attackingSquare };
                 counterAttackCommand.Damage = Hit(defender, attacker, counter);
                 res.CounterAttackCommand = counterAttackCommand;
                 res.Commands.Add(counterAttackCommand);

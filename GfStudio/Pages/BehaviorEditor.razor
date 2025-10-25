@@ -55,7 +55,7 @@
                             </div>
                             <div>
                                 <MudText Inline="true">Valid Targets: </MudText>
-                                @foreach(TeamType iter in _selectedBehavior.Accessible){
+                                @foreach(Relation iter in _selectedBehavior.Accessible){
                                     <MudChip T="string" Color="Color.Info" OnClose="() => RemoveValidTarget(iter)">@iter</MudChip>
                                 }
                                 <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" OnClick="OpenTargetPicker"/>

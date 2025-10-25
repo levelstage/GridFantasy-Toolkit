@@ -1,7 +1,7 @@
 using GfToolkit.Shared;
 using System.Collections.Generic;
 
-namespace GfEngine.Logics.Parsing
+namespace GfEngine.Battles.Parsing
 {
     // 정적인 매핑 정보를 담는 클래스
     public static class StatCodeMapper

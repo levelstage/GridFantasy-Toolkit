@@ -1,3 +1,4 @@
+using GfEngine.Battles.Rules;
 using GfEngine.Battles.Units;
 using System.Collections.Generic;
 namespace GfEngine.Models.Buffs
@@ -16,7 +17,7 @@ namespace GfEngine.Models.Buffs
 
 
 		// 이 Buff가 가진 실제 효과들의 목록
-		public List<Modifier> Effects { get; set; }
+		public List<ConditionalModifierRule> Modifiers { get; set; }
 
 		public Buff()
 		{
@@ -34,10 +35,10 @@ namespace GfEngine.Models.Buffs
 			IsDebuff = p.IsDebuff;
 			Removable = p.Removable;
 			Visible = p.Visible;
-			Effects = new List<Modifier>();
-			foreach (Modifier b in p.Effects)
+			Modifiers = new List<ConditionalModifierRule>();
+			foreach (ConditionalModifierRule cmr in p.Modifiers)
 			{
-				Effects.Add(new Modifier(b));
+				Modifiers.Add(new ConditionalModifierRule(cmr));
 			}
 		}
 	}

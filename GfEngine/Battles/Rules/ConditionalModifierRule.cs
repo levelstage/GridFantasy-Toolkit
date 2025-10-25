@@ -8,5 +8,11 @@ namespace GfEngine.Battles.Rules
     {
         public ICondition Condition { get; set; }
         public Modifier ModiferToApply { get; set; }
+        public ConditionalModifierRule() { }
+        public ConditionalModifierRule(ConditionalModifierRule parent)
+        {
+            Condition = parent.Condition;
+            ModiferToApply = new Modifier(parent.ModiferToApply);
+        }
     }
 }

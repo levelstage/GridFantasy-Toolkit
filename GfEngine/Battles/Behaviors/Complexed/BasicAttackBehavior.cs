@@ -85,13 +85,13 @@ namespace GfEngine.Battles.Behaviors.Complexed
             Unit defender = context.TargetUnit;
             HitCommand attack = new HitCommand()
             {
-                Agent = attacker,
+                SourceUnit = attacker,
                 TargetSquare = defendingSquare,
                 TargetUnit = defender
             };
             BasicAttackCommand res = new BasicAttackCommand()
             {
-                Agent = attacker,
+                SourceUnit = attacker,
                 TargetSquare = defendingSquare,
                 Commands = new List<Command>(),
                 AttackCommand = attack
@@ -116,7 +116,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
                 res.Commands.Add(attack);
                 // "가시" 혹은 "흡혈" 등을 처리해야함. 처리하고 반드시 Incidents에 넣을것.
                 res.HadInitiative = true;
-                HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = attackingSquare };
+                HitCommand counterAttackCommand = new HitCommand() { SourceUnit = defender, TargetUnit = attacker, TargetSquare = attackingSquare };
                 counterAttackCommand.Damage = Hit(defender, attacker, counter);
                 res.CounterAttackCommand = counterAttackCommand;
                 res.Commands.Add(counterAttackCommand);
@@ -125,7 +125,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
             else
             {
                 // 수비자의 선공
-                HitCommand counterAttackCommand = new HitCommand() { Agent = defender, TargetUnit = attacker, TargetSquare = attackingSquare };
+                HitCommand counterAttackCommand = new HitCommand() { SourceUnit = defender, TargetUnit = attacker, TargetSquare = attackingSquare };
                 counterAttackCommand.Damage = Hit(defender, attacker, counter);
                 res.CounterAttackCommand = counterAttackCommand;
                 res.Commands.Add(counterAttackCommand);

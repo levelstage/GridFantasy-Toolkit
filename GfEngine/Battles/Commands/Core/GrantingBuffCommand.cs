@@ -14,7 +14,7 @@ namespace GfEngine.Battles.Commands.Core
         public GrantingBuffCommand(GrantingBuffCommand parent)
         {
             TargetUnit = parent.TargetUnit;
-            ApplyingBuff = parent.ApplyingBuff;
+            ApplyingBuff = new Buff(parent.ApplyingBuff);
         }
 
         public override void Execute(BattleContext battleContext)

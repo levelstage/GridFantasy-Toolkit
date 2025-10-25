@@ -16,7 +16,7 @@ namespace GfEngine.Battles.Commands.Core
 
         public override string ToString()
         {
-            return string.Format(GameData.Text.Get(GameData.Text.Key.UI_Behavior_CharacterMoved), Agent.Name, MovedSquareDescription);
+            return string.Format(GameData.Text.Get(GameData.Text.Key.UI_Behavior_CharacterMoved), SourceUnit.Name, MovedSquareDescription);
         }
         public override Command Clone()
         {

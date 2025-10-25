@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using GfToolkit.Shared;
-using GfEngine.Battles;
+using GfEngine.Battles.Units;
 
 namespace GfEngine.Models.Buffs
 {

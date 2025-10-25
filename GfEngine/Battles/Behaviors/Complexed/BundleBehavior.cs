@@ -19,7 +19,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
                 TargetSquare = ts,
                 Commands = new List<Command>()
             };
-            command.Agent = o;
+            command.SourceUnit = o;
             foreach (Behavior iter in Behaviors)
             {
                 command.Commands.Add(iter.Execute(context));

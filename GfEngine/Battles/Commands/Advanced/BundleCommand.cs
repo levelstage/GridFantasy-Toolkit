@@ -6,20 +6,18 @@ namespace GfEngine.Battles.Commands.Advanced
     public class BundleCommand : Command
     {
         public List<Command> Commands { get; set; }
-        public override string ToString()
+        public BundleCommand() { }
+        public BundleCommand(BundleCommand parent) : base(parent)
         {
-            string res = "";
-            int finalChecker = 0;
-            foreach (Command iter in Commands)
-            {
-                if (++finalChecker == Commands.Count) res += iter.ToString();
-                else res = res + iter.ToString() + "\n";
-            }
-            return res;
+            Commands = new List<Command>(parent.Commands);
         }
         public override void Execute(BattleContext battleContext)
         {
             
+        }
+        public override Command Clone()
+        {
+            return new BundleCommand(this);
         }
     }    
 }

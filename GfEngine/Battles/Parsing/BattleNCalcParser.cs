@@ -67,7 +67,7 @@ namespace GfEngine.Battles.Parsing
                 // 5. 계산 실행
                 return Convert.ToDouble(e.Evaluate());
             }
-            catch (Exception ex)
+            catch
             {
                 return 0.0;
             }

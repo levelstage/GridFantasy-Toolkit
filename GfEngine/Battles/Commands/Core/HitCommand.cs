@@ -1,4 +1,5 @@
 using GfEngine.Battles.Units;
+using GfEngine.Logics;
 using GfToolkit.Shared;
 using System.Collections.Generic;
 
@@ -19,7 +20,7 @@ namespace GfEngine.Battles.Commands.Core
         }
         public override void Execute(BattleContext battleContext)
         {
-
+            
         }
         public override Command Clone()
         {

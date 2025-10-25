@@ -16,7 +16,7 @@ namespace GfToolkit.Shared
 		Sword, Shield_Up, Shield_Down, Spear, Cannon, Bow, MagicMissile
 	}
 
-	public enum AttackType // 공격이 공격력을 참고하는지, 마법 공격력을 참고하는지 확인. 나중에 방어력 참고 공격 이런것도 생각중.
+	public enum AttackType // 기본 공격이 공격력을 참고하는지, 마법 공격력을 참고하는지 확인. 나중에 방어력 참고 공격 이런것도 생각중.
 	{
 		Physical, Magical
 	}
@@ -69,6 +69,23 @@ namespace GfToolkit.Shared
 		Damage,     // 공격 관련
 		Utility     // 유틸리티 관련
 	}
+	// 전투 중에 발생하는 모든 트리거들의 모음
+	public enum BattleEventType
+    {
+        // 턴 및 행동 흐름
+        OnTurnStart,        // 유닛의 턴이 시작될 때
+        OnActionEnd,        // 유닛이 행동을 완료했을 때
+        
+        // 피해 및 회복
+        OnDamaged,          // 유닛이 피해를 입었을 때 (반격, 분노 발동)
+        OnDealDamage,       // 유닛이 피해를 주었을 때 (흡혈, 추가 타격)
+        OnHealed,           // 유닛이 회복했을 때
+        
+        // 상태 변화
+        OnDied,             // 유닛이 사망했을 때
+        OnBuffApplied,      // 버프가 적용될 때
+        OnStatusChanged     // HP가 50% 이하로 떨어지는 등 상태가 변했을 때
+    }
 
 	// 해당 아이템의 종류를 나타내는 Tag들.
 	public enum ItemTag

@@ -1,4 +1,5 @@
 using GfEngine.Models.Buffs;
+using GfEngine.Battles;
 using GfToolkit.Shared;
 using System.Collections.Generic;
 namespace GfEngine.Models.Statuses
@@ -8,7 +9,7 @@ namespace GfEngine.Models.Statuses
 		public Status Stat { get; }
 		public int CurrentHp { get; set; }
 		public List<Buff> Buffs { get; set; }
-		public List<Modifier> EffectiveModifiers { get; set; }
+		private readonly List<Modifier> EffectiveModifiers = new List<Modifier>();
 
 		// 생성자: '기본 스탯(Status)'을 바탕으로 '현재 상태'를 생성.
 		public LiveStatus(Status baseStat)
@@ -18,8 +19,19 @@ namespace GfEngine.Models.Statuses
 			CurrentHp = baseStat.MaxHp;
 			// 빈 버프 리스트 생성.
 			Buffs = new List<Buff>();
-			EffectiveModifiers = new List<Modifier>();
 		}
+
+		public void UpdateEffectiveModifiers(BattleContext context)
+        {
+			EffectiveModifiers.Clear();
+			foreach(var buff in Buffs)
+            {
+                foreach(var cmr in buff.Modifiers)
+                {
+					if (cmr.Condition.IsMet(context)) EffectiveModifiers.Add(cmr.ModiferToApply);
+                }
+            }
+        }
 
 		public float GetEffectMagnitude(BuffEffect effect)
 		{

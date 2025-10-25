@@ -35,7 +35,7 @@ namespace GfEngine.Battles.Behaviors
 
 			MoveCommand res = new MoveCommand()
 			{
-				Agent = o,
+				SourceUnit = o,
 				TargetSquare = ts,
 				MovedSquareDescription = GetSquareName(ts.X, ts.Y, context.WaveData.Map.GetLength(0))
 			};

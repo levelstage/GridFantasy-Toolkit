@@ -38,7 +38,7 @@ namespace GfEngine.Battles.Conditions
                 double rawLeftValue = _parser.Evaluate(LeftFormula, battleContext);
                 double rawRightValue = _parser.Evaluate(RightFormula, battleContext);
 
-                // 2. [핵심 수정] 비교 전에 양변을 정수(int)로 변환
+                // 2. 비교 전에 양변을 정수(int)로 변환
                 // Math.Floor를 사용하여 소수점 이하를 내림 처리합니다.
                 int leftValue = (int)Math.Round(rawLeftValue, MidpointRounding.AwayFromZero);
                 int rightValue = (int)Math.Round(rawRightValue, MidpointRounding.AwayFromZero);
@@ -55,7 +55,7 @@ namespace GfEngine.Battles.Conditions
                     case ComparisonOperator.LessThanOrEqual:
                         return leftValue <= rightValue;
                     case ComparisonOperator.Equal:
-                        return leftValue == rightValue; // 이제 안전하게 사용 가능
+                        return leftValue == rightValue;
                     case ComparisonOperator.NotEqual:
                         return leftValue != rightValue;
                     default:

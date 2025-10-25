@@ -39,7 +39,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
                 Commands = new List<Command>()
             };
             // 2차 검사: 영역 내에서 2차 대상으로 지정이 가능한지?
-            res.Agent = context.OriginUnit;
+            res.SourceUnit = context.OriginUnit;
             List<BehaviorTarget> affectedSquares = Area.TargetSearcher(target, context.WaveData);
             foreach (BehaviorTarget bt in affectedSquares)
             {

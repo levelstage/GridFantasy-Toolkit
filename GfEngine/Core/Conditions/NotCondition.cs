@@ -3,6 +3,11 @@ namespace GfEngine.Core.Conditions
     public class NotCondition : ICondition
     {
         public ICondition Condition;
+        public NotCondition() { }
+        public NotCondition(ICondition condition)
+        {
+            Condition = condition;
+        }
         public bool IsMet(IContext battleContext)
         {
             if (Condition == null) return false;

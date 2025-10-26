@@ -44,9 +44,12 @@ namespace GfToolkit.Shared
 		PhysicalResidence,
 		MagicalResidence,
 		HealResidence,
-		//관통력
+		// 관통력
 		AddMovePenetration,
 		AddWeaponPenetration,
+		// 범위 연장
+		ExtendMoveLength,
+		ExtendWeaponLength,
 
 		// 정성적 버프들
 		// Aura 관련
@@ -120,7 +123,8 @@ namespace GfToolkit.Shared
 	{
 		Rewrite,
 		Or,
-		And
+		And,
+		AndNot
 	}
 
 	// 기타

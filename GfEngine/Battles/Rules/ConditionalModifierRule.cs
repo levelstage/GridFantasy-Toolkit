@@ -11,7 +11,7 @@ namespace GfEngine.Battles.Rules
         public ConditionalModifierRule(ConditionalModifierRule parent)
         {
             Condition = parent.Condition;
-            ModiferToApply = new Modifier(parent.ModiferToApply);
+            ModiferToApply = parent.ModiferToApply.Clone();
         }
     }
 }

@@ -14,6 +14,11 @@ namespace GfEngine
             if (GetType() != other.GetType()) return false; // 서로 다른 Type끼리 비교할경우 false.
             return Code == other.Code;
         }
+        public override bool Equals(object obj)
+        {
+            if (obj is not GameObject other) return false;
+            return Equals(other);
+        }
         public override int GetHashCode()
         {
             return Code.GetHashCode();

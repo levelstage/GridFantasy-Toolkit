@@ -194,7 +194,7 @@ namespace GfEngine.Battles.Units
 		/// </summary>
 		/// <param name="condition">원본 Condition</param>
 		/// <param name="effect">적용할 modifier의 effect</param>
-		/// <returns></returns>
+		/// <returns>적절히 Overriding된 Condition</returns>
 		private ICondition OverrideConditionByModifiers(ICondition condition, BuffEffect effect)
 		{
 			ICondition res = condition;
@@ -211,25 +211,27 @@ namespace GfEngine.Battles.Units
 				switch (iter.OverridingBy)
 				{
 					case OverridingOperator.Rewrite:
-						res = iter.ConditonToOverride;
+						res = iter.ConditionToOverride;
 						break;
 					case OverridingOperator.Or:
-						res = new OrCondition(new List<ICondition>() { res, iter.ConditonToOverride });
+						res = new OrCondition(new List<ICondition>() { res, iter.ConditionToOverride });
 						break;
 					case OverridingOperator.And:
-						res = new AndCondition(new List<ICondition>() { res, iter.ConditonToOverride });
+						res = new AndCondition(new List<ICondition>() { res, iter.ConditionToOverride });
+						break;
+					case OverridingOperator.AndNot:
+						res = new AndCondition(new List<ICondition>() { res, new NotCondition(iter.ConditionToOverride) });
 						break;
 				}
 			}
 			return res;
 		}
 		/// <summary>
-        /// 어떤 PatternSet을 지정한 
+        /// 지정한 PatternSet을 특정 유형의 유효한 overrider들로 overriding하는 함수
         /// </summary>
-        /// <param name="patternSet"></param>
-        /// <param name="effect"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
+        /// <param name="patternSet">원본 PatternSet</param>
+        /// <param name="effect">적용할 modifier의 effect</param>
+        /// <returns>적절히 Overriding된 PatternSet</returns>
 		private PatternSet OverridePatternSetByModifiers(PatternSet patternSet, BuffEffect effect)
 		{
 			PatternSet res = new PatternSet(patternSet);
@@ -238,7 +240,7 @@ namespace GfEngine.Battles.Units
 			{
 				if (iter is PatternSetOverrider patternSetOverrider) overriders.Add(patternSetOverrider);
 			}
-			overriders = overriders.OrderBy(i => i.OverridingBy) // 기본적으로 Rewrite -> Or -> And 순
+			overriders = overriders.OrderBy(i => i.OverridingBy) // 기본적으로 Rewrite -> Or -> And -> AndNot 순
 									.ThenBy(i => i.Magnitude) // 세부 우선순위는 Magnitude에 의해 결정.
 									.ToList();
 			foreach (var iter in overriders)
@@ -254,6 +256,9 @@ namespace GfEngine.Battles.Units
 					case OverridingOperator.And:
 						res.Patterns.IntersectWith(iter.PatternSetToOverride.Patterns);
 						break;
+					case OverridingOperator.AndNot:
+						res.Patterns.ExceptWith(iter.PatternSetToOverride.Patterns);
+						break;						
 				}
 			}
 			return res;
@@ -267,6 +272,7 @@ namespace GfEngine.Battles.Units
 			Crest crest = GameData.AllCrests[_liveStat.PresentCrest];
 			RuledPatternSet res = new RuledPatternSet(GameData.AllPatternSets[crest.MoveSet], crest.Accessible, crest.ObstructedBy, crest.Penetration);
 			res.PatternSetToUse = OverridePatternSetByModifiers(res.PatternSetToUse, BuffEffect.OverrideMovePatternSet);
+			res.PatternSetToUse.ExtendLengths((int)NetEffectMagnitude(BuffEffect.ExtendMoveLength));
 			res.Accessible = OverrideConditionByModifiers(res.Accessible, BuffEffect.OverrideMoveAcceibles);
 			res.ObstructedBy = OverrideConditionByModifiers(res.ObstructedBy, BuffEffect.OverrideMoveObstruction);
 			res.Penetration += (int)NetEffectMagnitude(BuffEffect.AddMovePenetration);
@@ -282,6 +288,7 @@ namespace GfEngine.Battles.Units
 			WeaponClass wc = GameData.AllWeaponClasses[weapon.Class];
 			RuledPatternSet res = new RuledPatternSet(GameData.AllPatternSets[wc.BasePatternSet], wc.Accessible, wc.ObstructedBy, wc.Penetration);
 			res.PatternSetToUse = OverridePatternSetByModifiers(res.PatternSetToUse, BuffEffect.OverrideWeaponPatternSet);
+			res.PatternSetToUse.ExtendLengths((int)NetEffectMagnitude(BuffEffect.ExtendWeaponLength));
 			res.Accessible = OverrideConditionByModifiers(res.Accessible, BuffEffect.OverrideWeaponAccessibles);
 			res.ObstructedBy = OverrideConditionByModifiers(res.ObstructedBy, BuffEffect.OverrideWeaponObstruction);
 			res.Penetration += (int)NetEffectMagnitude(BuffEffect.AddWeaponPenetration);

@@ -29,11 +29,6 @@ namespace GfEngine.Battles.Squares
             Occupant = null;
         }
 
-        public void Update()
-        {
-            if (Occupant != null) Occupant.Update();
-        }
-
         public override string ToString()
         {
             string open_text = "[";

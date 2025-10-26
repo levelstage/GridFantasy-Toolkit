@@ -4,7 +4,7 @@ using GfEngine.Battles.Units;
 
 namespace GfEngine.Models.Buffs
 {
-	public class Modifier
+	public abstract class Modifier
 	{
 		// 버프를 이루는 가장 기본적인 속성. 모든 Buff는 Modifier들의 집합이다.
 		public BuffEffect Effect { get; set; } // 이 버프의 효과
@@ -29,5 +29,6 @@ namespace GfEngine.Models.Buffs
 			Effect = effect;
 			Magnitude = magnitude;
 		}
+		public abstract Modifier Clone();
 	}
 }

@@ -1,7 +1,7 @@
-using GfEngine.Battles;
+using GfEngine.Battles.Patterns;
 using System.Collections.Generic;
 using GfToolkit.Shared;
-namespace GfEngine.Models.Buffs
+namespace GfEngine.Models.Buffs.Modifiers
 {
 	public class Aura : Modifier
 	{

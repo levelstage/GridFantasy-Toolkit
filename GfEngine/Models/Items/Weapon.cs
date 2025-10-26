@@ -3,23 +3,23 @@ using GfEngine.Models.Buffs;
 using GfToolkit.Shared;
 namespace GfEngine.Models.Items
 {
-	public class Weapon : Item
+	public class Weapon : SymbolItem
 	{
-		public float Power { get; set; } // 공격시 공격력에 곱해질 계수
-		public WeaponType Type { get; set; }
+		public int Class { get; set; } // 이 무기의 무기군 코드
+		public string Fomula { get; set; } // 이 무기의 피해 산출 공식
 		public Buff EquipBuff { get; set; }
 		public Weapon()
 		{
-			Power = 10;
-			Type = WeaponType.Spear;
+			Fomula = "0";
+			Class = 1;
 		}
 		public Weapon(Weapon parent)
 		{
 			
 			Code = parent.Code;
 			Name = parent.Name;
-			Power = parent.Power;
-			Type = parent.Type;
+			Fomula = parent.Fomula;
+			Class = parent.Class;
 		}
 		public override Item Clone()
 		{

@@ -31,15 +31,34 @@ namespace GfToolkit.Shared
 
 	public enum BuffEffect // 각 버프의 실질적 효과를 식별하기 위한 타입. 같은 타입의 버프들은 중첩된다.
 	{
+		// 정량적 버프들
+
+		// 기본 6스탯 관련
 		MaxHpBoost,
 		DefenseBoost,
 		MagicDefenseBoost,
 		AttackBoost,
 		MagicAttackBoost,
 		AgilityBoost,
+		//저항력 관련
 		PhysicalResidence,
 		MagicalResidence,
-		Aura
+		HealResidence,
+		//관통력
+		AddMovePenetration,
+		AddWeaponPenetration,
+
+		// 정성적 버프들
+		// Aura 관련
+		Aura,
+		// ConditionOverrider 관련
+		OverrideMoveObstruction,
+		OverrideMoveAcceibles,
+		OverrideWeaponObstruction,
+		OverrideWeaponAccessibles,
+		// PatternSetOverrider 관련
+		OverrideMovePatternSet,
+		OverrideWeaponPatternSet,
 	}
 
 	public enum Relation // 출처와 대상의 관계. 이 대상이 어떤 behavior의 대상이 되는지를 확인하기 위한 타입.
@@ -87,22 +106,22 @@ namespace GfToolkit.Shared
         OnStatusChanged     // HP가 50% 이하로 떨어지는 등 상태가 변했을 때
     }
 
-	// 해당 아이템의 종류를 나타내는 Tag들.
-	public enum ItemTag
-	{
-		Weapon, Potion, Key
-	}
-
 	// 시스템 구현을 위해 필요한 enum
 	public enum ComparisonOperator // 비교형 Condition을 위한 연산자 열거
-    {
-        GreaterThan,       // >
-        GreaterThanOrEqual, // >=
-        LessThan,           // <
-        LessThanOrEqual,    // <=
-        Equal,              // ==
-        NotEqual            // !=
-    }
+	{
+		GreaterThan,       // >
+		GreaterThanOrEqual, // >=
+		LessThan,           // <
+		LessThanOrEqual,    // <=
+		Equal,              // ==
+		NotEqual            // !=
+	}
+	public enum OverridingOperator
+	{
+		Rewrite,
+		Or,
+		And
+	}
 
 	// 기타
 

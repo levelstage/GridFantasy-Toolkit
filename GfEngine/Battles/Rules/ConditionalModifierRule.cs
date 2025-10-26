@@ -1,4 +1,3 @@
-using GfEngine.Battles.Conditions;
 using GfEngine.Models.Buffs;
 using GfEngine.Core.Conditions;
 

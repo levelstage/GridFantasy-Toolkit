@@ -13,16 +13,7 @@ namespace GfEngine.Battles.Units
         {
             ActorData = actorData;
             Name = actorData.Name;
-            LiveStat = new LiveStatus(actorData.Stat);
             Team = team;
-        }
-        public override MoveType GetMoveClass()
-        {
-            return ActorData.MoveClass;
-        }
-        public override Weapon GetEquipment()
-        {
-            return ActorData.Equipment;
         }
     }
 }

@@ -1,3 +1,4 @@
+using GfEngine.Models.Classes;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
 using GfToolkit.Shared;
@@ -9,8 +10,8 @@ namespace GfEngine.Models.Actors
 	{
 		public Status Stat;
 		public GrowthRates BaseGrowthRates;
-		public MoveType MoveClass { get; set; }
-		public WeaponType WeaponClass { get; set; }
+		public int PresentCrest { get; set; } // 적용된 문장의 코드
+		public List<int> UsableWeapons { get; set; } // 사용 가능한 무기군의 코드들
 		public Skill UniqueSkill { get; set; }
 		public Weapon Equipment { get; set; }
 		public List<Item> Inventory { get; set; }
@@ -25,8 +26,8 @@ namespace GfEngine.Models.Actors
 		public Actor(Actor p)
 		{
 			Stat = p.Stat;
-			MoveClass = p.MoveClass;
-			WeaponClass = p.WeaponClass;
+			PresentCrest = p.PresentCrest;
+			UsableWeapons = p.UsableWeapons;
 			Name = p.Name;
 			UniqueSkill = p.UniqueSkill;
 			if (p.Equipment != null) Equipment = new Weapon(p.Equipment);

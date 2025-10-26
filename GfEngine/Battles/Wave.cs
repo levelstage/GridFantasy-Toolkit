@@ -10,11 +10,11 @@ namespace GfEngine.Battles
 	public class Wave
 	{
 		public Square[,] Map;
-		public List<Unit> Enemies;
+		public List<Unit> Entities;
 		public Wave()
 		{
 			Map = new Square[8, 8];
-			Enemies = new List<Unit>();
+			Entities = new List<Unit>();
 			for (int i = 0; i < 8; i++)
 			{
 				for (int j = 0; j < 8; j++)
@@ -26,7 +26,7 @@ namespace GfEngine.Battles
 						Status pawnStatus = new Status(20, 10, 5, 8, 0, 5); // 보병 스탯
 						Unit myPawn = new InstantUnit("방패병", pawnStatus, MoveType.Pawn_Down, GameData.AllWeapons[1], Teams.Enemies);
 						s.PlaceUnit(myPawn);
-						Enemies.Add(myPawn);
+						Entities.Add(myPawn);
 					}
 					if (i == 6)
 					{

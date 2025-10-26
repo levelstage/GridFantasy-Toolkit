@@ -20,7 +20,7 @@ namespace GfEngine.Models.Actors
         public Trait()
         {
             // 기본값은 Common으로 설정해서, 희귀 특성만 따로 지정해주면 편해.
-            this.Rarity = TraitRarity.Common;
+            Rarity = TraitRarity.Common;
         }
     
     }

@@ -12,14 +12,9 @@ namespace GfEngine.Battles.Behaviors
 {
 	public class BasicMoveBehavior : Behavior
 	{
-		public BasicMoveBehavior(MoveType moveType) // 이동 behavior 생성자
+		public BasicMoveBehavior(int moveType) // 이동 behavior 생성자
 		{
-			Name = GameData.Text.Get(GameData.Text.Key.Command_Move);
-			ApCost = GameData.MoveApCosts[moveType];
-			Scope = new RuledPatternSet(
-				GameData.MovePatterns[moveType],
-				accessible: new BattleComparingCondition(BattleManager.Instance.BattleFormulaParser, "Movable(TS)", "1", ComparisonOperator.Equal)
-			);
+
 		}
 		private static string GetSquareName(int x, int y, int ySize)
         {

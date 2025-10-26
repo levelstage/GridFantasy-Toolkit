@@ -4,11 +4,15 @@ namespace GfEngine.Battles.Patterns
 {
     public class PatternSet : GameObject
     {
-        public List<Pattern> Patterns { get; set; }
+        public HashSet<Pattern> Patterns { get; set; }
 
-        public PatternSet(List<Pattern> patterns)
+        public PatternSet(HashSet<Pattern> patterns)
         {
-			Patterns = patterns;
+            Patterns = patterns;
+        }
+        public PatternSet(PatternSet parent)
+        {
+            Patterns = new HashSet<Pattern>(parent.Patterns);
         }
 
     }

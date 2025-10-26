@@ -18,21 +18,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
         public Weapon Method;
         public BasicAttackBehavior(Weapon weapon) // 공격 behavior 생성자
         {
-            Name = GameData.Text.Get(GameData.Text.Key.Command_Attack);
-            Scope = new RuledPatternSet(
-                GameData.AttackPatterns[weapon.Type],
-                // 적 또는 중립 공격 가능
-                accessible: new OrCondition
-                (
-                    new List<ICondition>()
-                    {
-                        new BattleComparingCondition(BattleManager.Instance.BattleFormulaParser, "Relation()", "2", ComparisonOperator.Equal),
-                        new BattleComparingCondition(BattleManager.Instance.BattleFormulaParser, "Relation()", "3", ComparisonOperator.Equal)
-                    }
-                )
-            );
-            ApCost = GameData.AttackApCosts[weapon.Type];
-            Method = weapon;
+           
         }
         static BasicAttackBehavior GetCounterAttack(Square origin, Square target, int attackCost) // 예상되는 반격을 return하는 함수
         {
@@ -66,15 +52,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
 
         private static int Hit(Unit attacker, Unit defender, BasicAttackBehavior B)
         {
-            // 공격/반격의 피해를 계산하는 함수
-            int damage = 0;
-            (AttackType atkType, DamageType dmgType) = GameData.AttackDamageTypes[B.Method.Type];
-            if (atkType == AttackType.Physical) damage += attacker.GetFinalStatus().Attack;
-            else damage += attacker.GetFinalStatus().MagicAttack;
-            damage = defender.CalculateDamage((int)(damage * B.Method.Power), dmgType);
-            // 오버데미지 방지
-            if (damage > defender.CurrentHp()) return defender.CurrentHp();
-            return damage;
+            return 0;
         }
 
         public override Command Execute(BattleContext context)

@@ -3,6 +3,7 @@ using System.Linq;
 using GfEngine.Battles.Patterns;
 using GfEngine.Models.Actors;
 using GfEngine.Models.Buffs;
+using GfEngine.Models.Classes;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
 using GfToolkit.Shared;
@@ -10,47 +11,11 @@ using GfToolkit.Shared;
 namespace GfEngine
 {
     public static class GameData
-	{	
-		// 이동 ApCost 딕셔너리
-		public static readonly Dictionary<MoveType, int> MoveApCosts = new Dictionary<MoveType, int>{
-			[MoveType.Pawn_Up] = 8,
-			[MoveType.Pawn_Down] = 8,
-			[MoveType.Pawn_Up_Advanced] = 8,
-			[MoveType.Pawn_Down_Advanced] = 8,
-			[MoveType.King] = 10,
-			[MoveType.Knight] = 12,
-			[MoveType.Bishop] = 13,
-			[MoveType.Rook] = 15,
-			[MoveType.Queen] = 20
-		};
-		
-		// 공격 ApCost 딕셔너리
-		public static readonly Dictionary<WeaponType, int> AttackApCosts = new Dictionary<WeaponType, int>{
-			[WeaponType.Shield_Up] = 5,
-			[WeaponType.Shield_Down] = 5,
-			[WeaponType.Sword] = 10,
-			[WeaponType.Spear] = 12,
-			[WeaponType.Bow] = 15,
-			[WeaponType.Cannon] = 20,
-			[WeaponType.MagicMissile] = 25
-			
-		};
-		
-		// 공격 DamageType 딕셔너리
-		public static readonly Dictionary<WeaponType, (AttackType, DamageType)> AttackDamageTypes = new Dictionary<WeaponType, (AttackType, DamageType)>{
-			[WeaponType.Shield_Up] = (AttackType.Physical, DamageType.Physical),
-			[WeaponType.Shield_Down] = (AttackType.Physical, DamageType.Physical),
-			[WeaponType.Sword] = (AttackType.Physical, DamageType.Physical),
-			[WeaponType.Spear] = (AttackType.Physical, DamageType.Physical),
-			[WeaponType.Bow] = (AttackType.Physical, DamageType.Physical),
-			[WeaponType.Cannon] = (AttackType.Physical, DamageType.Physical),
-			[WeaponType.MagicMissile] = (AttackType.Magical, DamageType.Magical)
-		};
-		
+	{
 		public static readonly Dictionary<BasicPatternType, PatternSet> BasicPatternSets = new Dictionary<BasicPatternType, PatternSet>
 		{
 			// 킹(King): 주변 8칸으로 1칸씩 이동
-			[BasicPatternType.King] = new PatternSet(new List<Pattern>
+			[BasicPatternType.King] = new PatternSet(new HashSet<Pattern>
 			{
 				new Pattern { X = -1, Y = -1}, // Up-Left
 				new Pattern { X = 0,  Y = -1}, // Up
@@ -61,9 +26,9 @@ namespace GfEngine
 				new Pattern { X = 0,  Y = 1}, // Down
 				new Pattern { X = 1,  Y = 1}  // Down-Right
 			}),
-			
+
 			// 퀸(Queen): 8방향으로 끝까지 이동
-			[BasicPatternType.Queen] = new PatternSet(new List<Pattern>
+			[BasicPatternType.Queen] = new PatternSet(new HashSet<Pattern>
 			{
 				new VectorPattern { X = -1, Y = -1}, // Up-Left
 				new VectorPattern { X = 0,  Y = -1}, // Up
@@ -76,16 +41,16 @@ namespace GfEngine
 			}),
 
 			// 비숍(Bishop): 대각선 4방향으로 끝까지 이동
-			[BasicPatternType.Bishop] = new PatternSet(new List<Pattern>
+			[BasicPatternType.Bishop] = new PatternSet(new HashSet<Pattern>
 			{
 				new VectorPattern { X = -1, Y = -1}, // Up-Left
 				new VectorPattern { X = 1,  Y = -1}, // Up-Right
 				new VectorPattern { X = -1, Y = 1}, // Down-Left
 				new VectorPattern { X = 1,  Y = 1}  // Down-Right
 			}),
-			
+
 			// 나이트(Knight): 자신을 중심으로 한 반지름 루트5 원 위로 점프
-			[BasicPatternType.Knight] = new PatternSet(new List<Pattern>
+			[BasicPatternType.Knight] = new PatternSet(new HashSet<Pattern>
 			{
 				new Pattern { X = 1, Y = -2},
 				new Pattern { X = 2, Y = -1},
@@ -96,8 +61,8 @@ namespace GfEngine
 				new Pattern { X = -2, Y = -1},
 				new Pattern { X = -1, Y = -2}
 			}),
-					// 룩(Rook): 상하좌우 4방향으로 무제한 이동
-			[BasicPatternType.Rook] = new PatternSet(new List<Pattern>
+			// 룩(Rook): 상하좌우 4방향으로 무제한 이동
+			[BasicPatternType.Rook] = new PatternSet(new HashSet<Pattern>
 			{
 				new VectorPattern { X = 1, Y = 0}, // Right
 				new VectorPattern { X = 0, Y = 1}, // Down
@@ -105,77 +70,14 @@ namespace GfEngine
 				new VectorPattern { X = 0, Y = -1} //Up
 			})
 		};
-		
-		// 이동 패턴셋 딕셔너리
-		public static readonly Dictionary<MoveType, PatternSet> MovePatterns = new Dictionary<MoveType, PatternSet>
-		{
-			// 기본적인 5개 기물 이동은 BasicPatternSets Dictionary에 있는 PatternSet으로 해결.
-			[MoveType.King] = BasicPatternSets[BasicPatternType.King],
-			[MoveType.Queen] = BasicPatternSets[BasicPatternType.Queen],
-			[MoveType.Bishop] = BasicPatternSets[BasicPatternType.Bishop],
-			[MoveType.Knight] = BasicPatternSets[BasicPatternType.Knight],
-			[MoveType.Rook] = BasicPatternSets[BasicPatternType.Rook],	
-			
-			// 상향 폰(Pawn_Up): 
-			[MoveType.Pawn_Up] = new PatternSet(new List<Pattern>
-			{
-			new Pattern { X = 0, Y = -1}, //Up1
-					new Pattern { X = 0, Y = -2} //Up2
-			}),
-			// 하향 폰(Pawn_Down)
-			[MoveType.Pawn_Down] = new PatternSet(new List<Pattern>
-			{
-			new Pattern { X = 0, Y = 1}, //Down1
-						new Pattern { X = 0, Y = 2} //Down2
-			}),
-					// 한 번 이상 전진한 상향 폰(Pawn_Up_Advanced): 
-			[MoveType.Pawn_Up_Advanced] = new PatternSet(new List<Pattern>
-			{
-			new Pattern { X = 0, Y = -1}
-			}),
-					// 한 번 이상 전진한 하향 폰(Pawn_Down_Advanced): 
-					[MoveType.Pawn_Down_Advanced] = new PatternSet(new List<Pattern>
-			{
-			new Pattern { X = 0, Y = 1}
-			})
-		};
-		
-		// 공격 패턴셋 딕셔너리
-		public static readonly Dictionary<WeaponType, PatternSet> AttackPatterns = new Dictionary<WeaponType, PatternSet>
-		{
-			[WeaponType.Sword] = BasicPatternSets[BasicPatternType.King], // 검. 킹처럼 주변 8칸 공격
-			[WeaponType.Shield_Up] = new PatternSet(new List<Pattern> // 방패. 폰처럼 전방 대각선 공격
-			{
-				new Pattern { X = -1, Y = -1},
-				new Pattern { X = 1, Y = -1}
-			}),
-			[WeaponType.Shield_Down] = new PatternSet(new List<Pattern> // 방패. 폰처럼 전방 대각선 공격
-			{
-				new Pattern { X = -1, Y = 1},
-				new Pattern { X = 1, Y = 1}
-			}),
-					[WeaponType.Spear] = BasicPatternSets[BasicPatternType.Knight], // 창. 나이트처럼 원형 범위 공격
-					[WeaponType.Bow] = BasicPatternSets[BasicPatternType.Bishop], // 활. 비숍처럼 대각선 범위 공격
-					[WeaponType.Cannon] = BasicPatternSets[BasicPatternType.Rook], // 대포. 룩처럼 상하좌우 범위 공격
-					[WeaponType.MagicMissile] = BasicPatternSets[BasicPatternType.Queen] // 화염구. 퀸처럼 전방향 공격
-		};
 
+		public static readonly Dictionary<int, PatternSet> AllPatternSets = new Dictionary<int, PatternSet>();
 		public static readonly Dictionary<int, Buff> AllBuffs = new Dictionary<int, Buff>();
-
-
+		public static readonly Dictionary<int, Crest> AllCrests = new Dictionary<int, Crest>();
+		public static readonly Dictionary<int, WeaponClass> AllWeaponClasses = new Dictionary<int, WeaponClass>();
 		public static readonly Dictionary<int, Weapon> AllWeapons = new Dictionary<int, Weapon>();
-
-		public static readonly Dictionary<int, Skill> AllSkills = new Dictionary<int, Skill>
-		{
-			[0] = new Skill
-			{
-				Code = 0,
-				Name = Text.Get(Text.Key.Skill_Frontline_Name),
-				IsPassive = true,
-				// 이 스킬을 가지고 있으면, 'FrontlineAura' 버프를 자신에게 부여.
-				SkillBuff = AllBuffs[1]
-			}
-		};
+		public static readonly Dictionary<int, Skill> AllSkills = new Dictionary<int, Skill>();
+		public static readonly Dictionary<int, Actor> AllActors = new Dictionary<int, Actor>();
 
 			public static readonly Dictionary<int, Trait> AllTraits = new Dictionary<int, Trait>();
 		// 테마별 랜덤 특성 풀 (TraitType별로 구분된 특성들의 집합. static 생성자에서 자동 생성됨.)
@@ -188,46 +90,7 @@ namespace GfEngine
 			{ TraitRarity.Rare, 7 },
 			{ TraitRarity.Heroic, 3 }
 		};
-		
-		public static readonly Dictionary<int, Actor> AllActors  = new Dictionary<int, Actor> 
-		{
-			[0] = new Actor // 환영 폰. 이 액터 데이터 기반으로 InstantUnit 객체 생성.
-			{
-				Code = 0,
-				Name = Text.Get(Text.Key.Actor_Phantom_Name),
-				Stat = new Status(maxHp: 150, defense: 50, magicDefense: 50, attack: 70, magicAttack: 30, agility: 70),
-				MoveClass = MoveType.Pawn_Up,
-				WeaponClass = WeaponType.Shield_Up,
-				Equipment = AllWeapons[0], // 기본 장비
-				UniqueSkill = AllSkills[0], // 전선 유지
-				Traits = new List<Trait>(),
-				Inventory = new List<Item>{
-					new Weapon(AllWeapons[0])
-				}
-			},
-			
-			[1] = new Actor
-			{
-				Code = 1,
-				Name = Text.Get(Text.Key.Actor_Hagen_Name),
-				Stat = new Status(maxHp: 250, defense: 60, magicDefense: 50, attack: 90, magicAttack: 40, agility: 70),
-				MoveClass = MoveType.Knight,
-				WeaponClass = WeaponType.Spear,
-				UniqueSkill = null, // 나중에 스킬 객체 추가
-				Traits = new List<Trait>(),
-				Equipment = AllWeapons[2], // 기본 장비
-				BaseGrowthRates = new GrowthRates
-				{
-					HpRate = 25,
-					DefenseRate = 10,
-					MagicDefenseRate = 8,
-					AttackRate = 4,
-					MagicAttackRate = 2,
-					AgilityRate = 4
-				},
-				Inventory = new List<Item>()
-			},
-		};
+
 
 		public static class Text
 		{

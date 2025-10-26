@@ -10,8 +10,8 @@ namespace GfEngine.Battles.Units
     public class InstantUnit : Unit
     {
         public Status Stat;
-		public MoveType MoveClass { get; set; }
-		public WeaponType WeaponClass { get; set; }
+		public int MoveType { get; set; }
+		public int WeaponType { get; set; }
 		public Skill UniqueSkill { get; set; }
 		public Weapon Equipment { get; set; }
 		public List<Item> Inventory { get; set; }
@@ -20,10 +20,9 @@ namespace GfEngine.Battles.Units
 
         public InstantUnit(Actor actor, Teams team)
         {
-            MoveClass = actor.MoveClass;
-            WeaponClass = actor.Equipment.Type;
+            MoveType = actor.PresentCrest;
+            WeaponType = actor.Equipment.Class;
             Stat = actor.Stat;
-            LiveStat = new LiveStatus(actor.Stat);
             Team = team;
             Name = actor.Name;
             UniqueSkill = actor.UniqueSkill;
@@ -31,12 +30,11 @@ namespace GfEngine.Battles.Units
             Inventory = new List<Item>(actor.Inventory); // 장비는 이미 들어가 있음.
             Traits = actor.Traits;
         } 
-        public InstantUnit(string name, Status status, MoveType moveType, Weapon weapon, Skill uniqueSkill, Teams team, List<Item> inventory, List<Trait> traits)
+        public InstantUnit(string name, Status status, int moveType, Weapon weapon, Skill uniqueSkill, Teams team, List<Item> inventory, List<Trait> traits)
         {
-            MoveClass = moveType;
-            WeaponClass = weapon.Type;
+            MoveType = moveType;
+            WeaponType = weapon.Class;
             Stat = status;
-            LiveStat = new LiveStatus(status);
             Team = team;
             Name = name;
             UniqueSkill = uniqueSkill;
@@ -45,20 +43,10 @@ namespace GfEngine.Battles.Units
             Traits = traits;
         }
 
-        public InstantUnit(string name, Status status, MoveType moveType, Weapon weapon, Teams team)
+        public InstantUnit(string name, Status status, int moveType, Weapon weapon, Teams team)
             : this(name, status, moveType, weapon, null, team, new List<Item>(), new List<Trait>())
         {
             
-        }
-
-        public override MoveType GetMoveClass()
-        {
-            return MoveClass;
-        }
-
-        public override Weapon GetEquipment()
-        {
-            return Equipment;
         }
     }
 }

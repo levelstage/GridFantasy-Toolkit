@@ -1,5 +1,4 @@
-using GfEngine.Behaviors;
-using GfEngine.Battles;
+using GfEngine.Battles.Behaviors;
 using GfToolkit.Shared;
 using System.Collections.Generic;
 
@@ -17,7 +16,7 @@ namespace GfEngine.Models.Items
             Code = parent.Code;
             Name = parent.Name;
             Description = parent.Description;
-            Itags = new HashSet<ItemTag>(parent.Itags);
+            Itags = new HashSet<string>(parent.Itags);
             ItemBehavior = parent.ItemBehavior;
         }
 

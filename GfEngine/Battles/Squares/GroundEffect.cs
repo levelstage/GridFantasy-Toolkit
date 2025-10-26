@@ -22,7 +22,14 @@ namespace GfEngine.Battles.Squares
 
         public GroundEffect()
         {
-            
+
+        }
+        public GroundEffect(GroundEffect parent) : base(parent)
+        {
+            Source = parent.Source;
+            EffectCondition = parent.EffectCondition;
+            ApplyingBuff = new Buff(parent.ApplyingBuff);
+            Duration = parent.Duration;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace GfEngine.Battles.Commands.Core
         public Buff ApplyingBuff { get; set; } // 적용할 버프셋.
 
         public GrantingBuffCommand() { }
-        public GrantingBuffCommand(GrantingBuffCommand parent)
+        public GrantingBuffCommand(GrantingBuffCommand parent) : base(parent)
         {
             TargetUnit = parent.TargetUnit;
             ApplyingBuff = new Buff(parent.ApplyingBuff);

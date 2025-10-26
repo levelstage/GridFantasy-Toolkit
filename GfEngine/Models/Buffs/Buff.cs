@@ -24,19 +24,17 @@ namespace GfEngine.Models.Buffs
 
 		}
 
-		public Buff(Buff p)
+		public Buff(Buff parent) : base(parent)
 		{
-			Code = p.Code;
-			Name = p.Name;
-			Description = p.Description;
-			Duration = p.Duration;
+			Description = parent.Description;
+			Duration = parent.Duration;
 			Source = null;
-			IsBuff = p.IsBuff;
-			IsDebuff = p.IsDebuff;
-			Removable = p.Removable;
-			Visible = p.Visible;
+			IsBuff = parent.IsBuff;
+			IsDebuff = parent.IsDebuff;
+			Removable = parent.Removable;
+			Visible = parent.Visible;
 			Modifiers = new List<ConditionalModifierRule>();
-			foreach (ConditionalModifierRule cmr in p.Modifiers)
+			foreach (ConditionalModifierRule cmr in parent.Modifiers)
 			{
 				Modifiers.Add(new ConditionalModifierRule(cmr));
 			}

@@ -8,6 +8,12 @@ namespace GfEngine
     {
         public int Code { get; set; }
         public string Name { get; set; }
+        public GameObject() { }
+        public GameObject(GameObject parent)
+        {
+            Code = parent.Code;
+            Name = parent.Name;
+        }
         public bool Equals(GameObject other)
         {
             if (other == null) return false;

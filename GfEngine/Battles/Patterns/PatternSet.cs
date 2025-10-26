@@ -10,7 +10,7 @@ namespace GfEngine.Battles.Patterns
         {
             Patterns = patterns;
         }
-        public PatternSet(PatternSet parent)
+        public PatternSet(PatternSet parent) : base(parent)
         {
             Patterns = new HashSet<Pattern>(parent.Patterns);
         }

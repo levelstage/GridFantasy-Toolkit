@@ -2,7 +2,6 @@ using GfEngine.Battles.Squares;
 using GfEngine.Battles.Commands;
 using System.Collections.Generic;
 using GfEngine.Battles.Commands.Advanced;
-using GfEngine.Core;
 using GfEngine.Battles.Units;
 namespace GfEngine.Battles.Behaviors.Complexed
 {

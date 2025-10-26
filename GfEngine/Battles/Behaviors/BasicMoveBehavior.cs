@@ -1,9 +1,5 @@
 using GfEngine.Battles.Squares;
-using GfToolkit.Shared;
 using GfEngine.Battles.Commands.Core;
-using GfEngine.Battles.Conditions;
-using GfEngine.Logics;
-using GfEngine.Core;
 using GfEngine.Battles.Units;
 using GfEngine.Battles.Commands;
 using GfEngine.Battles.Patterns;
@@ -12,9 +8,10 @@ namespace GfEngine.Battles.Behaviors
 {
 	public class BasicMoveBehavior : Behavior
 	{
-		public BasicMoveBehavior(int moveType) // 이동 behavior 생성자
+		public BasicMoveBehavior(RuledPatternSet scope, int apCost) // 이동 behavior 생성자
 		{
-
+			Scope = scope;
+			ApCost = apCost;
 		}
 		private static string GetSquareName(int x, int y, int ySize)
         {

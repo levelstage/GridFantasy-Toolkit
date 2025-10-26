@@ -140,7 +140,7 @@ namespace GfEngine.Battles.Units
 		}
 
 		// 이 유닛의 특정 스탯을 파싱하는 함수
-		public int ParseStat(BattleContext context, StatType statType, bool isOrigin=false)
+		public int ParseStat(StatType statType, bool isOrigin=false)
 		{
 			if (statType == StatType.CurrentHp) return CurrentHp();
 			Status sourceStat;

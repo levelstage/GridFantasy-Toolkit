@@ -11,7 +11,7 @@ namespace GfEngine.Battles.Events
         // 2. 이벤트의 부가 데이터 (예: 버프 코드)
         public object SecondaryData { get; set; } 
         
-        // 3. 이벤트의 출처가 된 Command나 Unit (옵션)
+        // 3. 이벤트의 출처가 된 Unit (옵션)
         public Unit EventSourceUnit { get; set; }
 
         // BattleContext의 생성자를 그대로 사용하고 추가 데이터를 받습니다.
@@ -19,13 +19,7 @@ namespace GfEngine.Battles.Events
             BattleContext baseContext, 
             float primaryValue, 
             object secondaryData = null
-        ) : base(
-            waveData: baseContext.WaveData,
-            originSquare: baseContext.OriginSquare,
-            targetSquare: baseContext.TargetSquare,
-            explicitOriginUnit: baseContext.OriginUnit,
-            explicitTargetUnit: baseContext.TargetUnit
-        )
+        ) : base(baseContext: baseContext)
         {
             PrimaryValue = primaryValue;
             SecondaryData = secondaryData;

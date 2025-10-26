@@ -13,11 +13,11 @@ namespace GfEngine.Models.Items
 		{
 			Itags = new HashSet<string>();
 		}
-		public Item(Item p)
+		public Item(Item parent) : base(parent)
 		{
-			Name = p.Name;
-			Description = p.Description;
-			Itags = new HashSet<string>(p.Itags);
+			Name = parent.Name;
+			Description = parent.Description;
+			Itags = new HashSet<string>(parent.Itags);
 		}
 		public abstract Item Clone();
 	}

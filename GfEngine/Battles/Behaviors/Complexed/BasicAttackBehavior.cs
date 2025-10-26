@@ -7,18 +7,15 @@ using GfEngine.Battles.Commands.Advanced;
 using GfEngine.Battles.Commands.Core;
 using System.Collections.Generic;
 using System;
-using GfToolkit.Shared;
-using GfEngine.Core.Conditions;
-using GfEngine.Battles.Conditions;
-using GfEngine.Logics;
 namespace GfEngine.Battles.Behaviors.Complexed
 {
     public class BasicAttackBehavior : Behavior
     {
         public Weapon Method;
-        public BasicAttackBehavior(Weapon weapon) // 공격 behavior 생성자
+        public BasicAttackBehavior(RuledPatternSet scope, int apCost) // 공격 behavior 생성자
         {
-           
+            Scope = scope;
+            ApCost = apCost;
         }
         static BasicAttackBehavior GetCounterAttack(Square origin, Square target, int attackCost) // 예상되는 반격을 return하는 함수
         {
@@ -87,7 +84,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
                 return res;
             }
             // 누가 먼저 때릴지, Agility를 비교. 같으면 공격자 우선.
-            if (attacker.GetFinalStatus().Agility >= defender.GetFinalStatus().Agility)
+            if (attacker.GetStatus().Agility >= defender.GetStatus().Agility)
             {
                 // 공격자의 선공
                 attack.Damage = Hit(attacker, defender, this);

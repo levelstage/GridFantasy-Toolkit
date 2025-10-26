@@ -16,10 +16,10 @@ namespace GfEngine.Battles.Behaviors.Complexed
     public class AreaInvocationBehavior : Behavior
     {
         public RuledPatternSet Area; // 대상을 검색할 영역
-        // 해당 범위에서 검색된 대상들을 가지고 어떤 Command를 만들지.
-        // 이 List 안에 있는 Command들은 일부 프로퍼티가 비어있는 불완성품임.
-        // 여기에 적절한 프로퍼티를 채우고, BundleCommand화해서 Return하는게 이 Behavior의 역할이다.
         public List<ConditionalCommandRule> Invocations { get; set; }
+        // 해당 범위에서 검색된 대상들을 가지고 어떤 Command를 만들지.
+        // 이 List 안에 있는 Command들은 일부 속성이 비어있는 불완성품임.
+        // 여기에 적절한 속성을 채우고, BundleCommand화해서 Return하는게 이 Behavior의 역할이다.
 
         // 생성자에서 피해량, 피해 타입, 공격 범위(PatternSet) 등 '데이터'를 받는다.
         public AreaInvocationBehavior() : base()
@@ -58,7 +58,8 @@ namespace GfEngine.Battles.Behaviors.Complexed
                             // 해당 Behavior에서 처리할 수 있는 Command의 종류는 다음과 같음:
                             // HitCommand (유닛의 체력 변동)
                             // GrantBuffCommand (유닛에게 Buff/Debuff 부여)
-                            // 이론상 거의 모든 Command를 넣을 수 있지만 일단은 보류.
+                            // ApplyGroundEffectCommand (Square에 GroundEffect 부여)
+                            // 이론상 거의 모든 Command를 넣을 수 있다.
 
                             // 3차 검사: 해당 Command를 대상에게 실행할 수 있는지?
                             // 해당 검사를 통과한 커맨드들은 내용을 조립해준다.
@@ -67,6 +68,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
                                 Command subCommand = iter.CommandToExecute.Clone();
                                 if (subCommand is HitCommand hc)
                                 {
+                                    hc.SourceUnit = context.OriginUnit;
                                     hc.TargetSquare = subTarget;
                                     hc.TargetUnit = subTarget.Occupant;
                                     IBattleFormulaParser parser = BattleManager.Instance.BattleFormulaParser;
@@ -77,8 +79,14 @@ namespace GfEngine.Battles.Behaviors.Complexed
                                 }
                                 else if (subCommand is GrantingBuffCommand gbc)
                                 {
+                                    gbc.SourceUnit = context.OriginUnit;
                                     gbc.TargetSquare = subTarget;
                                     gbc.TargetUnit = subTarget.Occupant;
+                                }
+                                else if (subCommand is ApplyGroundEffectCommand agec)
+                                {
+                                    agec.SourceUnit = context.OriginUnit;
+                                    agec.TargetSquare = subTarget;
                                 }
                                 // 정해진 종류의 커맨드 이외에는 예외로 던져버린다.
                                 else
@@ -86,7 +94,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
                                     throw new InvalidOperationException(
                                         $"Behavior '{Name}' tried to generate an unknown Command type: {subCommand.GetType().Name}. " +
                                         "Check ConditionalCommandRule data."
-                                    ); 
+                                    );
                                 }                                
                                 // 조립된 커맨드를 bundle에 포장한다.
                                 res.Commands.Add(subCommand);

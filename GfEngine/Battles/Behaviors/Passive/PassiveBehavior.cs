@@ -37,12 +37,19 @@ namespace GfEngine.Battles.Behaviors.Passive
         /// </summary>
         public void HandleEvent(Enum eventType, IContext context)
         {
-            if ((BattleEventType)eventType != EventToListenFor) return; 
-            if (Condition.IsMet(context) && context is BattleContext battleContext) 
+            if ((BattleEventType)eventType != EventToListenFor) return;
+            if (Condition.IsMet(context) && context is BattleContext battleContext)
             {
-                Execute(battleContext);
+                // HandleEvent 자체는 조건 체크만 하고, 반응은 각 하위 클래스에서 결정함.
+                React(eventType, battleContext);
             }
         }
+        /// <summary>
+        /// 이벤트에 대한 반응의 구현을 위한 함수.
+        /// </summary>
+        /// <param name="eventType">내려받은 이벤트의 타입</param>
+        /// <param name="context">Reaction을 위한 총체적인 정보. 보통은 EventContext가 들어옴.</param>
+        public abstract void React(Enum eventType, IContext context);
         public PassiveBehavior() { }
     }
 }

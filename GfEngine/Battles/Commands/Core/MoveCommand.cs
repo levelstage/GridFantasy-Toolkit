@@ -22,9 +22,9 @@ namespace GfEngine.Battles.Commands.Core
         {
             return new MoveCommand(this);
         }
-        public override void Execute(BattleContext battleContext)
+        public override bool Execute(BattleContext battleContext)
         {
-            
+            return true;
         }
     }    
 }

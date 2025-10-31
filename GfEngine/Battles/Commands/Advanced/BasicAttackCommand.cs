@@ -16,9 +16,9 @@ namespace GfEngine.Battles.Commands.Advanced
             AttackCommand = parent.AttackCommand.Clone() as HitCommand;
             CounterAttackCommand = parent.CounterAttackCommand.Clone() as HitCommand;
         }
-        public override void Execute(BattleContext battleContext)
+        public override bool Execute(BattleContext battleContext)
         {
-
+            return true;
         }
         public override Command Clone()
         {

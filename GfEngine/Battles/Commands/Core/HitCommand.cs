@@ -18,9 +18,9 @@ namespace GfEngine.Battles.Commands.Core
             TargetUnit = parent.TargetUnit;
             Damage = parent.Damage;
         }
-        public override void Execute(BattleContext battleContext)
+        public override bool Execute(BattleContext battleContext)
         {
-            
+            return true;
         }
         public override Command Clone()
         {

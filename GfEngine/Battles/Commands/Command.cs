@@ -33,7 +33,7 @@ namespace GfEngine.Battles.Commands
             SourceUnit = parent.SourceUnit;
             TargetSquare = parent.TargetSquare;
         }
-        public abstract void Execute(BattleContext battleContext);
+        public abstract bool Execute(BattleContext battleContext);
         public abstract Command Clone();
     }    
 }

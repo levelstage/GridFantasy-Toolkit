@@ -11,9 +11,9 @@ namespace GfEngine.Battles.Commands.Advanced
         {
             Commands = new List<Command>(parent.Commands);
         }
-        public override void Execute(BattleContext battleContext)
+        public override bool Execute(BattleContext battleContext)
         {
-            
+            return true;
         }
         public override Command Clone()
         {

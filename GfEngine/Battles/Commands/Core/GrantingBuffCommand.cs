@@ -17,9 +17,9 @@ namespace GfEngine.Battles.Commands.Core
             ApplyingBuff = new Buff(parent.ApplyingBuff);
         }
 
-        public override void Execute(BattleContext battleContext)
+        public override bool Execute(BattleContext battleContext)
         {
-
+            return true;
         }
         public override Command Clone()
         {

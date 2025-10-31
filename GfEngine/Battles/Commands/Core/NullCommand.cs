@@ -7,9 +7,10 @@ namespace GfEngine.Battles.Commands
     public class NullCommand : Command
     {
         public NullCommand() { }
-        public override void Execute(BattleContext battleContext)
+        public override bool Execute(BattleContext battleContext)
         {
-            // 아무 행동도 하지 않는다.
+            // NullCommand가 발생하면 아무 행동도 하지 않고, 행동은 실패로 간주한다.
+            return false;
         }
         public override Command Clone()
         {

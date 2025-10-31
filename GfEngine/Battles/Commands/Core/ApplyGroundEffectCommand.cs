@@ -15,9 +15,9 @@ namespace GfEngine.Battles.Commands.Core
             ApplyingGroundEffect = new GroundEffect(parent.ApplyingGroundEffect);
         }
 
-        public override void Execute(BattleContext battleContext)
+        public override bool Execute(BattleContext battleContext)
         {
-            
+            return true;
         }
         public override Command Clone()
         {

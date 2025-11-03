@@ -62,6 +62,10 @@ namespace GfToolkit.Shared
 		// PatternSetOverrider 관련
 		OverrideMovePatternSet,
 		OverrideWeaponPatternSet,
+		// FomulaOverrider 관련
+		OverrideBasicAttackFomula,
+		// 피해 유형 변경
+		ChangeBasicAttackDamageType,
 	}
 
 	public enum Relation // 출처와 대상의 관계. 이 대상이 어떤 behavior의 대상이 되는지를 확인하기 위한 타입.
@@ -91,23 +95,32 @@ namespace GfToolkit.Shared
 		Damage,     // 공격 관련
 		Utility     // 유틸리티 관련
 	}
+
 	// 전투 중에 발생하는 모든 트리거들의 모음
 	public enum BattleEventType
-    {
-        // 턴 및 행동 흐름
-        OnTurnStart,        // 유닛의 턴이 시작될 때
-        OnActionEnd,        // 유닛이 행동을 완료했을 때
-        
-        // 피해 및 회복
-        OnDamaged,          // 유닛이 피해를 입었을 때 (반격, 분노 발동)
-        OnDealDamage,       // 유닛이 피해를 주었을 때 (흡혈, 추가 타격)
-        OnHealed,           // 유닛이 회복했을 때
-        
-        // 상태 변화
-        OnDied,             // 유닛이 사망했을 때
-        OnBuffApplied,      // 버프가 적용될 때
-        OnStatusChanged     // HP가 50% 이하로 떨어지는 등 상태가 변했을 때
-    }
+	{
+		// 턴 및 행동 흐름
+		OnTurnStart,        // 유닛의 턴이 시작될 때
+		OnActionEnd,        // 유닛이 행동을 완료했을 때
+
+		// 피해 및 회복
+		OnDamaged,          // 유닛이 피해를 입었을 때 (반격, 분노 발동)
+		OnDealDamage,       // 유닛이 피해를 주었을 때 (흡혈, 추가 타격)
+		OnHealed,           // 유닛이 회복했을 때
+
+		// 상태 변화
+		OnDied,             // 유닛이 사망했을 때
+		OnBuffApplied,      // 버프가 적용될 때
+		OnStatusChanged     // HP가 50% 이하로 떨어지는 등 상태가 변했을 때
+	}
+	// EventialBehavior의 대상 지정 종류
+	public enum EventialTarget
+	{
+		Self,
+		CommandSource,
+		CommandTarget,
+		System
+	}
 
 	// 시스템 구현을 위해 필요한 enum
 	public enum ComparisonOperator // 비교형 Condition을 위한 연산자 열거

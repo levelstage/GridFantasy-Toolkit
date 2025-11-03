@@ -20,13 +20,6 @@ namespace GfEngine.Battles.Behaviors.Complexed
         // 해당 범위에서 검색된 대상들을 가지고 어떤 Command를 만들지.
         // 이 List 안에 있는 Command들은 일부 속성이 비어있는 불완성품임.
         // 여기에 적절한 속성을 채우고, BundleCommand화해서 Return하는게 이 Behavior의 역할이다.
-
-        // 생성자에서 피해량, 피해 타입, 공격 범위(PatternSet) 등 '데이터'를 받는다.
-        public AreaInvocationBehavior() : base()
-        {
-            Name = ""; // 기본 이름
-        }
-
         public override Command Execute(BattleContext context)
         {
             Square target = context.TargetSquare;
@@ -35,12 +28,12 @@ namespace GfEngine.Battles.Behaviors.Complexed
             if (context.OriginUnit == null) return new NullCommand();
             BundleCommand res = new BundleCommand()
             {
+                SourceUnit = context.OriginUnit,
                 TargetSquare = target,
                 Commands = new List<Command>()
             };
             // 2차 검사: 영역 내에서 2차 대상으로 지정이 가능한지?
-            res.SourceUnit = context.OriginUnit;
-            List<BehaviorTarget> affectedSquares = Area.TargetSearcher(target, context.WaveData);
+            List<BehaviorTarget> affectedSquares = Area.GetValidTargets(target, context.WaveData);
             foreach (BehaviorTarget bt in affectedSquares)
             {
                 if (bt.Type == TargetType.Accessible)
@@ -61,7 +54,7 @@ namespace GfEngine.Battles.Behaviors.Complexed
                             // ApplyGroundEffectCommand (Square에 GroundEffect 부여)
                             // 이론상 거의 모든 Command를 넣을 수 있다.
 
-                            // 3차 검사: 해당 Command를 대상에게 실행할 수 있는지?
+                            // 3차 검사: 해당 Command를 실행할 수 있는지?
                             // 해당 검사를 통과한 커맨드들은 내용을 조립해준다.
                             if (iter.Condition.IsMet(subContext))
                             {

@@ -1,25 +1,24 @@
 using GfEngine.Battles.Behaviors;
 using GfEngine.Battles.Squares;
+using GfEngine.Battles.Patterns;
+using GfEngine.Core.Conditions;
+using GfEngine.Models.Actors;
+using GfEngine.Models.Buffs;
+using GfEngine.Models.Buffs.Modifiers;
+using GfEngine.Models.Classes;
 using GfEngine.Models.Items;
 using GfEngine.Models.Statuses;
-using GfEngine.Models.Buffs;
 using GfEngine.Logics;
-using GfEngine.Models.Buffs.Modifiers;
-using GfEngine.Battles.Patterns;
-using GfEngine.Models.Actors;
 using GfToolkit.Shared;
 using System.Collections.Generic;
 using System.Linq;
-using GfEngine.Core.Conditions;
-using GfEngine.Models.Classes;
+using GfEngine.Battles.Commands.Core;
 namespace GfEngine.Battles.Units
 {
 	public abstract class Unit
 	{
 		public string Name { get; set; }
-		private LiveStatus _liveStat { get; set; }
-		public Teams Team { get; set; }
-		public List<Behavior> Behaviors { get; set; }
+		private LiveStatus _liveStat { get; set; } // 유닛의 "버프에 의해 변경 가능한 모든 정보"가 있음.
 		public Square CurrentSquare { get; set; }
 
 		// 아래의 두 함수에 의해 유닛이 외부와 소통할때는 modify된 스탯들을 사용하게 됩니다.
@@ -227,11 +226,11 @@ namespace GfEngine.Battles.Units
 			return res;
 		}
 		/// <summary>
-        /// 지정한 PatternSet을 특정 유형의 유효한 overrider들로 overriding하는 함수
-        /// </summary>
-        /// <param name="patternSet">원본 PatternSet</param>
-        /// <param name="effect">적용할 modifier의 effect</param>
-        /// <returns>적절히 Overriding된 PatternSet</returns>
+		/// 지정한 PatternSet을 특정 유형의 유효한 overrider들로 overriding하는 함수
+		/// </summary>
+		/// <param name="patternSet">원본 PatternSet</param>
+		/// <param name="effect">적용할 modifier의 effect</param>
+		/// <returns>적절히 Overriding된 PatternSet</returns>
 		private PatternSet OverridePatternSetByModifiers(PatternSet patternSet, BuffEffect effect)
 		{
 			PatternSet res = new PatternSet(patternSet);
@@ -258,11 +257,46 @@ namespace GfEngine.Battles.Units
 						break;
 					case OverridingOperator.AndNot:
 						res.Patterns.ExceptWith(iter.PatternSetToOverride.Patterns);
-						break;						
+						break;
 				}
 			}
 			return res;
 		}
+		/// <summary>
+        /// 지정한 Fomula를 특정 유형의 유효한 overrider들로 overriding하는 함수
+        /// </summary>
+        /// <param name="fomula">덮어쓸 공식 원본</param>
+        /// <param name="effect">적용할 modifier의 effect</param>
+        /// <returns>적절히 Override된 fomula</returns>
+		private string OverrideFomulaByModifiers(string fomula, BuffEffect effect)
+        {
+            string res = fomula;
+			List<FomulaOverrider> overriders = new List<FomulaOverrider>();
+			foreach (var iter in SearchEffectiveModifiers(effect))
+			{
+				if (iter is FomulaOverrider fomulaOverrider) overriders.Add(fomulaOverrider);
+			}
+			overriders = overriders.OrderBy(i => i.Magnitude) // 여기서는 우선순위를 먼저 체크한다.
+									.ThenBy(i => i.OverridingBy) // 그 다음 연산자 체크. or = +, and = * 다.
+									.ToList();
+			foreach (var iter in overriders)
+			{
+				switch (iter.OverridingBy)
+				{
+					case OverridingOperator.Rewrite: // 덮어쓰기
+						res = iter.FomulaToOverride;
+						break;
+					case OverridingOperator.Or:  // 덧셈
+						res = res + " + " + iter.FomulaToOverride;
+						break;
+					case OverridingOperator.And:  // 곱셈
+						res = "(" + res + ")" + " * " + iter.FomulaToOverride;
+						break;
+					// Andnot의 경우는 아예 아무것도 안함.
+				}
+			}
+			return res;
+        }
 		/// <summary>
 		/// 유닛의 버프가 적용된 MoveScope를 Return하는 함수.
 		/// </summary>
@@ -279,9 +313,9 @@ namespace GfEngine.Battles.Units
 			return res;
 		}
 		/// <summary>
-        /// 유닛의 버프가 적용된 BasicAttackScope를 Return하는 함수.
-        /// </summary>
-        /// <returns>유닛의 버프가 적용된 BasicAttackScope</returns>
+		/// 유닛의 버프가 적용된 BasicAttackScope를 Return하는 함수.
+		/// </summary>
+		/// <returns>유닛의 버프가 적용된 BasicAttackScope</returns>
 		public RuledPatternSet GetBasicAttackScope()
 		{
 			Weapon weapon = _liveStat.Equipment; // weapon은 crest와 달리 타입이 아닌 객체이기에, DB를 참조하지 않음.
@@ -294,5 +328,13 @@ namespace GfEngine.Battles.Units
 			res.Penetration += (int)NetEffectMagnitude(BuffEffect.AddWeaponPenetration);
 			return res;
 		}
+		public (string, DamageType) GetBasicAttackInfo()
+        {
+			string fomula = OverrideFomulaByModifiers(_liveStat.Equipment.Fomula, BuffEffect.OverrideBasicAttackFomula);
+			DamageType damageType = _liveStat.Equipment.TypeOfDamage;
+			List<Modifier> damageChangers = SearchEffectiveModifiers(BuffEffect.ChangeBasicAttackDamageType);
+			if (damageChangers.Count > 0) damageType = (DamageType)damageChangers.Last().Magnitude;
+			return (fomula, damageType);
+        }
 	}
 }

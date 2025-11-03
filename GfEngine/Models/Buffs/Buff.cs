@@ -5,7 +5,6 @@ namespace GfEngine.Models.Buffs
 {
 	public class Buff : GameObject // 진정한 객체로서의 버프. 여러 Modifier들의 묶음임.
 	{
-		public string Description { get; set; }
 		public int Duration { get; set; } // 이 '효과 묶음'의 지속시간
 		// 부차적인 속성
 		public Unit Source { get; set; }  // 버프를 준 Source Unit. 유닛에게서 받은 버프가 아니라면 null

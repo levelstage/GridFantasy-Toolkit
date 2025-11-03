@@ -5,7 +5,6 @@ namespace GfEngine.Models.Items
 {
 	public abstract class Item : GameObject
 	{
-		public string Description { get; set; }
 		public HashSet<string> Itags { get; set; }
 		public Buff ItemBuff { get; set; }
 

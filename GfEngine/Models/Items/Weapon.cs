@@ -7,6 +7,7 @@ namespace GfEngine.Models.Items
 	{
 		public int Class { get; set; } // 이 무기의 무기군 코드
 		public string Fomula { get; set; } // 이 무기의 피해 산출 공식
+		public DamageType TypeOfDamage { get; set; } // 이 무기의 피해 유형
 		public Buff EquipBuff { get; set; }
 		public Weapon()
 		{
